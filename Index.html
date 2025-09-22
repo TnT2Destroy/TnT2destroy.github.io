@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Nested Series-Parallel V.I.R.P. Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc; /* slate-50 */
+            --bg-tertiary: #f1f5f9;  /* slate-100 */
+            --bg-accent: #f0f9ff;   /* sky-50 */
+            --bg-accent-nested: #ecfeff; /* cyan-50 */
+            --text-primary: #1e293b; /* slate-800 */
+            --text-secondary: #475569; /* slate-600 */
+            --text-accent: #0c4a6e; /* sky-800 */
+            --border-primary: #e2e8f0; /* slate-200 */
+            --border-accent: #bae6fd;  /* sky-200 */
+            --border-focus: #3b82f6; /* blue-500 */
+            --heading-color: #1d4ed8; /* blue-700 */
+            --button-text: #ffffff;
+            --scrollbar-thumb: #94a3b8;
+            --scrollbar-track: #f1f5f9;
+            --bg-animated-light: linear-gradient(-45deg, #e0f2fe, #f0f9ff, #ecfeff, #f0fdf4);
+            --bg-main-container-light: rgba(255, 255, 255, 0.7);
+            --border-main-container-light: rgba(255, 255, 255, 0.2);
+        }
+
+        html.dark {
+            --bg-primary: #1e293b; /* slate-800 */
+            --bg-secondary: #334155; /* slate-700 */
+            --bg-tertiary: #0f172a;  /* slate-900 */
+            --bg-accent: #1e293b;   /* slate-800 */
+            --bg-accent-nested: #27374d; /* custom */
+            --text-primary: #e2e8f0; /* slate-200 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --text-accent: #7dd3fc; /* sky-300 */
+            --border-primary: #475569; /* slate-600 */
+            --border-accent: #38bdf8;  /* sky-400 */
+            --border-focus: #60a5fa; /* blue-400 */
+            --heading-color: #60a5fa; /* blue-400 */
+            --button-text: #ffffff;
+            --scrollbar-thumb: #475569;
+            --scrollbar-track: #1e293b;
+            --bg-animated-dark: linear-gradient(-45deg, #0c4a6e, #0f172a, #1e293b, #334155);
+            --bg-main-container-dark: rgba(30, 41, 59, 0.7);
+            --border-main-container-dark: rgba(71, 85, 105, 0.3);
+        }
+        
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            transition: color 0.3s;
+            background-size: 400% 400%;
+            animation: gradient-animation 20s ease infinite;
+            background-image: var(--bg-animated-light);
+        }
+        html.dark body {
+            background-image: var(--bg-animated-dark);
+        }
+
+        .main-container {
+            background-color: var(--bg-main-container-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-main-container-light);
+        }
+        html.dark .main-container {
+            background-color: var(--bg-main-container-dark);
+            border: 1px solid var(--border-main-container-dark);
+        }
+
+        .component-group {
+            border-left: 3px solid #1e40af; /* blue-800 */
+            background-color: var(--bg-accent);
+        }
+        .nested-component-group {
+            border-left: 3px solid #0e7490; /* cyan-700 */
+            background-color: var(--bg-accent-nested);
+        }
+        .control-panel { background-color: var(--bg-secondary); }
+        .canvas-bg { background-color: var(--bg-secondary); }
+        input { background-color: var(--bg-primary); color: var(--text-primary); border-color: var(--border-primary); }
+        input:focus { --tw-ring-color: var(--border-focus); border-color: var(--border-focus); }
+        
+        .header-text {
+            background-image: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        html.dark .header-text {
+             background-image: linear-gradient(45deg, #60a5fa, #93c5fd);
+        }
+
+        .subheader-text { color: var(--text-secondary); }
+        .border-main { border-color: var(--border-primary); }
+        .text-main { color: var(--text-primary); }
+        .text-light { color: var(--text-secondary); }
+        .text-accent-color { color: var(--text-accent); }
+        .branch-bg { background-color: var(--bg-primary); }
+        .branch-border { border-color: var(--border-accent); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="flex items-start justify-center min-h-screen p-4 sm:p-6">
+
+<div class="main-container p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-6xl relative">
+    <!-- Spinning Fish GIF -->
+    <div class="absolute top-6 left-6 w-24 z-10">
+        <div class="tenor-gif-embed" data-postid="2672489223534272224" data-share-method="host" data-aspect-ratio="1.75352" data-width="100%"><a href="https://tenor.com/view/low-poly-spinning-fish-low-poly-spinning-fish-green-sunfish-gif-2672489223534272224">Low-poly Spinning GIF</a>from <a href="https://tenor.com/search/low-poly-gifs">Low-poly GIFs</a></div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="absolute top-4 right-4 flex items-center">
+        <span class="text-sm font-medium text-light mr-2">Light</span>
+        <button onclick="toggleDarkMode()" class="w-12 h-6 flex items-center bg-slate-300 dark:bg-slate-600 rounded-full p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--bg-main-container-light)] dark:focus:ring-offset-[var(--bg-main-container-dark)] focus:ring-blue-500">
+            <div id="dark-mode-indicator" class="w-5 h-5 bg-white rounded-full shadow-md transform translate-x-0 dark:translate-x-5 transition-transform duration-300"></div>
+        </button>
+        <span class="text-sm font-medium text-light ml-2">Dark</span>
+    </div>
+
+
+    <header class="text-center mb-6 pb-4 border-b border-main">
+        <h1 class="text-3xl sm:text-4xl font-bold header-text">Visual V.I.R.P. Circuit Calculator ⚡</h1>
+        <p class="subheader-text mt-1">Build and analyze complex circuits with nested parallel groups.</p>
+    </header>
+    
+    <!-- Canvas for Circuit Diagram -->
+    <div class="canvas-bg rounded-lg p-2 mb-6 overflow-x-auto">
+      <canvas id="circuit-canvas" class="h-auto"></canvas>
+    </div>
+
+    <!-- Main Controls -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Voltage Input -->
+        <div class="control-panel p-4 rounded-lg">
+            <label for="voltage" class="block font-semibold text-main mb-2">Source Voltage (V)</label>
+            <input type="number" id="voltage" placeholder="e.g., 12" value="24" oninput="drawAndCalculate()" class="w-full p-2 border rounded-md focus:ring-2 transition">
+        </div>
+
+        <!-- Add Components -->
+        <div class="control-panel p-4 rounded-lg md:col-span-2">
+            <h2 class="font-semibold text-main mb-2">Circuit Builder</h2>
+            <div class="flex flex-wrap gap-3">
+                 <button onclick="addComponent('resistor')" class="flex-grow bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-all shadow-sm transform hover:scale-105">+ Add Series Resistor</button>
+                 <button onclick="addComponent('parallel')" class="flex-grow bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-sky-700 transition-all shadow-sm transform hover:scale-105">+ Add Parallel Group</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dynamic Component Inputs -->
+    <div id="circuit-builder" class="space-y-4 mb-6"></div>
+    
+    <!-- Calculate Button -->
+    <div class="text-center my-6">
+        <button onclick="drawAndCalculate({force: true})" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-12 rounded-lg hover:bg-blue-700 transition-all shadow-lg transform hover:scale-105 text-lg">Calculate V.I.R.P.</button>
+    </div>
+    
+    <!-- Naming Convention Toggle -->
+    <div class="flex justify-end items-center mb-4">
+        <span class="text-sm font-medium text-light mr-3">Resistor Naming:</span>
+        <button id="naming-toggle-btn" onclick="toggleNamingConvention()" class="bg-indigo-500 text-white font-semibold py-1 px-3 rounded-lg hover:bg-indigo-600 transition-all shadow-sm text-sm">
+            Sequential (R1, R2...)
+        </button>
+    </div>
+
+    <!-- Results Table -->
+    <div id="results-container" class="overflow-x-auto"></div>
+</div>
+
+<script>
+    // --- DATA STRUCTURE & STATE ---
+    let circuit = [];
+    let componentIdCounter = 0;
+    let useSequentialNaming = true;
+    const canvas = document.getElementById('circuit-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- THEME MANAGEMENT ---
+    function applyTheme() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+
+    function toggleDarkMode() {
+        document.documentElement.classList.toggle('dark');
+        if (document.documentElement.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+        drawAndCalculate({force: true});
+    }
+
+    applyTheme(); // Apply theme on initial script load to prevent flashing
+
+    // --- CORE COMPONENT MANAGEMENT ---
+
+    function getComponentByPath(path) {
+        let currentLevel = circuit;
+        let component = null;
+        for (let i = 0; i < path.length; i++) {
+            const index = path[i];
+            component = currentLevel[index];
+            if (component && component.type === 'parallel' && i < path.length - 1) {
+                const branchIndex = path[++i];
+                currentLevel = component.branches[branchIndex];
+            }
+        }
+        return component;
+    }
+
+    function getParentByPath(path) {
+        if (path.length === 1) return { parent: circuit, index: path[0] };
+        
+        let currentLevel = circuit;
+        let parent = circuit;
+        let lastIndex = path[0];
+
+        for (let i = 0; i < path.length - 1; i++) {
+            const index = path[i];
+            parent = currentLevel[index] || currentLevel;
+            lastIndex = index;
+            if (parent.type === 'parallel' && i < path.length - 2) {
+                const branchIndex = path[++i];
+                currentLevel = parent.branches[branchIndex];
+            } else {
+                currentLevel = parent;
+            }
+        }
+        return { parent: currentLevel, index: path[path.length-1] };
+    }
+
+    function createComponent(type) {
+        componentIdCounter++;
+        if (type === 'resistor') {
+            return { id: componentIdCounter, type: 'resistor', value: null };
+        }
+        if (type === 'parallel') {
+            return { id: componentIdCounter, type: 'parallel', branches: [
+                [createComponent('resistor')],
+                [createComponent('resistor')]
+            ]};
+        }
+    }
+    
+    function addComponent(type, pathStr = '[]') {
+        const path = JSON.parse(pathStr);
+        const newComponent = createComponent(type);
+        if (path.length === 0) {
+            circuit.push(newComponent);
+        } else {
+            const parentBranch = getComponentByPath(path).branches[path[path.length - 1]];
+            parentBranch.push(newComponent);
+        }
+        renderControls();
+        drawAndCalculate();
+    }
+
+    function removeComponent(pathStr) {
+        const path = JSON.parse(pathStr);
+        const { parent, index } = getParentByPath(path);
+        parent.splice(index, 1);
+        renderControls();
+        drawAndCalculate();
+    }
+    
+    function updateResistorValue(pathStr, value) {
+        const path = JSON.parse(pathStr);
+        const component = getComponentByPath(path);
+        const parsedValue = parseFloat(value);
+        component.value = isNaN(parsedValue) || parsedValue <= 0 ? null : parsedValue;
+        drawAndCalculate();
+    }
+    
+    function addBranch(pathStr) {
+        const path = JSON.parse(pathStr);
+        const component = getComponentByPath(path);
+        component.branches.push([createComponent('resistor')]);
+        renderControls();
+        drawAndCalculate();
+    }
+
+    function removeBranch(pathStr, branchIndex) {
+        const path = JSON.parse(pathStr);
+        const component = getComponentByPath(path);
+        if (component.branches.length > 1) {
+            component.branches.splice(branchIndex, 1);
+            renderControls();
+            drawAndCalculate();
+        }
+    }
+
+    function toggleNamingConvention() {
+        useSequentialNaming = !useSequentialNaming;
+        const btn = document.getElementById('naming-toggle-btn');
+        btn.textContent = useSequentialNaming ? 'Sequential (R1, R2...)' : 'Hierarchical (R1.1.1)';
+        drawAndCalculate({force: true});
+    }
+
+    // --- UI RENDERING (RECURSIVE) ---
+
+    function renderControls() {
+        const builder = document.getElementById('circuit-builder');
+        builder.innerHTML = '';
+        circuit.forEach((component, index) => {
+            builder.appendChild(renderComponent(component, [index]));
+        });
+    }
+
+    function renderComponent(component, path) {
+        const div = document.createElement('div');
+        const pathStr = JSON.stringify(path);
+        const level = Math.floor(path.length / 2);
+
+        let title, baseClass, titleColor;
+
+        if (component.type === 'resistor') {
+            title = `Resistor`;
+            baseClass = 'control-panel';
+            titleColor = 'text-main';
+        } else { // parallel
+            title = level === 0 ? `Parallel Group` : `Nested Parallel Group`;
+            baseClass = level === 0 ? 'component-group' : 'nested-component-group';
+            titleColor = level === 0 ? 'header-text' : 'text-accent-color';
+        }
+
+        div.className = `p-4 rounded-lg border border-main shadow-sm transition-all ${baseClass}`;
+        
+        let innerHTML = `
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-bold ${titleColor}">${title}</h3>
+                <button onclick="removeComponent('${pathStr}')" class="bg-red-500 text-white font-bold w-8 h-8 rounded-full hover:bg-red-600 transition transform hover:scale-110 flex items-center justify-center">&times;</button>
+            </div>`;
+
+        if (component.type === 'resistor') {
+            innerHTML += `<div class="flex items-center p-2 rounded-md border border-main" style="background-color: var(--bg-primary);">
+                <label class="font-medium text-light mr-2 whitespace-nowrap">R:</label>
+                <input type="number" value="${component.value || ''}" 
+                       oninput="updateResistorValue('${pathStr}', this.value)" 
+                       placeholder="Ohms (Ω)"
+                       class="w-full p-1 border-0 rounded-md focus:ring-1">
+            </div>`;
+        } else { // parallel group
+            innerHTML += '<div class="space-y-3">';
+            component.branches.forEach((branch, bIndex) => {
+                innerHTML += `
+                    <div class="branch-bg p-3 rounded-lg border branch-border">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-semibold text-accent-color">Branch ${bIndex + 1}</h4>
+                            <button onclick="removeBranch('${pathStr}', ${bIndex})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900/80">Remove Branch</button>
+                        </div>
+                        <div class="pl-4 border-l-2 border-main space-y-3" id="branch-${path.join('-')}-${bIndex}"></div>
+                        <div class="mt-3 pt-2 border-t border-tertiary flex flex-wrap gap-2">
+                            <button onclick="addComponent('resistor', '${JSON.stringify([...path, bIndex])}')" class="bg-green-500 text-white text-xs font-semibold py-1 px-2 rounded hover:bg-green-600 transition">+ Resistor</button>
+                            <button onclick="addComponent('parallel', '${JSON.stringify([...path, bIndex])}')" class="bg-cyan-500 text-white text-xs font-semibold py-1 px-2 rounded hover:bg-cyan-600 transition">+ Nested Parallel</button>
+                        </div>
+                    </div>`;
+            });
+            innerHTML += '</div>';
+            innerHTML += `<div class="mt-4 pt-4 border-t border-main">
+                <button onclick="addBranch('${pathStr}')" class="bg-sky-500 text-white text-sm font-semibold py-1 px-3 rounded-md hover:bg-sky-600 transition">+ Add Parallel Branch</button>
+            </div>`;
+        }
+
+        div.innerHTML = innerHTML;
+        
+        if (component.type === 'parallel') {
+            component.branches.forEach((branch, bIndex) => {
+                const branchContainer = div.querySelector(`#branch-${path.join('-')}-${bIndex}`);
+                branch.forEach((subComponent, cIndex) => {
+                    branchContainer.appendChild(renderComponent(subComponent, [...path, bIndex, cIndex]));
+                });
+            });
+        }
+
+        return div;
+    }
+
+
+    // --- CALCULATION LOGIC (RECURSIVE) ---
+
+    function getEquivalentResistance(component) {
+        if (!component) return 0;
+        if (component.type === 'resistor') {
+            return component.value > 0 ? component.value : 0;
+        }
+        if (component.type === 'parallel') {
+            const branchResistances = component.branches.map(branch => {
+                return branch.reduce((sum, subComp) => sum + getEquivalentResistance(subComp), 0);
+            }).filter(r => r > 0);
+
+            if (branchResistances.length === 0) return 0;
+            const inverseSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
+            return 1 / inverseSum;
+        }
+        return 0;
+    }
+
+    function calculateVIRP() {
+        const voltage = parseFloat(document.getElementById('voltage').value);
+        const resultsContainer = document.getElementById('results-container');
+        
+        if (isNaN(voltage) || voltage <= 0) {
+            resultsContainer.innerHTML = `<p class="text-center text-red-600 font-semibold">Please enter a valid, positive source voltage.</p>`;
+            return;
+        }
+
+        const totalResistance = circuit.reduce((sum, comp) => sum + getEquivalentResistance(comp), 0);
+        
+        if (totalResistance === 0) {
+            resultsContainer.innerHTML = `<p class="text-center text-red-600 font-semibold">Error: Total resistance is zero. Avoid short circuits.</p>`;
+            return;
+        }
+        
+        const totalCurrent = voltage / totalResistance;
+        const totalPower = voltage * totalCurrent;
+        
+        let resistorCounter = 0; 
+
+        let resultsHTML = `
+            <h2 class="text-2xl font-bold text-center mb-4" style="color: var(--heading-color);">V.I.R.P. Chart</h2>
+            <div class="overflow-x-auto shadow-md rounded-lg">
+                <table class="w-full text-sm text-left text-light">
+                    <thead class="text-xs text-main uppercase" style="background-color: var(--bg-secondary);">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Component</th>
+                            <th scope="col" class="px-6 py-3 text-right">Voltage</th>
+                            <th scope="col" class="px-6 py-3 text-right">Current</th>
+                            <th scope="col" class="px-6 py-3 text-right">Resistance (Ω)</th>
+                            <th scope="col" class="px-6 py-3 text-right">Power</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+        
+        function generateRows(component, current, nameInfo) {
+            if (!component) return '';
+            let rows = '';
+            const R = getEquivalentResistance(component);
+            if (R === 0) return '';
+            
+            if (component.type === 'resistor') {
+                resistorCounter++;
+                const resistorName = useSequentialNaming ? `R${resistorCounter}` : nameInfo.name;
+                const V = current * R;
+                const P = V * current;
+                rows += `<tr class="border-b border-main" style="background-color: var(--bg-primary);">
+                    <td class="px-6 py-4 font-medium text-main" style="padding-left: ${1.5 + nameInfo.level * 1.5}rem">${nameInfo.level > 0 ? '↳' : ''} ${resistorName}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(V, 'V')}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(current, 'A')}</td>
+                    <td class="px-6 py-4 text-right">${component.value}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(P, 'W')}</td>
+                </tr>`;
+            } else if (component.type === 'parallel') {
+                const V = current * R;
+                component.branches.forEach((branch, bIndex) => {
+                    const branchR = branch.reduce((sum, c) => sum + getEquivalentResistance(c), 0);
+                    if (branchR === 0) return;
+                    const branchCurrent = V / branchR;
+                    branch.forEach((subComp, cIndex) => {
+                        rows += generateRows(subComp, branchCurrent, {
+                            name: `${nameInfo.name}.${bIndex + 1}.${cIndex + 1}`,
+                            level: nameInfo.level + 1
+                        });
+                    });
+                });
+            }
+            return rows;
+        }
+
+        circuit.forEach((component, index) => {
+             resultsHTML += generateRows(component, totalCurrent, { name: `R${index + 1}`, level: 0 });
+        });
+
+        resultsHTML += `
+                <tr class="font-bold text-main" style="background-color: var(--bg-secondary);">
+                    <td class="px-6 py-4">Total</td>
+                    <td class="px-6 py-4 text-right">${formatValue(voltage, 'V')}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(totalCurrent, 'A')}</td>
+                    <td class="px-6 py-4 text-right">${totalResistance.toFixed(3)}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(totalPower, 'W')}</td>
+                </tr>
+            </tbody></table></div>`;
+        resultsContainer.innerHTML = resultsHTML;
+    }
+
+
+    // --- DRAWING LOGIC (RECURSIVE) ---
+
+    function drawAndCalculate(options = {force: false}) {
+        clearTimeout(window.drawTimeout);
+        window.drawTimeout = setTimeout(() => {
+            drawCircuit();
+            calculateVIRP();
+        }, options.force ? 0 : 300);
+    }
+    
+    function getComponentDimensions(component) {
+        const rWidth = 60, pGapY = 60, pGapX = 20, seriesGap = 20;
+        if (component.type === 'resistor') {
+            return { width: rWidth, height: 50 };
+        }
+        if (component.type === 'parallel') {
+            let maxWidth = 0;
+            let totalHeight = 0;
+            const branchDimensions = component.branches.map(branch => {
+                let branchWidth = 0;
+                let maxHeight = 0;
+                branch.forEach((subComp, i) => {
+                    const dims = getComponentDimensions(subComp);
+                    branchWidth += dims.width;
+                    if(i > 0) branchWidth += seriesGap;
+                    if(dims.height > maxHeight) maxHeight = dims.height;
+                });
+                return { width: branchWidth, height: maxHeight };
+            });
+
+            branchDimensions.forEach((dims, i) => {
+                if (dims.width > maxWidth) maxWidth = dims.width;
+                totalHeight += dims.height;
+                 if(i > 0) totalHeight += pGapY;
+            });
+            
+            return { width: maxWidth + pGapX * 2, height: totalHeight };
+        }
+        return { width: 0, height: 0 };
+    }
+
+    function drawCircuit() {
+        const totalDimensions = getComponentDimensions({type: 'parallel', branches: [circuit]});
+        const requiredWidth = totalDimensions.width + 200;
+        const isDark = document.documentElement.classList.contains('dark');
+        const strokeColor = isDark ? '#e2e8f0' : '#334155';
+
+        canvas.width = Math.max(canvas.parentElement.offsetWidth, requiredWidth);
+        canvas.height = totalDimensions.height + 100;
+        
+        const voltageValue = document.getElementById('voltage').value || 'V';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = strokeColor;
+        ctx.fillStyle = strokeColor;
+        ctx.lineWidth = 2; ctx.font = '14px Inter'; ctx.textAlign = 'center';
+        
+        const startX = 60;
+        const startY = canvas.height / 2;
+
+        drawBattery(startX, startY, voltageValue + 'V');
+        let currentX = startX + 40;
+        ctx.beginPath(); ctx.moveTo(currentX, startY);
+        
+        let resistorCounter = 0;
+
+        circuit.forEach((component, index) => {
+             const dims = getComponentDimensions(component);
+             currentX += 20;
+             ctx.lineTo(currentX, startY);
+             resistorCounter = drawComponent(component, currentX, startY, { name: `R${index + 1}` }, resistorCounter);
+             currentX += dims.width;
+             ctx.moveTo(currentX, startY);
+        });
+
+        const endX = currentX + 40;
+        ctx.lineTo(endX, startY);
+        ctx.lineTo(endX, canvas.height - 20);
+        ctx.lineTo(20, canvas.height - 20);
+        ctx.lineTo(20, startY);
+        ctx.lineTo(startX - 20, startY);
+        ctx.stroke();
+    }
+    
+    function drawComponent(component, x, y, namePrefix, counter) {
+        if (component.type === 'resistor') {
+            counter++;
+            const resistorName = useSequentialNaming ? `R${counter}` : namePrefix.name;
+            drawResistor(x, y, resistorName, component.value);
+            return counter;
+        }
+
+        if (component.type === 'parallel') {
+            const groupDims = getComponentDimensions(component);
+            const pStartX = x;
+            const pEndX = x + groupDims.width;
+            
+            const branchDims = component.branches.map(b => getComponentDimensions({type: 'parallel', branches: [b]}));
+            const totalBranchHeight = branchDims.reduce((sum, d) => sum + d.height, 0);
+            const totalGaps = (component.branches.length - 1) * 60; // pGapY = 60
+            const pTotalHeight = totalBranchHeight + totalGaps;
+
+            let currentY = y - pTotalHeight / 2;
+            
+            ctx.moveTo(pStartX, currentY);
+            ctx.lineTo(pStartX, y + pTotalHeight / 2);
+            ctx.moveTo(pEndX, currentY);
+            ctx.lineTo(pEndX, y + pTotalHeight / 2);
+
+            component.branches.forEach((branch, bIndex) => {
+                const branchHeight = branchDims[bIndex].height;
+                const branchY = currentY + branchHeight / 2;
+                const pGapX = 20, seriesGap = 20;
+
+                ctx.moveTo(pStartX, branchY);
+                ctx.lineTo(pStartX + pGapX, branchY);
+                let branchCurrentX = pStartX + pGapX;
+                
+                branch.forEach((subComp, i) => {
+                    const subDims = getComponentDimensions(subComp);
+                    const newName = `${namePrefix.name}.${bIndex + 1}.${i + 1}`;
+                    counter = drawComponent(subComp, branchCurrentX, branchY, { name: newName }, counter);
+                    branchCurrentX += subDims.width;
+                    ctx.moveTo(branchCurrentX, branchY);
+                    if (i < branch.length - 1) {
+                         branchCurrentX += seriesGap;
+                         ctx.lineTo(branchCurrentX, branchY);
+                    }
+                });
+
+                ctx.lineTo(pEndX - pGapX, branchY);
+                ctx.moveTo(pEndX, branchY);
+
+                currentY += branchHeight + 60; // pGapY
+            });
+            return counter;
+        }
+        return counter;
+    }
+
+    function drawBattery(x, y, label) { ctx.beginPath(); ctx.moveTo(x - 20, y); ctx.lineTo(x, y); ctx.moveTo(x + 5, y - 12); ctx.lineTo(x + 5, y + 12); ctx.moveTo(x + 15, y - 20); ctx.lineTo(x + 15, y + 20); ctx.moveTo(x + 20, y); ctx.lineTo(x + 40, y); ctx.stroke(); ctx.fillText(label, x + 10, y - 25); }
+    function drawResistor(x, y, label, value) { const width = 50, height = 16, lead = 5; const zigzagWidth = width - 2 * lead, numPeaks = 3, segments = numPeaks * 2; const segWidth = zigzagWidth / segments; let currentZigzagX = x + lead; ctx.moveTo(x, y); ctx.lineTo(currentZigzagX, y); for (let i = 0; i < segments; i++) { const yOffset = (i % 2 === 0) ? -height/2 : height/2; currentZigzagX += segWidth; ctx.lineTo(currentZigzagX, y + yOffset); } ctx.lineTo(x + width, y); ctx.fillText(label, x + width/2, y - 15); ctx.fillText((value || '?') + ' Ω', x + width/2, y + 25); }
+    function formatValue(value, unit) { if (typeof value !== 'number' || isNaN(value)) return 'N/A'; if (value === 0) return `0 ${unit}`; const absValue = Math.abs(value); if (unit === 'A' || unit === 'W' || unit === 'V') { if (absValue < 1e-6) return (value * 1e9).toFixed(2) + ` n${unit}`; if (absValue < 1e-3) return (value * 1e6).toFixed(2) + ` µ${unit}`; if (absValue < 1) return (value * 1000).toFixed(2) + ` m${unit}`; } if (absValue >= 1e6) return (value / 1e6).toFixed(2) + ` M${unit}`; if (absValue >= 1e3) return (value / 1e3).toFixed(2) + ` k${unit}`; return value.toFixed(3) + ` ${unit}`; }
+
+    // --- INITIAL STATE ---
+    window.onload = () => {
+        // Example circuit to demonstrate nesting
+        addComponent('resistor');
+        circuit[0].value = 100;
+
+        addComponent('parallel');
+        
+        const mainP_B1_R1_path = '[1, 0, 0]';
+        updateResistorValue(mainP_B1_R1_path, 500);
+        
+        addComponent('parallel', '[1, 1]');
+        
+        const nestedP_B1_R1_path = '[1, 1, 0, 0, 0]';
+        updateResistorValue(nestedP_B1_R1_path, 200);
+
+        addComponent('resistor', '[1, 1, 0, 1]'); 
+        const nestedP_B2_R1_path = '[1, 1, 0, 1, 0]';
+        const nestedP_B2_R2_path = '[1, 1, 0, 1, 1]';
+        updateResistorValue(nestedP_B2_R1_path, 150);
+        updateResistorValue(nestedP_B2_R2_path, 50);
+        removeComponent('[1, 1, 1]');
+        
+        renderControls();
+        drawAndCalculate({force: true});
+    };
+
+    window.onresize = () => drawAndCalculate({force: true});
+
+</script>
+
+<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+</body>
+</html>
+
+
+
