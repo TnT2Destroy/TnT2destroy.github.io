@@ -172,6 +172,19 @@
                  <button onclick="simplifyCircuit()" class="flex-grow bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-teal-600 transition-all shadow-sm">Simplify Circuit</button>
                  <button onclick="clearCircuit()" class="flex-grow bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all shadow-sm">Clear Circuit</button>
             </div>
+            <!-- START: NEW SAVE/LOAD BUTTONS -->
+            <h2 class="font-semibold text-main mb-2 mt-4">Save & Load</h2>
+            <div class="flex flex-wrap gap-3">
+                 <button onclick="saveCircuit()" class="flex-grow bg-emerald-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-emerald-600 transition-all shadow-sm">Save Circuit</button>
+                 <button onclick="loadCircuit()" class="flex-grow bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-amber-600 transition-all shadow-sm">Load Saved Circuit</button>
+            </div>
+            <!-- END: NEW SAVE/LOAD BUTTONS -->
+             <!-- START: NEW CAT BUTTON -->
+            <h2 class="font-semibold text-main mb-2 mt-4">Feeling Stressed?</h2>
+            <div class="flex flex-wrap gap-3">
+                 <button onclick="showCatPopup()" class="flex-grow bg-pink-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-600 transition-all shadow-sm">Show a Random Cat 🐱</button>
+            </div>
+            <!-- END: NEW CAT BUTTON -->
         </div>
     </div>
     
@@ -204,6 +217,19 @@
         </div>
     </div>
 </div>
+
+<!-- Cat Popup Modal -->
+<div id="cat-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300" style="display: none;">
+    <div class="bg-primary p-4 rounded-lg shadow-xl text-center relative max-w-md w-full mx-4 transform scale-95 transition-transform duration-300">
+        <button onclick="hideCatPopup()" class="absolute -top-2 -right-2 text-white bg-red-500 hover:bg-red-600 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold shadow-lg">&times;</button>
+        <h3 class="text-xl font-semibold mb-4 text-main">Here's a random cat for you!</h3>
+        <div id="cat-image-container" class="w-full h-80 bg-tertiary rounded-md flex items-center justify-center overflow-hidden">
+            <p class="text-light animate-pulse">Loading a cute cat...</p>
+        </div>
+        <button onclick="loadNewCat()" class="mt-4 bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition-all shadow-sm">Get Another Cat</button>
+    </div>
+</div>
+
 
 <script>
     // --- DATA STRUCTURE & STATE ---
@@ -250,20 +276,17 @@
             const componentIndex = path[i];
             
             if (!currentCollection || componentIndex >= currentCollection.length) {
-                // Invalid path, index out of bounds
                 return null; 
             }
             component = currentCollection[componentIndex];
 
             if (component && component.type === 'parallel') {
                 if (i + 1 >= path.length) {
-                    // Path ends on a parallel group, which is valid
                     break; 
                 }
-                const branchIndex = path[i + 1]; // Look ahead for branch index
+                const branchIndex = path[i + 1];
                 
                 if (!component.branches || branchIndex >= component.branches.length) {
-                    // Invalid path, branch index out of bounds
                     return null;
                 }
                 currentCollection = component.branches[branchIndex];
@@ -300,7 +323,6 @@
             return { id: componentIdCounter, type: 'resistor', value: null };
         }
         if (type === 'parallel') {
-            // NOTE: Branches now start empty for cleaner building.
             return { id: componentIdCounter, type: 'parallel', branches: [[], []] };
         }
     }
@@ -338,7 +360,6 @@
         if (path.length === 1) {
             parentCollection = circuit;
         } else {
-            // This logic is complex, let's simplify by getting the parent collection directly
             const parentPath = path.slice(0, -1);
             let parentComponent = circuit;
             for (let i=0; i < parentPath.length; i++) {
@@ -354,12 +375,11 @@
         if (parentCollection && Array.isArray(parentCollection)) {
             parentCollection.splice(indexToRemove, 1);
         } else {
-            // Fallback for nested structures
             const parentData = getParentByPath(path);
             if (Array.isArray(parentData.parent)) {
                  parentData.parent.splice(parentData.index, 1);
             } else if (parentData.parent.branches) {
-                parentData.parent.branches[path[path.length -2]].splice(parentData.index,1);
+                 parentData.parent.branches[path[path.length -2]].splice(parentData.index,1);
             }
         }
 
@@ -367,12 +387,34 @@
         drawAndCalculate();
     }
     
+    // START: NEW PARSING FUNCTION
+    function parseResistanceValue(valueStr) {
+        if (typeof valueStr !== 'string' || !valueStr) return null;
+        const lastChar = valueStr.slice(-1).toLowerCase();
+        let numPart = valueStr;
+        let multiplier = 1;
+
+        if (lastChar === 'k') {
+            multiplier = 1e3;
+            numPart = valueStr.slice(0, -1);
+        } else if (lastChar === 'm') {
+            multiplier = 1e6;
+            numPart = valueStr.slice(0, -1);
+        }
+
+        const num = parseFloat(numPart);
+        if (isNaN(num)) return null;
+
+        return num * multiplier;
+    }
+    // END: NEW PARSING FUNCTION
+
     function updateResistorValue(pathStr, value) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
         if (component && component.type === 'resistor') {
-            const parsedValue = parseFloat(value);
-            component.value = isNaN(parsedValue) || parsedValue <= 0 ? null : parsedValue;
+            const parsedValue = parseResistanceValue(value);
+            component.value = parsedValue !== null && parsedValue > 0 ? parsedValue : null;
             drawAndCalculate();
         }
     }
@@ -380,7 +422,6 @@
     function addBranch(pathStr) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
-        // NOTE: Adds an empty branch now.
         component.branches.push([]);
         renderControls();
         drawAndCalculate();
@@ -441,9 +482,9 @@
         if (component.type === 'resistor') {
             innerHTML += `<div class="flex items-center p-2 rounded-md border border-main" style="background-color: var(--bg-primary);">
                 <label class="font-medium text-light mr-2 whitespace-nowrap">R:</label>
-                <input type="number" value="${component.value || ''}" 
+                <input type="text" value="${component.value || ''}" 
                        oninput="updateResistorValue('${pathStr}', this.value)" 
-                       placeholder="Ohms (Ω)"
+                       placeholder="e.g., 100, 2.2k, 1M"
                        class="w-full p-1 border-0 rounded-md focus:ring-1">
             </div>`;
         } else { // parallel group
@@ -667,7 +708,6 @@
     function generateExplanationHtml() {
         if (circuit.length === 0) return '<p>The circuit is empty.</p>';
 
-        // Note: The explanation always uses sequential naming for clarity.
         let counters = { resistor: 1, eq: 1, branch: 1 };
         let allSteps = [];
         let topLevelFormulas = [];
@@ -759,22 +799,18 @@
 
         let resistorCounter = 0;
 
-        // Determine if a path is active for styling
         const isPathActive = !isolatedComponentPath;
 
-        // Draw Battery
         drawBattery(startX, startY, voltageValue + 'V', isPathActive, ['source']);
 
         let currentX = startX + 40;
         ctx.beginPath(); 
         
-        // Main drawing loop
         circuit.forEach((component, index) => {
             const dims = getComponentDimensions(component);
             const path = [index];
             let componentIsActive = isPathActive;
             if (isolatedComponentPath) {
-                 // Top-level series components are always active.
                  componentIsActive = true;
             }
 
@@ -792,7 +828,6 @@
             ctx.moveTo(currentX, startY);
         });
 
-        // Draw connecting wires
         const endX = currentX + 40;
         setDrawStyle(isPathActive, ['end']);
         ctx.lineTo(endX, startY);
@@ -823,7 +858,6 @@
 
             let currentY = y - pTotalHeight / 2;
             
-            // Draw vertical bars for the parallel group
             ctx.beginPath();
             setDrawStyle(isPathActive, path);
             ctx.moveTo(pStartX, y + pTotalHeight / 2);
@@ -838,10 +872,8 @@
                 const branchY = currentY + branchHeight / 2;
                 const pGapX = 20, seriesGap = 20;
 
-                // Check if this branch is on the isolated path
                 let branchIsActive = isPathActive;
                 if(isolatedComponentPath){
-                    // A branch is active if the main path is active AND the isolated path includes this branch's index.
                     branchIsActive = isPathActive && isolatedComponentPath.length > path.length && isolatedComponentPath[path.length] === bIndex;
                 }
 
@@ -934,7 +966,6 @@
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        // Iterate backwards to check topmost components first
         for (let i = drawableComponents.length - 1; i >= 0; i--) {
             const comp = drawableComponents[i];
             if (mouseX >= comp.x && mouseX <= comp.x + comp.width && 
@@ -974,7 +1005,7 @@
 
         if (JSON.stringify(newHoveredPath) !== JSON.stringify(hoveredComponentPath)) {
             hoveredComponentPath = newHoveredPath;
-            drawCircuit(); // Redraw to show hover effect
+            drawCircuit();
         }
     }
 
@@ -1016,6 +1047,29 @@
             drawAndCalculate({force: true});
         }
     }
+    
+    // START: NEW SAVE/LOAD FUNCTIONS
+    function saveCircuit() {
+        if (circuit.length > 0) {
+            localStorage.setItem('userSavedCircuit', JSON.stringify(circuit));
+            alert('Circuit saved to your browser!');
+        } else {
+            alert('Cannot save an empty circuit.');
+        }
+    }
+
+    function loadCircuit() {
+        const savedCircuit = localStorage.getItem('userSavedCircuit');
+        if (savedCircuit) {
+            circuit = JSON.parse(savedCircuit);
+            resetIsolationView();
+            renderControls();
+            drawAndCalculate({ force: true });
+        } else {
+            alert('No saved circuit found in your browser.');
+        }
+    }
+    // END: NEW SAVE/LOAD FUNCTIONS
 
     function buildLadderCircuit() {
         clearCircuit(false);
@@ -1023,22 +1077,20 @@
         addComponent('resistor', '[]');
         updateResistorValue('[0]', 100);
         
-        // This is a parallel group with R2 on one branch, and R3 + the rest on the other.
         addComponent('parallel', '[]');
         addComponent('resistor', '[1, 0]'); // R2
         updateResistorValue('[1, 0, 0]', 100);
 
-        // Branch 2 starts with R3
+        // Branch 2
         addComponent('resistor', '[1, 1]');
         updateResistorValue('[1, 1, 0]', 100);
-        // Then another parallel group
         addComponent('parallel', '[1, 1]');
         addComponent('resistor', '[1, 1, 1, 0]'); // R4
         updateResistorValue('[1, 1, 1, 0, 0]', 100);
         addComponent('resistor', '[1, 1, 1, 1]'); // R5
         updateResistorValue('[1, 1, 1, 1, 0]', 100);
 
-        // Final resistor R6
+        // R6
         addComponent('resistor', '[]');
         updateResistorValue('[2]', 100);
         
@@ -1048,28 +1100,21 @@
 
     function buildNestedExample() {
         clearCircuit(false);
-        // R1
         addComponent('resistor');
         updateResistorValue('[0]', 100);
 
-        // Main parallel group
         addComponent('parallel');
         
-        // Branch 1 of main parallel group
         addComponent('resistor', '[1, 0]');
         updateResistorValue('[1, 0, 0]', 500);
         
-        // Branch 2 of main parallel group starts with a resistor...
         addComponent('resistor', '[1, 1]');
         updateResistorValue('[1, 1, 0]', 250);
-        // ...and is in series with a nested parallel group
         addComponent('parallel', '[1, 1]');
         
-        // Branch 1 of nested parallel group
         addComponent('resistor', '[1, 1, 1, 0]');
         updateResistorValue('[1, 1, 1, 0, 0]', 200);
 
-        // Branch 2 of nested parallel group has two resistors in series
         addComponent('resistor', '[1, 1, 1, 1]'); 
         addComponent('resistor', '[1, 1, 1, 1]'); 
         updateResistorValue('[1, 1, 1, 1, 0]', 150);
@@ -1079,12 +1124,61 @@
         drawAndCalculate({force: true});
     }
 
+    // --- CAT POPUP LOGIC ---
+    const catPopup = document.getElementById('cat-popup');
+    const catPopupContent = catPopup.querySelector('.transform');
+    const catImageContainer = document.getElementById('cat-image-container');
+
+    function showCatPopup() {
+        catPopup.style.display = 'flex';
+        // Use a short timeout to allow the display property to apply before starting the transition
+        setTimeout(() => {
+            catPopup.classList.remove('opacity-0');
+            catPopupContent.classList.remove('scale-95');
+        }, 10);
+        loadNewCat();
+    }
+
+    function hideCatPopup() {
+        catPopup.classList.add('opacity-0');
+        catPopupContent.classList.add('scale-95');
+        // Wait for the transition to finish before hiding the element
+        setTimeout(() => {
+            catPopup.style.display = 'none';
+            catImageContainer.innerHTML = '<p class="text-light animate-pulse">Loading a cute cat...</p>';
+        }, 300);
+    }
+
+    function loadNewCat() {
+        catImageContainer.innerHTML = '<p class="text-light animate-pulse">Loading a cute cat...</p>';
+        const img = new Image();
+        // Add a timestamp to prevent caching and get a new cat every time
+        img.src = `https://cataas.com/cat?_=${new Date().getTime()}`;
+        img.className = 'w-full h-full object-contain rounded-md';
+        img.onload = () => {
+            catImageContainer.innerHTML = '';
+            catImageContainer.appendChild(img);
+        };
+        img.onerror = () => {
+            catImageContainer.innerHTML = '<p class="text-red-500 font-semibold">Could not load a cat. Sorry! 😿</p>';
+        };
+    }
+    
+    // Add event listener to close popup when clicking on the background overlay
+    catPopup.addEventListener('click', function(event) {
+        if (event.target === catPopup) {
+            hideCatPopup();
+        }
+    });
+
     // --- INITIAL STATE ---
     window.onload = () => {
         buildLadderCircuit();
         canvas.addEventListener('click', handleCanvasClick);
         canvas.addEventListener('mousemove', handleCanvasMouseMove);
         canvas.addEventListener('mouseleave', handleCanvasMouseLeave);
+        // Prepare the popup for transitions
+        catPopup.classList.add('opacity-0');
     };
 
     window.onresize = () => drawAndCalculate({force: true});
