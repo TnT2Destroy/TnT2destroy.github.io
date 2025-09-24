@@ -165,26 +165,29 @@
                  <button onclick="addComponent('resistor')" class="flex-grow bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-all shadow-sm transform hover:scale-105">+ Add Series Resistor</button>
                  <button onclick="addComponent('parallel')" class="flex-grow bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-sky-700 transition-all shadow-sm transform hover:scale-105">+ Add Parallel Group</button>
             </div>
-            <h2 class="font-semibold text-main mb-2">Examples</h2>
-            <div class="flex flex-wrap gap-3">
-                 <button onclick="buildLadderCircuit()" class="flex-grow bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-600 transition-all shadow-sm">Load Ladder Example</button>
-                 <button onclick="buildNestedExample()" class="flex-grow bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-600 transition-all shadow-sm">Load Nested Example</button>
-                 <button onclick="simplifyCircuit()" class="flex-grow bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-teal-600 transition-all shadow-sm">Simplify Circuit</button>
-                 <button onclick="clearCircuit()" class="flex-grow bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all shadow-sm">Clear Circuit</button>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mt-4 pt-4 border-t border-main">
+                <div>
+                    <h2 class="font-semibold text-main mb-2">Examples</h2>
+                    <div class="flex flex-col gap-3">
+                         <button onclick="buildLadderCircuit()" class="w-full bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-600 transition-all shadow-sm">Load Ladder Example</button>
+                         <button onclick="buildNestedExample()" class="w-full bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-600 transition-all shadow-sm">Load Nested Example</button>
+                    </div>
+                </div>
+                 <div>
+                    <h2 class="font-semibold text-main mb-2">Circuit Controls</h2>
+                    <div class="flex flex-col gap-3">
+                         <button onclick="simplifyCircuit()" class="w-full bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-teal-600 transition-all shadow-sm">Simplify Circuit</button>
+                         <button onclick="clearCircuit()" class="w-full bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all shadow-sm">Clear Circuit</button>
+                    </div>
+                </div>
             </div>
-            <!-- START: NEW SAVE/LOAD BUTTONS -->
-            <h2 class="font-semibold text-main mb-2 mt-4">Save & Load</h2>
-            <div class="flex flex-wrap gap-3">
-                 <button onclick="saveCircuit()" class="flex-grow bg-emerald-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-emerald-600 transition-all shadow-sm">Save Circuit</button>
-                 <button onclick="loadCircuit()" class="flex-grow bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-amber-600 transition-all shadow-sm">Load Saved Circuit</button>
+             <!-- START: NEW SAVE/LOAD BUTTONS -->
+            <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-main">
+                 <button onclick="saveCircuit()" class="flex-grow bg-emerald-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-emerald-600/80 transition-all shadow-sm">Save Circuit</button>
+                 <button onclick="loadCircuit()" class="flex-grow bg-amber-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-amber-600/80 transition-all shadow-sm">Load Circuit</button>
             </div>
             <!-- END: NEW SAVE/LOAD BUTTONS -->
-             <!-- START: NEW CAT BUTTON -->
-            <h2 class="font-semibold text-main mb-2 mt-4">Feeling Stressed?</h2>
-            <div class="flex flex-wrap gap-3">
-                 <button onclick="showCatPopup()" class="flex-grow bg-pink-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-600 transition-all shadow-sm">Show a Random Cat 🐱</button>
-            </div>
-            <!-- END: NEW CAT BUTTON -->
         </div>
     </div>
     
@@ -215,6 +218,12 @@
         <div id="explanation-content" class="mt-4 p-4 rounded-lg text-left bg-tertiary border-main" style="display: none; background-color: var(--bg-tertiary);">
             <!-- Explanation will be injected here -->
         </div>
+    </div>
+
+    <!-- Cat Button Section -->
+    <div class="text-center mt-8 pt-6 border-t border-main">
+        <p class="text-light mb-3">Feeling overwhelmed by all the calculations?</p>
+        <button onclick="showCatPopup()" class="bg-pink-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-pink-600 transition-all shadow-lg transform hover:scale-105">Take a Break with a Random Cat 🐱</button>
     </div>
 </div>
 
@@ -1187,3 +1196,4 @@
 <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 </body>
 </html>
+
