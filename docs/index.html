@@ -26,6 +26,8 @@
             --bg-animated-light: linear-gradient(-45deg, #e0f2fe, #f0f9ff, #ecfeff, #f0fdf4);
             --bg-main-container-light: rgba(255, 255, 255, 0.7);
             --border-main-container-light: rgba(255, 255, 255, 0.2);
+            --highlight-stroke: #2563eb; /* blue-600 */
+            --hover-stroke: #ea580c; /* orange-600 */
         }
 
         html.dark {
@@ -47,6 +49,8 @@
             --bg-animated-dark: linear-gradient(-45deg, #0c4a6e, #0f172a, #1e293b, #334155);
             --bg-main-container-dark: rgba(30, 41, 59, 0.7);
             --border-main-container-dark: rgba(71, 85, 105, 0.3);
+            --highlight-stroke: #60a5fa; /* blue-400 */
+            --hover-stroke: #f97316; /* orange-500 */
         }
         
         @keyframes gradient-animation {
@@ -134,13 +138,16 @@
 
 
     <header class="text-center mb-6 pb-4 border-b border-main">
-        <h1 class="text-3xl sm:text-4xl font-bold header-text">Visual V.I.R.P. Circuit Calculator ⚡</h1>
-        <p class="subheader-text mt-1">Build and analyze complex circuits with nested parallel groups.</p>
+        <h1 class="text-3xl sm:text-4xl font-bold header-text">Interactive V.I.R.P. Circuit Calculator ⚡</h1>
+        <p class="subheader-text mt-1">Build, analyze, and interact with complex circuits.</p>
     </header>
     
+    <p class="text-center text-sm text-light mb-4">This calculator handles any series-parallel circuit, including complex nested and ladder circuits. Bridge circuits require a different analysis method.</p>
+
     <!-- Canvas for Circuit Diagram -->
-    <div class="canvas-bg rounded-lg p-2 mb-6 overflow-x-auto">
-      <canvas id="circuit-canvas" class="h-auto"></canvas>
+    <div class="canvas-bg rounded-lg p-2 mb-6 overflow-x-auto relative">
+        <canvas id="circuit-canvas" class="h-auto"></canvas>
+        <button id="reset-view-btn" onclick="resetIsolationView()" class="absolute top-2 right-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-lg hover:bg-blue-600 transition-all shadow-sm text-sm" style="display: none;">Show Full Circuit</button>
     </div>
 
     <!-- Main Controls -->
@@ -151,12 +158,19 @@
             <input type="number" id="voltage" placeholder="e.g., 12" value="24" oninput="drawAndCalculate()" class="w-full p-2 border rounded-md focus:ring-2 transition">
         </div>
 
-        <!-- Add Components -->
+        <!-- Add Components & Examples -->
         <div class="control-panel p-4 rounded-lg md:col-span-2">
             <h2 class="font-semibold text-main mb-2">Circuit Builder</h2>
-            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-wrap gap-3 mb-4">
                  <button onclick="addComponent('resistor')" class="flex-grow bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-all shadow-sm transform hover:scale-105">+ Add Series Resistor</button>
                  <button onclick="addComponent('parallel')" class="flex-grow bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-sky-700 transition-all shadow-sm transform hover:scale-105">+ Add Parallel Group</button>
+            </div>
+            <h2 class="font-semibold text-main mb-2">Examples</h2>
+            <div class="flex flex-wrap gap-3">
+                 <button onclick="buildLadderCircuit()" class="flex-grow bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-600 transition-all shadow-sm">Load Ladder Example</button>
+                 <button onclick="buildNestedExample()" class="flex-grow bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-600 transition-all shadow-sm">Load Nested Example</button>
+                 <button onclick="simplifyCircuit()" class="flex-grow bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-teal-600 transition-all shadow-sm">Simplify Circuit</button>
+                 <button onclick="clearCircuit()" class="flex-grow bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all shadow-sm">Clear Circuit</button>
             </div>
         </div>
     </div>
@@ -179,6 +193,16 @@
 
     <!-- Results Table -->
     <div id="results-container" class="overflow-x-auto"></div>
+
+    <!-- Explanation Section -->
+    <div id="explanation-section" class="mt-4 text-center" style="display: none;">
+        <button id="explain-btn" onclick="toggleExplanation()" class="bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all shadow-sm">
+            Explain Equations
+        </button>
+        <div id="explanation-content" class="mt-4 p-4 rounded-lg text-left bg-tertiary border-main" style="display: none; background-color: var(--bg-tertiary);">
+            <!-- Explanation will be injected here -->
+        </div>
+    </div>
 </div>
 
 <script>
@@ -188,6 +212,11 @@
     let useSequentialNaming = true;
     const canvas = document.getElementById('circuit-canvas');
     const ctx = canvas.getContext('2d');
+
+    // --- INTERACTIVITY STATE ---
+    let drawableComponents = [];
+    let isolatedComponentPath = null;
+    let hoveredComponentPath = null;
 
     // --- THEME MANAGEMENT ---
     function applyTheme() {
@@ -214,21 +243,38 @@
     // --- CORE COMPONENT MANAGEMENT ---
 
     function getComponentByPath(path) {
-        let currentLevel = circuit;
+        let currentCollection = circuit;
         let component = null;
+
         for (let i = 0; i < path.length; i++) {
-            const index = path[i];
-            component = currentLevel[index];
-            if (component && component.type === 'parallel' && i < path.length - 1) {
-                const branchIndex = path[++i];
-                currentLevel = component.branches[branchIndex];
+            const componentIndex = path[i];
+            
+            if (!currentCollection || componentIndex >= currentCollection.length) {
+                // Invalid path, index out of bounds
+                return null; 
+            }
+            component = currentCollection[componentIndex];
+
+            if (component && component.type === 'parallel') {
+                if (i + 1 >= path.length) {
+                    // Path ends on a parallel group, which is valid
+                    break; 
+                }
+                const branchIndex = path[i + 1]; // Look ahead for branch index
+                
+                if (!component.branches || branchIndex >= component.branches.length) {
+                    // Invalid path, branch index out of bounds
+                    return null;
+                }
+                currentCollection = component.branches[branchIndex];
+                i++; // Manually skip the branch index we just used
             }
         }
         return component;
     }
 
     function getParentByPath(path) {
-        if (path.length === 1) return { parent: circuit, index: path[0] };
+        if (path.length <= 1) return { parent: circuit, index: path[0] };
         
         let currentLevel = circuit;
         let parent = circuit;
@@ -254,10 +300,8 @@
             return { id: componentIdCounter, type: 'resistor', value: null };
         }
         if (type === 'parallel') {
-            return { id: componentIdCounter, type: 'parallel', branches: [
-                [createComponent('resistor')],
-                [createComponent('resistor')]
-            ]};
+            // NOTE: Branches now start empty for cleaner building.
+            return { id: componentIdCounter, type: 'parallel', branches: [[], []] };
         }
     }
     
@@ -267,8 +311,18 @@
         if (path.length === 0) {
             circuit.push(newComponent);
         } else {
-            const parentBranch = getComponentByPath(path).branches[path[path.length - 1]];
-            parentBranch.push(newComponent);
+            let parentGroup = circuit;
+            let targetBranch = null;
+
+            for(let i = 0; i < path.length; i++) {
+                if(i % 2 === 0) { // component index
+                    parentGroup = parentGroup[path[i]];
+                } else { // branch index
+                    targetBranch = parentGroup.branches[path[i]];
+                    parentGroup = targetBranch;
+                }
+            }
+            targetBranch.push(newComponent);
         }
         renderControls();
         drawAndCalculate();
@@ -276,8 +330,39 @@
 
     function removeComponent(pathStr) {
         const path = JSON.parse(pathStr);
-        const { parent, index } = getParentByPath(path);
-        parent.splice(index, 1);
+        if (!path || path.length === 0) return;
+
+        const indexToRemove = path[path.length - 1];
+        let parentCollection;
+
+        if (path.length === 1) {
+            parentCollection = circuit;
+        } else {
+            // This logic is complex, let's simplify by getting the parent collection directly
+            const parentPath = path.slice(0, -1);
+            let parentComponent = circuit;
+            for (let i=0; i < parentPath.length; i++) {
+                if (parentComponent[parentPath[i]]) {
+                    parentComponent = parentComponent[parentPath[i]];
+                } else if (parentComponent.branches && parentComponent.branches[parentPath[i]]) {
+                     parentComponent = parentComponent.branches[parentPath[i]];
+                }
+            }
+            parentCollection = parentComponent;
+        }
+        
+        if (parentCollection && Array.isArray(parentCollection)) {
+            parentCollection.splice(indexToRemove, 1);
+        } else {
+            // Fallback for nested structures
+            const parentData = getParentByPath(path);
+            if (Array.isArray(parentData.parent)) {
+                 parentData.parent.splice(parentData.index, 1);
+            } else if (parentData.parent.branches) {
+                parentData.parent.branches[path[path.length -2]].splice(parentData.index,1);
+            }
+        }
+
         renderControls();
         drawAndCalculate();
     }
@@ -285,15 +370,18 @@
     function updateResistorValue(pathStr, value) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
-        const parsedValue = parseFloat(value);
-        component.value = isNaN(parsedValue) || parsedValue <= 0 ? null : parsedValue;
-        drawAndCalculate();
+        if (component && component.type === 'resistor') {
+            const parsedValue = parseFloat(value);
+            component.value = isNaN(parsedValue) || parsedValue <= 0 ? null : parsedValue;
+            drawAndCalculate();
+        }
     }
     
     function addBranch(pathStr) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
-        component.branches.push([createComponent('resistor')]);
+        // NOTE: Adds an empty branch now.
+        component.branches.push([]);
         renderControls();
         drawAndCalculate();
     }
@@ -365,10 +453,10 @@
                     <div class="branch-bg p-3 rounded-lg border branch-border">
                         <div class="flex justify-between items-center mb-2">
                             <h4 class="font-semibold text-accent-color">Branch ${bIndex + 1}</h4>
-                            <button onclick="removeBranch('${pathStr}', ${bIndex})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900/80">Remove Branch</button>
+                            ${component.branches.length > 1 ? `<button onclick="removeBranch('${pathStr}', ${bIndex})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900/80">Remove Branch</button>` : ''}
                         </div>
                         <div class="pl-4 border-l-2 border-main space-y-3" id="branch-${path.join('-')}-${bIndex}"></div>
-                        <div class="mt-3 pt-2 border-t border-tertiary flex flex-wrap gap-2">
+                        <div class="mt-3 pt-2 border-t border-main flex flex-wrap gap-2">
                             <button onclick="addComponent('resistor', '${JSON.stringify([...path, bIndex])}')" class="bg-green-500 text-white text-xs font-semibold py-1 px-2 rounded hover:bg-green-600 transition">+ Resistor</button>
                             <button onclick="addComponent('parallel', '${JSON.stringify([...path, bIndex])}')" class="bg-cyan-500 text-white text-xs font-semibold py-1 px-2 rounded hover:bg-cyan-600 transition">+ Nested Parallel</button>
                         </div>
@@ -376,7 +464,7 @@
             });
             innerHTML += '</div>';
             innerHTML += `<div class="mt-4 pt-4 border-t border-main">
-                <button onclick="addBranch('${pathStr}')" class="bg-sky-500 text-white text-sm font-semibold py-1 px-3 rounded-md hover:bg-sky-600 transition">+ Add Parallel Branch</button>
+                <button onclick="addBranch('${pathStr}')" class="bg-purple-600 text-white text-sm font-semibold py-1 px-3 rounded-md hover:bg-purple-700 transition">+ Add Parallel Branch</button>
             </div>`;
         }
 
@@ -426,7 +514,7 @@
         const totalResistance = circuit.reduce((sum, comp) => sum + getEquivalentResistance(comp), 0);
         
         if (totalResistance === 0) {
-            resultsContainer.innerHTML = `<p class="text-center text-red-600 font-semibold">Error: Total resistance is zero. Avoid short circuits.</p>`;
+            resultsContainer.innerHTML = `<p class="text-center text-yellow-600 font-semibold">Circuit is incomplete or has a short. Add components and resistor values.</p>`;
             return;
         }
         
@@ -499,10 +587,121 @@
                 </tr>
             </tbody></table></div>`;
         resultsContainer.innerHTML = resultsHTML;
+
+        // Show and populate the explanation section
+        const explanationSection = document.getElementById('explanation-section');
+        if (circuit.length > 0) {
+            explanationSection.style.display = 'block';
+            const explanationContent = document.getElementById('explanation-content');
+            explanationContent.innerHTML = generateExplanationHtml();
+        } else {
+            explanationSection.style.display = 'none';
+        }
     }
 
 
-    // --- DRAWING LOGIC (RECURSIVE) ---
+    // --- EXPLANATION LOGIC ---
+    function toggleExplanation() {
+        const content = document.getElementById('explanation-content');
+        const btn = document.getElementById('explain-btn');
+        const isVisible = content.style.display === 'block';
+        
+        if (isVisible) {
+            content.style.display = 'none';
+            btn.textContent = 'Explain Equations';
+        } else {
+            content.style.display = 'block';
+            btn.textContent = 'Hide Equations';
+        }
+    }
+
+    function getExplanationSteps(component, counters) {
+        if (component.type === 'resistor') {
+            const formula = `R${counters.resistor}`;
+            counters.resistor++;
+            return { formula: formula, steps: [] };
+        }
+
+        if (component.type === 'parallel') {
+            let allSteps = [];
+            let branchFormulas = [];
+
+            component.branches.forEach(branch => {
+                if (branch.length === 0) return;
+
+                let seriesFormulas = [];
+                branch.forEach(subComp => {
+                    const subResult = getExplanationSteps(subComp, counters);
+                    allSteps.push(...subResult.steps);
+                    seriesFormulas.push(subResult.formula);
+                });
+
+                if (seriesFormulas.length > 1) {
+                    const branchFormulaName = `R_b${counters.branch}`;
+                    const branchEquation = `${branchFormulaName} = ${seriesFormulas.join(' + ')}`;
+                    allSteps.push(branchEquation);
+                    branchFormulas.push(branchFormulaName);
+                    counters.branch++;
+                } else if (seriesFormulas.length === 1) {
+                    branchFormulas.push(seriesFormulas[0]);
+                }
+            });
+            
+            if (branchFormulas.length === 0) return { formula: '0', steps: [] };
+            if (branchFormulas.length === 1) {
+                return { formula: branchFormulas[0], steps: allSteps };
+            }
+
+            const eqFormulaName = `R_eq${counters.eq}`;
+            const inverseTerms = branchFormulas.map(f => `1/${f}`).join(' + ');
+            const eqEquation = `${eqFormulaName} = 1 / (${inverseTerms})`;
+            allSteps.push(eqEquation);
+            counters.eq++;
+
+            return { formula: eqFormulaName, steps: allSteps };
+        }
+        
+        return { formula: '', steps: [] };
+    }
+
+    function generateExplanationHtml() {
+        if (circuit.length === 0) return '<p>The circuit is empty.</p>';
+
+        // Note: The explanation always uses sequential naming for clarity.
+        let counters = { resistor: 1, eq: 1, branch: 1 };
+        let allSteps = [];
+        let topLevelFormulas = [];
+
+        circuit.forEach(component => {
+            if (getEquivalentResistance(component) > 0) {
+                const result = getExplanationSteps(component, counters);
+                allSteps.push(...result.steps);
+                topLevelFormulas.push(result.formula);
+            }
+        });
+
+        let html = '<h4 class="font-bold text-lg mb-2 text-main">Calculation Steps:</h4><p class="text-sm text-light mb-3">The calculator simplifies the circuit from the inside out. Here are the steps:</p><div class="space-y-2 font-mono text-sm text-accent-color">';
+
+        const uniqueSteps = [...new Set(allSteps)];
+        uniqueSteps.forEach(step => {
+            html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">${step.replace(/ /g, '&nbsp;')}</div>`;
+        });
+        
+        const totalResistanceFormula = `R_total = ${topLevelFormulas.join(' + ')}`;
+        html += `<div class="p-2 rounded font-bold" style="background-color: var(--bg-primary);">${totalResistanceFormula.replace(/ /g, '&nbsp;')}</div>`;
+        html += '</div>';
+        
+        html += '<h4 class="font-bold text-lg mt-4 mb-2 text-main">Primary Formulas (Ohm\'s Law):</h4>';
+        html += '<div class="space-y-2 font-mono text-sm text-accent-color">';
+        html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">I_total = V_source / R_total</div>`;
+        html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">P_total = V_source * I_total</div>`;
+        html += '</div>';
+
+        return html;
+    }
+
+
+    // --- DRAWING LOGIC (RECURSIVE & INTERACTIVE) ---
 
     function drawAndCalculate(options = {force: false}) {
         clearTimeout(window.drawTimeout);
@@ -522,7 +721,7 @@
             let totalHeight = 0;
             const branchDimensions = component.branches.map(branch => {
                 let branchWidth = 0;
-                let maxHeight = 0;
+                let maxHeight = 50; // min height for empty branch
                 branch.forEach((subComp, i) => {
                     const dims = getComponentDimensions(subComp);
                     branchWidth += dims.width;
@@ -538,45 +737,64 @@
                  if(i > 0) totalHeight += pGapY;
             });
             
-            return { width: maxWidth + pGapX * 2, height: totalHeight };
+            return { width: maxWidth + pGapX * 2, height: Math.max(totalHeight, 50) };
         }
         return { width: 0, height: 0 };
     }
 
     function drawCircuit() {
+        drawableComponents = []; // Clear for hit detection
         const totalDimensions = getComponentDimensions({type: 'parallel', branches: [circuit]});
         const requiredWidth = totalDimensions.width + 200;
-        const isDark = document.documentElement.classList.contains('dark');
-        const strokeColor = isDark ? '#e2e8f0' : '#334155';
-
+        
         canvas.width = Math.max(canvas.parentElement.offsetWidth, requiredWidth);
         canvas.height = totalDimensions.height + 100;
         
         const voltageValue = document.getElementById('voltage').value || 'V';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = strokeColor;
-        ctx.fillStyle = strokeColor;
         ctx.lineWidth = 2; ctx.font = '14px Inter'; ctx.textAlign = 'center';
         
         const startX = 60;
         const startY = canvas.height / 2;
 
-        drawBattery(startX, startY, voltageValue + 'V');
-        let currentX = startX + 40;
-        ctx.beginPath(); ctx.moveTo(currentX, startY);
-        
         let resistorCounter = 0;
 
+        // Determine if a path is active for styling
+        const isPathActive = !isolatedComponentPath;
+
+        // Draw Battery
+        drawBattery(startX, startY, voltageValue + 'V', isPathActive, ['source']);
+
+        let currentX = startX + 40;
+        ctx.beginPath(); 
+        
+        // Main drawing loop
         circuit.forEach((component, index) => {
-             const dims = getComponentDimensions(component);
-             currentX += 20;
-             ctx.lineTo(currentX, startY);
-             resistorCounter = drawComponent(component, currentX, startY, { name: `R${index + 1}` }, resistorCounter);
-             currentX += dims.width;
-             ctx.moveTo(currentX, startY);
+            const dims = getComponentDimensions(component);
+            const path = [index];
+            let componentIsActive = isPathActive;
+            if (isolatedComponentPath) {
+                 // Top-level series components are always active.
+                 componentIsActive = true;
+            }
+
+            setDrawStyle(isPathActive, path);
+            ctx.moveTo(currentX, startY);
+            currentX += 20;
+            ctx.lineTo(currentX, startY);
+            ctx.stroke();
+
+            resistorCounter = drawComponentOnCanvas(component, currentX, startY, { name: `R${index + 1}` }, resistorCounter, path, componentIsActive);
+            currentX += dims.width;
+            
+            setDrawStyle(isPathActive, path);
+            ctx.beginPath();
+            ctx.moveTo(currentX, startY);
         });
 
+        // Draw connecting wires
         const endX = currentX + 40;
+        setDrawStyle(isPathActive, ['end']);
         ctx.lineTo(endX, startY);
         ctx.lineTo(endX, canvas.height - 20);
         ctx.lineTo(20, canvas.height - 20);
@@ -585,11 +803,11 @@
         ctx.stroke();
     }
     
-    function drawComponent(component, x, y, namePrefix, counter) {
+    function drawComponentOnCanvas(component, x, y, namePrefix, counter, path, isPathActive) {
         if (component.type === 'resistor') {
             counter++;
             const resistorName = useSequentialNaming ? `R${counter}` : namePrefix.name;
-            drawResistor(x, y, resistorName, component.value);
+            drawResistor(x, y, resistorName, component.value, isPathActive, path);
             return counter;
         }
 
@@ -605,34 +823,59 @@
 
             let currentY = y - pTotalHeight / 2;
             
-            ctx.moveTo(pStartX, currentY);
-            ctx.lineTo(pStartX, y + pTotalHeight / 2);
-            ctx.moveTo(pEndX, currentY);
-            ctx.lineTo(pEndX, y + pTotalHeight / 2);
+            // Draw vertical bars for the parallel group
+            ctx.beginPath();
+            setDrawStyle(isPathActive, path);
+            ctx.moveTo(pStartX, y + pTotalHeight / 2);
+            ctx.lineTo(pStartX, y - pTotalHeight/2);
+            ctx.moveTo(pEndX, y + pTotalHeight / 2);
+            ctx.lineTo(pEndX, y - pTotalHeight / 2);
+            ctx.stroke();
 
             component.branches.forEach((branch, bIndex) => {
+                const branchPath = [...path, bIndex];
                 const branchHeight = branchDims[bIndex].height;
                 const branchY = currentY + branchHeight / 2;
                 const pGapX = 20, seriesGap = 20;
 
+                // Check if this branch is on the isolated path
+                let branchIsActive = isPathActive;
+                if(isolatedComponentPath){
+                    // A branch is active if the main path is active AND the isolated path includes this branch's index.
+                    branchIsActive = isPathActive && isolatedComponentPath.length > path.length && isolatedComponentPath[path.length] === bIndex;
+                }
+
+                ctx.beginPath();
+                setDrawStyle(branchIsActive, branchPath);
                 ctx.moveTo(pStartX, branchY);
                 ctx.lineTo(pStartX + pGapX, branchY);
+                ctx.stroke();
+
                 let branchCurrentX = pStartX + pGapX;
                 
                 branch.forEach((subComp, i) => {
+                    const subPath = [...branchPath, i];
                     const subDims = getComponentDimensions(subComp);
                     const newName = `${namePrefix.name}.${bIndex + 1}.${i + 1}`;
-                    counter = drawComponent(subComp, branchCurrentX, branchY, { name: newName }, counter);
+                    
+                    counter = drawComponentOnCanvas(subComp, branchCurrentX, branchY, { name: newName }, counter, subPath, branchIsActive);
                     branchCurrentX += subDims.width;
+
+                    ctx.beginPath();
+                    setDrawStyle(branchIsActive, subPath);
                     ctx.moveTo(branchCurrentX, branchY);
                     if (i < branch.length - 1) {
                          branchCurrentX += seriesGap;
                          ctx.lineTo(branchCurrentX, branchY);
                     }
+                     ctx.stroke();
                 });
-
+                
+                ctx.beginPath();
+                setDrawStyle(branchIsActive, branchPath);
                 ctx.lineTo(pEndX - pGapX, branchY);
                 ctx.moveTo(pEndX, branchY);
+                ctx.stroke();
 
                 currentY += branchHeight + 60; // pGapY
             });
@@ -640,45 +883,213 @@
         }
         return counter;
     }
+    
+    function setDrawStyle(isActive, path) {
+        const isDark = document.documentElement.classList.contains('dark');
+        const defaultStroke = isDark ? '#e2e8f0' : '#334155';
+        const highlightStroke = getComputedStyle(document.documentElement).getPropertyValue('--highlight-stroke').trim();
+        const hoverStroke = getComputedStyle(document.documentElement).getPropertyValue('--hover-stroke').trim();
 
-    function drawBattery(x, y, label) { ctx.beginPath(); ctx.moveTo(x - 20, y); ctx.lineTo(x, y); ctx.moveTo(x + 5, y - 12); ctx.lineTo(x + 5, y + 12); ctx.moveTo(x + 15, y - 20); ctx.lineTo(x + 15, y + 20); ctx.moveTo(x + 20, y); ctx.lineTo(x + 40, y); ctx.stroke(); ctx.fillText(label, x + 10, y - 25); }
-    function drawResistor(x, y, label, value) { const width = 50, height = 16, lead = 5; const zigzagWidth = width - 2 * lead, numPeaks = 3, segments = numPeaks * 2; const segWidth = zigzagWidth / segments; let currentZigzagX = x + lead; ctx.moveTo(x, y); ctx.lineTo(currentZigzagX, y); for (let i = 0; i < segments; i++) { const yOffset = (i % 2 === 0) ? -height/2 : height/2; currentZigzagX += segWidth; ctx.lineTo(currentZigzagX, y + yOffset); } ctx.lineTo(x + width, y); ctx.fillText(label, x + width/2, y - 15); ctx.fillText((value || '?') + ' Ω', x + width/2, y + 25); }
+        ctx.globalAlpha = isActive ? 1.0 : 0.2;
+        ctx.strokeStyle = defaultStroke;
+        ctx.fillStyle = defaultStroke;
+
+        if (isolatedComponentPath && JSON.stringify(path) === JSON.stringify(isolatedComponentPath)) {
+            ctx.strokeStyle = highlightStroke;
+            ctx.fillStyle = highlightStroke;
+        }
+        if (hoveredComponentPath && JSON.stringify(path) === JSON.stringify(hoveredComponentPath)) {
+            ctx.strokeStyle = hoverStroke;
+            ctx.fillStyle = hoverStroke;
+            ctx.globalAlpha = 1.0;
+        }
+    }
+
+    function drawBattery(x, y, label, isActive, path) { 
+        ctx.beginPath(); 
+        setDrawStyle(isActive, path);
+        ctx.moveTo(x - 20, y); ctx.lineTo(x, y); ctx.moveTo(x + 5, y - 12); ctx.lineTo(x + 5, y + 12); ctx.moveTo(x + 15, y - 20); ctx.lineTo(x + 15, y + 20); ctx.moveTo(x + 20, y); ctx.lineTo(x + 40, y); ctx.stroke(); ctx.fillText(label, x + 10, y - 25); 
+    }
+    function drawResistor(x, y, label, value, isActive, path) { 
+        const width = 60, height = 16, lead = 5; 
+        drawableComponents.push({path, x, y: y - height, width, height: height * 2});
+
+        const zigzagWidth = width - 2 * lead, numPeaks = 3, segments = numPeaks * 2; const segWidth = zigzagWidth / segments; let currentZigzagX = x + lead; 
+        
+        ctx.beginPath();
+        setDrawStyle(isActive, path);
+        ctx.moveTo(x, y); ctx.lineTo(currentZigzagX, y); 
+        for (let i = 0; i < segments; i++) { const yOffset = (i % 2 === 0) ? -height/2 : height/2; currentZigzagX += segWidth; ctx.lineTo(currentZigzagX, y + yOffset); } 
+        ctx.lineTo(x + width, y);
+        ctx.stroke();
+
+        ctx.fillText(label, x + width/2, y - 20); 
+        ctx.fillText((value || '?') + ' Ω', x + width/2, y + 25);
+    }
     function formatValue(value, unit) { if (typeof value !== 'number' || isNaN(value)) return 'N/A'; if (value === 0) return `0 ${unit}`; const absValue = Math.abs(value); if (unit === 'A' || unit === 'W' || unit === 'V') { if (absValue < 1e-6) return (value * 1e9).toFixed(2) + ` n${unit}`; if (absValue < 1e-3) return (value * 1e6).toFixed(2) + ` µ${unit}`; if (absValue < 1) return (value * 1000).toFixed(2) + ` m${unit}`; } if (absValue >= 1e6) return (value / 1e6).toFixed(2) + ` M${unit}`; if (absValue >= 1e3) return (value / 1e3).toFixed(2) + ` k${unit}`; return value.toFixed(3) + ` ${unit}`; }
 
-    // --- INITIAL STATE ---
-    window.onload = () => {
-        // Example circuit to demonstrate nesting
-        addComponent('resistor');
-        circuit[0].value = 100;
+    // --- CANVAS INTERACTIVITY ---
+    function handleCanvasClick(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
 
-        addComponent('parallel');
+        // Iterate backwards to check topmost components first
+        for (let i = drawableComponents.length - 1; i >= 0; i--) {
+            const comp = drawableComponents[i];
+            if (mouseX >= comp.x && mouseX <= comp.x + comp.width && 
+                mouseY >= comp.y && mouseY <= comp.y + comp.height) {
+                
+                const pathStr = JSON.stringify(comp.path);
+                if (isolatedComponentPath && JSON.stringify(isolatedComponentPath) === pathStr) {
+                    isolatedComponentPath = null; // Toggle off
+                } else {
+                    isolatedComponentPath = comp.path;
+                }
+                document.getElementById('reset-view-btn').style.display = isolatedComponentPath ? 'block' : 'none';
+                drawCircuit();
+                return;
+            }
+        }
+    }
+
+    function handleCanvasMouseMove(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        let newHoveredPath = null;
+        let onComponent = false;
+
+        for (let i = drawableComponents.length - 1; i >= 0; i--) {
+            const comp = drawableComponents[i];
+            if (mouseX >= comp.x && mouseX <= comp.x + comp.width && 
+                mouseY >= comp.y && mouseY <= comp.y + comp.height) {
+                newHoveredPath = comp.path;
+                onComponent = true;
+                break;
+            }
+        }
         
-        const mainP_B1_R1_path = '[1, 0, 0]';
-        updateResistorValue(mainP_B1_R1_path, 500);
+        canvas.style.cursor = onComponent ? 'pointer' : 'default';
+
+        if (JSON.stringify(newHoveredPath) !== JSON.stringify(hoveredComponentPath)) {
+            hoveredComponentPath = newHoveredPath;
+            drawCircuit(); // Redraw to show hover effect
+        }
+    }
+
+    function handleCanvasMouseLeave() {
+        if(hoveredComponentPath){
+            hoveredComponentPath = null;
+            drawCircuit();
+        }
+    }
+
+    function resetIsolationView() {
+        isolatedComponentPath = null;
+        document.getElementById('reset-view-btn').style.display = 'none';
+        drawAndCalculate({force: true});
+    }
+
+    // --- CIRCUIT BUILDER FUNCTIONS ---
+    function clearCircuit(redraw = true) {
+        circuit = [];
+        resetIsolationView();
+        if (redraw) {
+            renderControls();
+            drawAndCalculate({force: true});
+        }
+    }
+
+    function simplifyCircuit() {
+        const totalResistance = circuit.reduce((sum, comp) => sum + getEquivalentResistance(comp), 0);
         
+        if (totalResistance > 0) {
+            clearCircuit(false);
+            addComponent('resistor', '[]'); 
+
+            const newResistor = getComponentByPath([0]);
+            if (newResistor) {
+                newResistor.value = parseFloat(totalResistance.toFixed(3));
+            }
+            renderControls();
+            drawAndCalculate({force: true});
+        }
+    }
+
+    function buildLadderCircuit() {
+        clearCircuit(false);
+        // R1
+        addComponent('resistor', '[]');
+        updateResistorValue('[0]', 100);
+        
+        // This is a parallel group with R2 on one branch, and R3 + the rest on the other.
+        addComponent('parallel', '[]');
+        addComponent('resistor', '[1, 0]'); // R2
+        updateResistorValue('[1, 0, 0]', 100);
+
+        // Branch 2 starts with R3
+        addComponent('resistor', '[1, 1]');
+        updateResistorValue('[1, 1, 0]', 100);
+        // Then another parallel group
         addComponent('parallel', '[1, 1]');
-        
-        const nestedP_B1_R1_path = '[1, 1, 0, 0, 0]';
-        updateResistorValue(nestedP_B1_R1_path, 200);
+        addComponent('resistor', '[1, 1, 1, 0]'); // R4
+        updateResistorValue('[1, 1, 1, 0, 0]', 100);
+        addComponent('resistor', '[1, 1, 1, 1]'); // R5
+        updateResistorValue('[1, 1, 1, 1, 0]', 100);
 
-        addComponent('resistor', '[1, 1, 0, 1]'); 
-        const nestedP_B2_R1_path = '[1, 1, 0, 1, 0]';
-        const nestedP_B2_R2_path = '[1, 1, 0, 1, 1]';
-        updateResistorValue(nestedP_B2_R1_path, 150);
-        updateResistorValue(nestedP_B2_R2_path, 50);
-        removeComponent('[1, 1, 1]');
+        // Final resistor R6
+        addComponent('resistor', '[]');
+        updateResistorValue('[2]', 100);
         
         renderControls();
         drawAndCalculate({force: true});
+    }
+
+    function buildNestedExample() {
+        clearCircuit(false);
+        // R1
+        addComponent('resistor');
+        updateResistorValue('[0]', 100);
+
+        // Main parallel group
+        addComponent('parallel');
+        
+        // Branch 1 of main parallel group
+        addComponent('resistor', '[1, 0]');
+        updateResistorValue('[1, 0, 0]', 500);
+        
+        // Branch 2 of main parallel group starts with a resistor...
+        addComponent('resistor', '[1, 1]');
+        updateResistorValue('[1, 1, 0]', 250);
+        // ...and is in series with a nested parallel group
+        addComponent('parallel', '[1, 1]');
+        
+        // Branch 1 of nested parallel group
+        addComponent('resistor', '[1, 1, 1, 0]');
+        updateResistorValue('[1, 1, 1, 0, 0]', 200);
+
+        // Branch 2 of nested parallel group has two resistors in series
+        addComponent('resistor', '[1, 1, 1, 1]'); 
+        addComponent('resistor', '[1, 1, 1, 1]'); 
+        updateResistorValue('[1, 1, 1, 1, 0]', 150);
+        updateResistorValue('[1, 1, 1, 1, 1]', 50);
+
+        renderControls();
+        drawAndCalculate({force: true});
+    }
+
+    // --- INITIAL STATE ---
+    window.onload = () => {
+        buildLadderCircuit();
+        canvas.addEventListener('click', handleCanvasClick);
+        canvas.addEventListener('mousemove', handleCanvasMouseMove);
+        canvas.addEventListener('mouseleave', handleCanvasMouseLeave);
     };
 
     window.onresize = () => drawAndCalculate({force: true});
-
 </script>
 
 <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 </body>
 </html>
-
-
-
