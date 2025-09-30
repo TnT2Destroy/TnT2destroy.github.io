@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi derp</title>
+    <title>Hi All! and Derp.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -173,12 +173,14 @@
                     </div>
                 </div>
             </div>
-             <!-- START: NEW SAVE/LOAD BUTTONS -->
-            <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-main">
-                 <button onclick="saveCircuit()" class="flex-grow bg-emerald-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-emerald-600/80 transition-all shadow-sm">Save Circuit</button>
-                 <button onclick="loadCircuit()" class="flex-grow bg-amber-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-amber-600/80 transition-all shadow-sm">Load Circuit</button>
+            <!-- START: SAVE/LOAD/IMPORT/EXPORT BUTTONS -->
+            <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-main">
+                 <button onclick="saveCircuit()" class="w-full bg-emerald-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-emerald-600/80 transition-all shadow-sm">Save to Browser</button>
+                 <button onclick="loadCircuit()" class="w-full bg-amber-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-amber-600/80 transition-all shadow-sm">Load from Browser</button>
+                 <button onclick="exportCircuit()" class="w-full bg-sky-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-sky-600/80 transition-all shadow-sm">Export to File</button>
+                 <button onclick="importCircuit()" class="w-full bg-indigo-500/80 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-indigo-600/80 transition-all shadow-sm">Import from File</button>
             </div>
-            <!-- END: NEW SAVE/LOAD BUTTONS -->
+            <!-- END: SAVE/LOAD/IMPORT/EXPORT BUTTONS -->
         </div>
     </div>
     
@@ -387,7 +389,6 @@
         drawAndCalculate();
     }
     
-    // START: NEW PARSING FUNCTION
     function parseResistanceValue(valueStr) {
         if (typeof valueStr !== 'string' || !valueStr) return null;
         const lastChar = valueStr.slice(-1).toLowerCase();
@@ -407,7 +408,6 @@
 
         return num * multiplier;
     }
-    // END: NEW PARSING FUNCTION
 
     function updateResistorValue(pathStr, value) {
         const path = JSON.parse(pathStr);
@@ -1022,6 +1022,95 @@
         drawAndCalculate({force: true});
     }
 
+    // --- CIRCUIT DATA MANAGEMENT ---
+    function saveCircuit() { // Saves to browser's localStorage
+        if (circuit.length > 0) {
+            localStorage.setItem('userSavedCircuit', JSON.stringify(circuit));
+            alert('Circuit saved to your browser!');
+        } else {
+            alert('Cannot save an empty circuit to browser.');
+        }
+    }
+
+    function loadCircuit() { // Loads from browser's localStorage
+        const savedCircuit = localStorage.getItem('userSavedCircuit');
+        if (savedCircuit) {
+            try {
+                const parsedCircuit = JSON.parse(savedCircuit);
+                 if (Array.isArray(parsedCircuit)) {
+                    circuit = parsedCircuit;
+                    resetIsolationView();
+                    renderControls();
+                    drawAndCalculate({ force: true });
+                } else {
+                     alert('Saved circuit data is invalid.');
+                }
+            } catch(e) {
+                 alert('Could not load circuit from browser. Data might be corrupted.');
+            }
+        } else {
+            alert('No saved circuit found in your browser.');
+        }
+    }
+    
+    function exportCircuit() { // Exports to a .json file
+        if (circuit.length === 0) {
+            alert('Cannot export an empty circuit.');
+            return;
+        }
+
+        const circuitData = JSON.stringify(circuit, null, 2);
+        const blob = new Blob([circuitData], { type: 'application/json' });
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'circuit-layout.json';
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
+
+    function importCircuit() { // Imports from a .json file
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json,application/json';
+
+        fileInput.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = event => {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (Array.isArray(importedData)) {
+                        circuit = importedData;
+                        resetIsolationView();
+                        renderControls();
+                        drawAndCalculate({ force: true });
+                        alert('Circuit imported successfully!');
+                    } else {
+                        throw new Error('Invalid circuit file format. Must be an array.');
+                    }
+                } catch (error) {
+                    console.error('Error importing circuit:', error);
+                    alert('Could not import circuit. The file might be corrupted or in the wrong format.');
+                }
+            };
+            
+            reader.onerror = error => {
+                console.error('Error reading file:', error);
+                alert('An error occurred while reading the file.');
+            };
+            reader.readAsText(file);
+        };
+        fileInput.click();
+    }
+
     // --- CIRCUIT BUILDER FUNCTIONS ---
     function clearCircuit(redraw = true) {
         circuit = [];
@@ -1048,29 +1137,6 @@
         }
     }
     
-    // START: NEW SAVE/LOAD FUNCTIONS
-    function saveCircuit() {
-        if (circuit.length > 0) {
-            localStorage.setItem('userSavedCircuit', JSON.stringify(circuit));
-            alert('Circuit saved to your browser!');
-        } else {
-            alert('Cannot save an empty circuit.');
-        }
-    }
-
-    function loadCircuit() {
-        const savedCircuit = localStorage.getItem('userSavedCircuit');
-        if (savedCircuit) {
-            circuit = JSON.parse(savedCircuit);
-            resetIsolationView();
-            renderControls();
-            drawAndCalculate({ force: true });
-        } else {
-            alert('No saved circuit found in your browser.');
-        }
-    }
-    // END: NEW SAVE/LOAD FUNCTIONS
-
     function buildLadderCircuit() {
         clearCircuit(false);
         // R1
@@ -1187,4 +1253,3 @@
 <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 </body>
 </html>
-
