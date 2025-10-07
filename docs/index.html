@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi All! and Derp.</title>
+    <title>Interactive V.I.R.P. Circuit Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -524,46 +524,106 @@
     }
 
 
-    // --- CALCULATION LOGIC (RECURSIVE) ---
+    // --- CALCULATION & EXPLANATION LOGIC (REWRITTEN) ---
 
-    function getEquivalentResistance(component) {
-        if (!component) return 0;
-        if (component.type === 'resistor') {
-            return component.value > 0 ? component.value : 0;
-        }
-        if (component.type === 'parallel') {
-            const branchResistances = component.branches.map(branch => {
-                return branch.reduce((sum, subComp) => sum + getEquivalentResistance(subComp), 0);
-            }).filter(r => r > 0);
+    function calculateAndAnnotate(voltage) {
+        if (isNaN(voltage) || voltage <= 0) return null;
 
-            if (branchResistances.length === 0) return 0;
-            const inverseSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
-            return 1 / inverseSum;
+        // Deep copy circuit to avoid modifying the original with calculation data
+        const circuitToAnalyze = JSON.parse(JSON.stringify(circuit));
+
+        function calculateReq(component) {
+            if (component.type === 'resistor') {
+                component.Req = component.value > 0 ? component.value : 0;
+            } else if (component.type === 'parallel') {
+                const branchResistances = component.branches.map(branch => {
+                    let branchR = 0;
+                    branch.forEach(subComp => {
+                        calculateReq(subComp);
+                        branchR += subComp.Req;
+                    });
+                    return branchR;
+                }).filter(r => r > 0);
+
+                if (branchResistances.length === 0) {
+                    component.Req = 0;
+                } else {
+                    const inverseSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
+                    component.Req = 1 / inverseSum;
+                }
+            }
         }
-        return 0;
+        circuitToAnalyze.forEach(calculateReq);
+
+        const totalResistance = circuitToAnalyze.reduce((sum, comp) => sum + comp.Req, 0);
+        if (totalResistance === 0) return null;
+        
+        const totalCurrent = voltage / totalResistance;
+
+        let resistorCounter = 0;
+        const resistorList = [];
+
+        function annotate(component, current, nameInfo) {
+            if (!component || component.Req === 0) return;
+            
+            component.I = current;
+            component.V = current * component.Req;
+            component.P = component.V * component.I;
+
+            if (component.type === 'resistor') {
+                resistorCounter++;
+                component.name = useSequentialNaming ? `R${resistorCounter}` : nameInfo.name;
+                resistorList.push(component);
+
+            } else if (component.type === 'parallel') {
+                component.name = `Group_${nameInfo.name}`;
+                component.branches.forEach((branch, bIndex) => {
+                    const branchR = branch.reduce((sum, c) => sum + c.Req, 0);
+                    if (branchR > 0) {
+                        const branchCurrent = component.V / branchR;
+                        branch.forEach((subComp, cIndex) => {
+                            annotate(subComp, branchCurrent, {
+                                name: `${nameInfo.name}.${bIndex + 1}.${cIndex + 1}`,
+                                level: nameInfo.level + 1
+                            });
+                        });
+                    }
+                });
+            }
+        }
+
+        circuitToAnalyze.forEach((component, index) => {
+            annotate(component, totalCurrent, { name: `C${index + 1}`, level: 0 });
+        });
+
+        return {
+            totalResistance,
+            totalCurrent,
+            totalPower: voltage * totalCurrent,
+            resistors: resistorList,
+            annotatedCircuit: circuitToAnalyze
+        };
     }
 
     function calculateVIRP() {
         const voltage = parseFloat(document.getElementById('voltage').value);
         const resultsContainer = document.getElementById('results-container');
+        const explanationSection = document.getElementById('explanation-section');
         
         if (isNaN(voltage) || voltage <= 0) {
             resultsContainer.innerHTML = `<p class="text-center text-red-600 font-semibold">Please enter a valid, positive source voltage.</p>`;
+            explanationSection.style.display = 'none';
             return;
         }
 
-        const totalResistance = circuit.reduce((sum, comp) => sum + getEquivalentResistance(comp), 0);
+        const analysis = calculateAndAnnotate(voltage);
         
-        if (totalResistance === 0) {
+        if (!analysis) {
             resultsContainer.innerHTML = `<p class="text-center text-yellow-600 font-semibold">Circuit is incomplete or has a short. Add components and resistor values.</p>`;
+            explanationSection.style.display = 'none';
             return;
         }
         
-        const totalCurrent = voltage / totalResistance;
-        const totalPower = voltage * totalCurrent;
-        
-        let resistorCounter = 0; 
-
         let resultsHTML = `
             <h2 class="text-2xl font-bold text-center mb-4" style="color: var(--heading-color);">V.I.R.P. Chart</h2>
             <div class="overflow-x-auto shadow-md rounded-lg">
@@ -579,69 +639,36 @@
                     </thead>
                     <tbody>`;
         
-        function generateRows(component, current, nameInfo) {
-            if (!component) return '';
-            let rows = '';
-            const R = getEquivalentResistance(component);
-            if (R === 0) return '';
-            
-            if (component.type === 'resistor') {
-                resistorCounter++;
-                const resistorName = useSequentialNaming ? `R${resistorCounter}` : nameInfo.name;
-                const V = current * R;
-                const P = V * current;
-                rows += `<tr class="border-b border-main" style="background-color: var(--bg-primary);">
-                    <td class="px-6 py-4 font-medium text-main" style="padding-left: ${1.5 + nameInfo.level * 1.5}rem">${nameInfo.level > 0 ? '↳' : ''} ${resistorName}</td>
-                    <td class="px-6 py-4 text-right">${formatValue(V, 'V')}</td>
-                    <td class="px-6 py-4 text-right">${formatValue(current, 'A')}</td>
-                    <td class="px-6 py-4 text-right">${component.value}</td>
-                    <td class="px-6 py-4 text-right">${formatValue(P, 'W')}</td>
-                </tr>`;
-            } else if (component.type === 'parallel') {
-                const V = current * R;
-                component.branches.forEach((branch, bIndex) => {
-                    const branchR = branch.reduce((sum, c) => sum + getEquivalentResistance(c), 0);
-                    if (branchR === 0) return;
-                    const branchCurrent = V / branchR;
-                    branch.forEach((subComp, cIndex) => {
-                        rows += generateRows(subComp, branchCurrent, {
-                            name: `${nameInfo.name}.${bIndex + 1}.${cIndex + 1}`,
-                            level: nameInfo.level + 1
-                        });
-                    });
-                });
-            }
-            return rows;
-        }
-
-        circuit.forEach((component, index) => {
-             resultsHTML += generateRows(component, totalCurrent, { name: `R${index + 1}`, level: 0 });
+        analysis.resistors.forEach(resistor => {
+            resultsHTML += `<tr class="border-b border-main" style="background-color: var(--bg-primary);">
+                <td class="px-6 py-4 font-medium text-main">${resistor.name}</td>
+                <td class="px-6 py-4 text-right">${formatValue(resistor.V, 'V')}</td>
+                <td class="px-6 py-4 text-right">${formatValue(resistor.I, 'A')}</td>
+                <td class="px-6 py-4 text-right">${resistor.value}</td>
+                <td class="px-6 py-4 text-right">${formatValue(resistor.P, 'W')}</td>
+            </tr>`;
         });
 
         resultsHTML += `
                 <tr class="font-bold text-main" style="background-color: var(--bg-secondary);">
                     <td class="px-6 py-4">Total</td>
                     <td class="px-6 py-4 text-right">${formatValue(voltage, 'V')}</td>
-                    <td class="px-6 py-4 text-right">${formatValue(totalCurrent, 'A')}</td>
-                    <td class="px-6 py-4 text-right">${totalResistance.toFixed(3)}</td>
-                    <td class="px-6 py-4 text-right">${formatValue(totalPower, 'W')}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(analysis.totalCurrent, 'A')}</td>
+                    <td class="px-6 py-4 text-right">${analysis.totalResistance.toFixed(3)}</td>
+                    <td class="px-6 py-4 text-right">${formatValue(analysis.totalPower, 'W')}</td>
                 </tr>
             </tbody></table></div>`;
         resultsContainer.innerHTML = resultsHTML;
 
-        // Show and populate the explanation section
-        const explanationSection = document.getElementById('explanation-section');
         if (circuit.length > 0) {
             explanationSection.style.display = 'block';
             const explanationContent = document.getElementById('explanation-content');
-            explanationContent.innerHTML = generateExplanationHtml();
+            explanationContent.innerHTML = generateExplanationHtml(analysis.annotatedCircuit, voltage);
         } else {
             explanationSection.style.display = 'none';
         }
     }
 
-
-    // --- EXPLANATION LOGIC ---
     function toggleExplanation() {
         const content = document.getElementById('explanation-content');
         const btn = document.getElementById('explain-btn');
@@ -656,85 +683,160 @@
         }
     }
 
-    function getExplanationSteps(component, counters) {
-        if (component.type === 'resistor') {
-            const formula = `R${counters.resistor}`;
-            counters.resistor++;
-            return { formula: formula, steps: [] };
-        }
+    function generateExplanationHtml(annotatedCircuit, sourceVoltage) {
+        if (!annotatedCircuit || annotatedCircuit.length === 0) return '<p>The circuit is empty.</p>';
+        
+        let html = '<h3 class="font-bold text-xl mb-3 text-main">Calculation Walkthrough</h3>';
+        let counters = { resistor: 1, parallelGroup: 1, seriesGroup: 1 };
+        
+        // --- STEP 1: Calculate Total Resistance ---
+        html += '<h4 class="font-semibold text-lg mt-4 mb-2 text-accent-color">Step 1: Simplify to find Total Resistance (R<sub>Total</sub>)</h4>';
+        html += '<p class="text-sm text-light mb-3">We simplify the circuit by combining resistors, starting from the most nested parts.</p>';
+        html += '<div class="space-y-3 text-sm">';
 
-        if (component.type === 'parallel') {
-            let allSteps = [];
-            let branchFormulas = [];
+        function getResistanceExplanation(component) {
+            if (component.type === 'resistor') {
+                const name = `R${counters.resistor++}`;
+                component.calcName = name; // Store the name for later reference
+                return { name: name, steps: [] };
+            }
 
-            component.branches.forEach(branch => {
-                if (branch.length === 0) return;
+            if (component.type === 'parallel') {
+                const groupName = `R_p${counters.parallelGroup++}`;
+                component.calcName = groupName;
+                let groupSteps = [];
+                let branchCalculations = [];
 
-                let seriesFormulas = [];
-                branch.forEach(subComp => {
-                    const subResult = getExplanationSteps(subComp, counters);
-                    allSteps.push(...subResult.steps);
-                    seriesFormulas.push(subResult.formula);
+                component.branches.forEach((branch, i) => {
+                    if (branch.length === 0) return;
+                    
+                    const branchTotalR = branch.reduce((s,c)=>s+c.Req, 0);
+                    if (branchTotalR === 0) return;
+
+                    if (branch.length > 1) { // It's a series of components within a branch
+                        const seriesGroupName = `R_s${counters.seriesGroup++}`;
+                        let seriesResistors = [];
+                        let seriesValues = [];
+                        branch.forEach(subComp => {
+                            const subResult = getResistanceExplanation(subComp);
+                            groupSteps.push(...subResult.steps);
+                            seriesResistors.push(subResult.name);
+                            seriesValues.push(subComp.Req);
+                        });
+                        
+                        const equation = `${seriesGroupName} = ${seriesResistors.join(' + ')}`;
+                        const values = `${seriesGroupName} = ${seriesValues.map(v => `${v.toFixed(2)}Ω`).join(' + ')} = ${branchTotalR.toFixed(2)}Ω`;
+                        groupSteps.push(`<li>First, combine series resistors in branch ${i+1}: <code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${equation}</code><code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${values}</code></li>`);
+                        branchCalculations.push({name: seriesGroupName, value: branchTotalR});
+
+                    } else { // Single component in the branch
+                        const subResult = getResistanceExplanation(branch[0]);
+                        groupSteps.push(...subResult.steps);
+                        branchCalculations.push({name: subResult.name, value: branch[0].Req});
+                    }
                 });
-
-                if (seriesFormulas.length > 1) {
-                    const branchFormulaName = `R_b${counters.branch}`;
-                    const branchEquation = `${branchFormulaName} = ${seriesFormulas.join(' + ')}`;
-                    allSteps.push(branchEquation);
-                    branchFormulas.push(branchFormulaName);
-                    counters.branch++;
-                } else if (seriesFormulas.length === 1) {
-                    branchFormulas.push(seriesFormulas[0]);
+                
+                if(branchCalculations.length > 0) {
+                    const inverseTerms = branchCalculations.map(b => `1/${b.name}`).join(' + ');
+                    const inverseValues = branchCalculations.map(b => `1/${b.value.toFixed(2)}Ω`).join(' + ');
+                    const equation = `${groupName} = 1 / (${inverseTerms})`;
+                    const values = `${groupName} = 1 / (${inverseValues}) = ${component.Req.toFixed(2)}Ω`;
+                    groupSteps.push(`<li>Combine the parallel branches: <code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${equation}</code><code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${values}</code></li>`);
                 }
-            });
-            
-            if (branchFormulas.length === 0) return { formula: '0', steps: [] };
-            if (branchFormulas.length === 1) {
-                return { formula: branchFormulas[0], steps: allSteps };
+                
+                return { name: groupName, steps: groupSteps };
             }
+            return {name: '', steps:[]};
+        }
 
-            const eqFormulaName = `R_eq${counters.eq}`;
-            const inverseTerms = branchFormulas.map(f => `1/${f}`).join(' + ');
-            const eqEquation = `${eqFormulaName} = 1 / (${inverseTerms})`;
-            allSteps.push(eqEquation);
-            counters.eq++;
+        counters.resistor = 1; 
+        let finalResistanceSteps = [];
+        let topLevelComponents = [];
+        let topLevelValues = [];
 
-            return { formula: eqFormulaName, steps: allSteps };
+        annotatedCircuit.forEach(component => {
+            if (component.Req > 0) {
+                const result = getResistanceExplanation(component);
+                finalResistanceSteps.push(...result.steps);
+                topLevelComponents.push(result.name);
+                topLevelValues.push(component.Req);
+            }
+        });
+
+        html += `<ol class="list-decimal list-inside space-y-2">${finalResistanceSteps.join('')}</ol>`;
+        
+        const totalReq = annotatedCircuit.reduce((s, c) => s + c.Req, 0);
+        const totalFormula = `R<sub>Total</sub> = ${topLevelComponents.join(' + ')}`;
+        const totalValues = `R<sub>Total</sub> = ${topLevelValues.map(v => `${v.toFixed(2)}Ω`).join(' + ')} = <strong>${totalReq.toFixed(2)}Ω</strong>`;
+        html += `<div class="mt-3 p-3 rounded bg-sky-100 dark:bg-sky-900/50 border border-sky-200 dark:border-sky-700">
+                    <p class="font-semibold">Finally, add the top-level components:</p>
+                    <code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${totalFormula}</code>
+                    <code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${totalValues}</code>
+                </div>`;
+        html += '</div>';
+
+        // --- STEP 2: Calculate Total Current ---
+        html += '<h4 class="font-semibold text-lg mt-6 mb-2 text-accent-color">Step 2: Find Total Current (I<sub>Total</sub>)</h4>';
+        html += '<p class="text-sm text-light mb-3">Using Ohm\'s Law (V = IR), we find the total current flowing from the source.</p>';
+        const totalCurrent = sourceVoltage / totalReq;
+        const currentFormula = `I<sub>Total</sub> = V<sub>Source</sub> / R<sub>Total</sub>`;
+        const currentValues = `I<sub>Total</sub> = ${sourceVoltage}V / ${totalReq.toFixed(2)}Ω = <strong>${formatValue(totalCurrent, 'A')}</strong>`;
+        html += `<div class="p-3 rounded bg-sky-100 dark:bg-sky-900/50 border border-sky-200 dark:border-sky-700">
+                    <code class="block p-2 rounded bg-white dark:bg-slate-800">${currentFormula}</code>
+                    <code class="block mt-1 p-2 rounded bg-white dark:bg-slate-800">${currentValues}</code>
+                </div>`;
+
+        // --- STEP 3: Analyze Individual Components ---
+        html += '<h4 class="font-semibold text-lg mt-6 mb-2 text-accent-color">Step 3: Calculate V, I, and P for Each Resistor</h4>';
+        html += '<p class="text-sm text-light mb-3">Now we work backwards, applying the rules for series and parallel circuits.</p>';
+        html += '<div class="space-y-4">';
+
+        function getVIPExplanation(component, current) {
+            let compHtml = '';
+            if (component.type === 'resistor') {
+                compHtml += `<div class="p-3 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                    <p class="font-semibold text-main">Analyzing ${component.name} (${component.value}Ω):</p>
+                    <ul class="list-disc list-inside text-sm mt-2 space-y-1 pl-2">
+                        <li>Current (I) is <strong>${formatValue(current, 'A')}</strong> (from its series section).</li>
+                        <li>Voltage (V) = I × R = ${formatValue(current, 'A')} × ${component.value}Ω = <strong>${formatValue(component.V, 'V')}</strong>.</li>
+                        <li>Power (P) = V × I = ${formatValue(component.V, 'V')} × ${formatValue(current, 'A')} = <strong>${formatValue(component.P, 'W')}</strong>.</li>
+                    </ul>
+                </div>`;
+            } else if (component.type === 'parallel') {
+                compHtml += `<div class="p-3 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                    <p class="font-semibold text-main">Analyzing Parallel Group ${component.calcName} (R<sub>eq</sub>: ${component.Req.toFixed(2)}Ω):</p>
+                    <ul class="list-disc list-inside text-sm mt-2 space-y-2 pl-2">
+                        <li>The total current entering the group is ${formatValue(current, 'A')}.</li>
+                        <li>Voltage across the group is V = I × R<sub>eq</sub> = ${formatValue(current, 'A')} × ${component.Req.toFixed(2)}Ω = <strong>${formatValue(component.V, 'V')}</strong>.</li>
+                        <li>This voltage is <strong>the same</strong> for all branches inside this parallel group.</li>
+                    </ul>
+                    <div class="mt-3 space-y-3 pl-4 border-l-2 border-sky-300 dark:border-sky-700">`;
+
+                component.branches.forEach((branch, i) => {
+                    const branchR = branch.reduce((sum, c) => sum + c.Req, 0);
+                    if (branchR > 0) {
+                        const branchCurrent = component.V / branchR;
+                        compHtml += `<div class="p-2 rounded bg-white dark:bg-slate-800">
+                            <p class="font-medium text-accent-color">Branch ${i+1} (Total R = ${branchR.toFixed(2)}Ω):</p>
+                            <p class="text-xs ml-4">Current (I<sub>branch</sub>) = V<sub>group</sub> / R<sub>branch</sub> = ${formatValue(component.V, 'V')} / ${branchR.toFixed(2)}Ω = <strong>${formatValue(branchCurrent, 'A')}</strong>.</p>
+                            <div class="mt-2 space-y-2">`;
+                        
+                        branch.forEach(subComp => {
+                            compHtml += getVIPExplanation(subComp, branchCurrent);
+                        });
+
+                        compHtml += '</div></div>';
+                    }
+                });
+                compHtml += '</div></div>';
+            }
+            return compHtml;
         }
         
-        return { formula: '', steps: [] };
-    }
-
-    function generateExplanationHtml() {
-        if (circuit.length === 0) return '<p>The circuit is empty.</p>';
-
-        let counters = { resistor: 1, eq: 1, branch: 1 };
-        let allSteps = [];
-        let topLevelFormulas = [];
-
-        circuit.forEach(component => {
-            if (getEquivalentResistance(component) > 0) {
-                const result = getExplanationSteps(component, counters);
-                allSteps.push(...result.steps);
-                topLevelFormulas.push(result.formula);
-            }
+        annotatedCircuit.forEach(component => {
+            html += getVIPExplanation(component, totalCurrent);
         });
 
-        let html = '<h4 class="font-bold text-lg mb-2 text-main">Calculation Steps:</h4><p class="text-sm text-light mb-3">The calculator simplifies the circuit from the inside out. Here are the steps:</p><div class="space-y-2 font-mono text-sm text-accent-color">';
-
-        const uniqueSteps = [...new Set(allSteps)];
-        uniqueSteps.forEach(step => {
-            html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">${step.replace(/ /g, '&nbsp;')}</div>`;
-        });
-        
-        const totalResistanceFormula = `R_total = ${topLevelFormulas.join(' + ')}`;
-        html += `<div class="p-2 rounded font-bold" style="background-color: var(--bg-primary);">${totalResistanceFormula.replace(/ /g, '&nbsp;')}</div>`;
-        html += '</div>';
-        
-        html += '<h4 class="font-bold text-lg mt-4 mb-2 text-main">Primary Formulas (Ohm\'s Law):</h4>';
-        html += '<div class="space-y-2 font-mono text-sm text-accent-color">';
-        html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">I_total = V_source / R_total</div>`;
-        html += `<div class="p-2 rounded" style="background-color: var(--bg-primary);">P_total = V_source * I_total</div>`;
         html += '</div>';
 
         return html;
@@ -1122,15 +1224,18 @@
     }
 
     function simplifyCircuit() {
-        const totalResistance = circuit.reduce((sum, comp) => sum + getEquivalentResistance(comp), 0);
+        // We need the equivalent resistance, which our new function can provide.
+        const analysis = calculateAndAnnotate(parseFloat(document.getElementById('voltage').value) || 1);
         
-        if (totalResistance > 0) {
+        if (analysis && analysis.totalResistance > 0) {
             clearCircuit(false);
             addComponent('resistor', '[]'); 
 
+            // Find the new resistor object in the modified 'circuit' array
             const newResistor = getComponentByPath([0]);
             if (newResistor) {
-                newResistor.value = parseFloat(totalResistance.toFixed(3));
+                // Update the value directly in the component object before rendering
+                newResistor.value = parseFloat(analysis.totalResistance.toFixed(3));
             }
             renderControls();
             drawAndCalculate({force: true});
@@ -1141,24 +1246,24 @@
         clearCircuit(false);
         // R1
         addComponent('resistor', '[]');
-        updateResistorValue('[0]', 100);
+        updateResistorValue('[0]', "100");
         
         addComponent('parallel', '[]');
         addComponent('resistor', '[1, 0]'); // R2
-        updateResistorValue('[1, 0, 0]', 100);
+        updateResistorValue('[1, 0, 0]', "100");
 
         // Branch 2
         addComponent('resistor', '[1, 1]');
-        updateResistorValue('[1, 1, 0]', 100);
+        updateResistorValue('[1, 1, 0]', "100");
         addComponent('parallel', '[1, 1]');
         addComponent('resistor', '[1, 1, 1, 0]'); // R4
-        updateResistorValue('[1, 1, 1, 0, 0]', 100);
+        updateResistorValue('[1, 1, 1, 0, 0]', "100");
         addComponent('resistor', '[1, 1, 1, 1]'); // R5
-        updateResistorValue('[1, 1, 1, 1, 0]', 100);
+        updateResistorValue('[1, 1, 1, 1, 0]', "100");
 
         // R6
         addComponent('resistor', '[]');
-        updateResistorValue('[2]', 100);
+        updateResistorValue('[2]', "100");
         
         renderControls();
         drawAndCalculate({force: true});
@@ -1167,24 +1272,24 @@
     function buildNestedExample() {
         clearCircuit(false);
         addComponent('resistor');
-        updateResistorValue('[0]', 100);
+        updateResistorValue('[0]', "100");
 
         addComponent('parallel');
         
         addComponent('resistor', '[1, 0]');
-        updateResistorValue('[1, 0, 0]', 500);
+        updateResistorValue('[1, 0, 0]', "500");
         
         addComponent('resistor', '[1, 1]');
-        updateResistorValue('[1, 1, 0]', 250);
+        updateResistorValue('[1, 1, 0]', "250");
         addComponent('parallel', '[1, 1]');
         
         addComponent('resistor', '[1, 1, 1, 0]');
-        updateResistorValue('[1, 1, 1, 0, 0]', 200);
+        updateResistorValue('[1, 1, 1, 0, 0]', "200");
 
         addComponent('resistor', '[1, 1, 1, 1]'); 
         addComponent('resistor', '[1, 1, 1, 1]'); 
-        updateResistorValue('[1, 1, 1, 1, 0]', 150);
-        updateResistorValue('[1, 1, 1, 1, 1]', 50);
+        updateResistorValue('[1, 1, 1, 1, 0]', "150");
+        updateResistorValue('[1, 1, 1, 1, 1]', "50");
 
         renderControls();
         drawAndCalculate({force: true});
