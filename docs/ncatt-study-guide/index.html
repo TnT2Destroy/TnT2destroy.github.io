@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Avionics Study Guide</title>
+    <title>NCATT AET Study Assist</title>
     <link rel="icon" type="image/png" href="../stonks.png">
     <meta name="description" content="Interactive NCATT AET certification study tool with spaced repetition, flashcards, exam simulation, and deep analytics.">
     <!-- PWA Support -->
@@ -227,6 +227,76 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 .stats-grid{grid-template-columns:1fr 1fr}
 .ach-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
 }
+</style>
+
+<style>
+  /* Disclaimer Modal */
+  .disclaimer-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .disclaimer-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border: 1px solid rgba(100, 150, 255, 0.2);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 560px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.1);
+    animation: slideUp 0.4s ease 0.1s both;
+  }
+  .disclaimer-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  .disclaimer-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .disclaimer-text {
+    font-size: 15px;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .disclaimer-text a {
+    color: #60a5fa;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  .disclaimer-text a:hover {
+    color: #93bbfc;
+  }
+  .disclaimer-btn {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+  }
+  .disclaimer-btn:hover {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+  }
 </style>
 </head>
 <body>
@@ -1595,5 +1665,28 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         }, 1500);
       };
     </script>
+
+<div class="disclaimer-overlay" id="disclaimerModal">
+  <div class="disclaimer-card">
+    <div class="disclaimer-icon">&#9888;&#65039;</div>
+    <div class="disclaimer-title">Important Disclaimer</div>
+    <div class="disclaimer-text">
+      This tool is designed to <strong>assist you in your studying</strong> and does not contain or emulate what would be on the NCATT certification exam.<br><br>
+      This tool simply uses the <a href="https://www.spacetec.us/wp-content/uploads/2019/03/AET-Study-Guide-v5-12.pdf" target="_blank" rel="noopener">AET Study Guide</a> from NCATT as a reference for its content.
+    </div>
+    <button class="disclaimer-btn" onclick="acceptDisclaimer()">I Understand &mdash; Take Me to the Tool</button>
+  </div>
+</div>
+<script>
+  function acceptDisclaimer() {
+    localStorage.setItem('ncatt_disclaimer_accepted', 'true');
+    document.getElementById('disclaimerModal').style.display = 'none';
+  }
+  (function() {
+    if (localStorage.getItem('ncatt_disclaimer_accepted') === 'true') {
+      document.getElementById('disclaimerModal').style.display = 'none';
+    }
+  })();
+</script>
 </body>
 </html>
