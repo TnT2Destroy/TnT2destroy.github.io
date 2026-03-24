@@ -433,24 +433,39 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     </div>
     <div style="margin-top:16px"><button class="btn btn-p" onclick="closeModals()">Close</button></div>
   </div></div>
-  <div class="modal-overlay" id="authModal"><div class="modal" id="authModalBody">
-    <h3 id="authModalTitle">&#128274; Sign In / Sign Up</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Sync your progress across devices via Cloud.</p>
-    <div id="authError" style="color:var(--incorrect);font-size:12px;margin-bottom:10px;"></div>
-    <label>Email</label>
-    <input type="email" id="authEmail" placeholder="you@example.com">
-    <label>Password</label>
-    <input type="password" id="authPassword" placeholder="Minimum 6 characters">
-    <div style="margin-top:12px; display:flex; gap:10px;">
-      <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="flex:1;">Sign In</button>
-      <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="flex:1;">Need an account? Sign Up</button>
+  <div class="modal-overlay" id="authModal">
+    <div class="modal" id="authModalBody" style="border: 1px solid var(--accent); box-shadow: 0 0 20px rgba(59,130,246,0.15); padding: 32px;">
+      <h3 id="authModalTitle" style="font-size: 22px; margin-bottom: 8px;">&#128274; Cloud Sync</h3>
+      <p style="font-size:14px; color:var(--text2); margin-bottom:24px; line-height:1.5;">Securely sync your progress across devices to never lose your mastery levels.</p>
+      
+      <div id="authError" style="color:var(--incorrect); font-size:13px; margin-bottom:16px; font-weight: 500;"></div>
+      
+      <div style="margin-bottom: 16px;">
+        <label style="font-weight: 600; margin-bottom: 8px;">&#9993; Email Address</label>
+        <input type="email" id="authEmail" placeholder="pilot@example.com" style="padding: 12px; font-size: 15px; border-radius: 8px; border: 2px solid var(--border); transition: border-color 0.2s;">
+      </div>
+      
+      <div style="margin-bottom: 24px;">
+        <label style="font-weight: 600; margin-bottom: 8px;">&#128273; Password</label>
+        <input type="password" id="authPassword" placeholder="Minimum 6 characters" style="padding: 12px; font-size: 15px; border-radius: 8px; border: 2px solid var(--border); transition: border-color 0.2s;">
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="padding: 12px; font-size: 15px; justify-content: center;">Sign In</button>
+        <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="padding: 12px; font-size: 13px; justify-content: center; border-color: transparent;">No account yet? <strong>Sign Up</strong></button>
+      </div>
+      
+      <div id="authLoggedInView" style="display:none; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 16px;">&#128104;&#8205;&#9992;&#65039;</div>
+        <p style="font-size:15px; margin-bottom:24px; color:var(--text);">Welcome back,<br><strong id="authCurrentUser" style="color: var(--accent); font-size: 16px;"></strong></p>
+        <button class="btn btn-d" onclick="handleSignOut()" style="width:100%; padding: 12px; justify-content: center;">Sign Out</button>
+      </div>
+      
+      <div style="margin-top:24px; border-top: 1px solid var(--border); padding-top: 16px;">
+        <button class="btn btn-s" onclick="closeModals()" style="width:100%; justify-content: center; border: none; background: rgba(255,255,255,0.05);">Close</button>
+      </div>
     </div>
-    <div id="authLoggedInView" style="display:none;">
-      <p style="font-size:14px; margin-bottom:12px; color:var(--text);">Logged in as: <strong id="authCurrentUser"></strong></p>
-      <button class="btn btn-d" onclick="handleSignOut()" style="width:100%;">Sign Out</button>
-    </div>
-    <div style="margin-top:16px"><button class="btn btn-s" onclick="closeModals()">Close</button></div>
-  </div></div>
+  </div>
   <div class="modal-overlay" id="importExportModal"><div class="modal">
     <h3>&#128229; Import / Export Progress</h3>
     <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Export your study data to back it up, or import from a previous backup.</p>
