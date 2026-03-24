@@ -1,0 +1,9 @@
+{
+  "name": "NCATT Study Guide",
+  "short_name": "NCATT Quiz",
+  "description": "Interactive study tool for the NCATT AET certification.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a"
+}
