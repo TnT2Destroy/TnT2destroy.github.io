@@ -669,10 +669,16 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     let subjectListOpen = true;
     function toggleSubjectList() { subjectListOpen = !subjectListOpen; document.getElementById('subjectList').style.display = subjectListOpen ? '' : 'none'; document.getElementById('subjectArrow').innerHTML = subjectListOpen ? '&#9660;' : '&#9654;'; }
 
-    function buildMenu() {
+    function    buildMenu() {
       const el = document.getElementById('subjectList');
       let html = '';
-      for (const sub in subjects) {
+      const romanOrder = {'I.':1,'II.':2,'III.':3,'IV.':4};
+      const sortedSubs = Object.keys(subjects).sort((a,b) => {
+        const aPrefix = (a.match(/^(I{1,3}V?)\./) || [''])[0];
+        const bPrefix = (b.match(/^(I{1,3}V?)\./) || [''])[0];
+        return (romanOrder[aPrefix]||99) - (romanOrder[bPrefix]||99);
+      });
+      for (const sub of sortedSubs) {
         const sid = 'sub_'+sub.replace(/[^a-zA-Z0-9]/g,'_');
         const safeSubQ = sub.replace(/'/g,"\\'");
         html += '<div style="display:flex;align-items:center">';
