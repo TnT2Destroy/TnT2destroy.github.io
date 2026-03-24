@@ -1445,27 +1445,44 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
       function pullFromCloud() {
         if(!currentUser) return;
-        db.collection('users').doc(currentUser.uid).get().then(doc => {
+        if (window.cloudUnsub) window.cloudUnsub();
+        window.cloudUnsub = db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
           if (doc.exists) {
             const data = doc.data();
-            let changed = false;
             ['mastery','notes','streak','sessions','missed','achievements','firstAttempts','timeStats','missCount','timerSetting','dailyGoal','bookmarks','flagged'].forEach(k => {
               if (data[k] !== undefined) {
-                const currentStr = localStorage.getItem('ncatt_'+k);
-                const cloudStr = JSON.stringify(data[k]);
-                if (currentStr !== cloudStr) {
-                  localStorage.setItem('ncatt_'+k, cloudStr);
-                  changed = true;
-                }
+                localStorage.setItem('ncatt_'+k, JSON.stringify(data[k]));
               }
             });
-            if (changed) {
-              window.location.reload();
+            
+            // Rehydrate memory instead of reloading
+            if (typeof LS !== 'undefined') {
+              masteryData = LS('mastery', {});
+              bookmarks = new Set(LS('bookmarks', []));
+              flaggedQuestions = new Set(LS('flagged', []));
+              userNotes = LS('notes', {});
+              streakData = LS('streak', {count:0, lastDate:null});
+              sessionHistory = LS('sessions', []);
+              missedRecent = LS('missed', []);
+              achievements = new Set(LS('achievements', []));
+              dailyGoal = LS('dailyGoal', 20);
+              timerSetting = LS('timerSetting', 0);
+              firstAttempts = LS('firstAttempts', {});
+              timeStats = LS('timeStats', {});
+              missCount = LS('missCount', {});
+              
+              let gInp = document.getElementById('goalInput'); if(gInp) gInp.value = dailyGoal;
+              let tInp = document.getElementById('timerInput'); if(tInp) tInp.value = timerSetting;
+              
+              if (typeof currentView !== 'undefined') {
+                if (currentView === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
+                if (currentView === 'analytics' && typeof renderAnalytics === 'function') renderAnalytics();
+              }
             }
           } else {
             window.throttleFirebaseSync();
           }
-        }).catch(err => console.error("Error fetching cloud data:", err));
+        }, err => console.error("Error syncing cloud data:", err));
       }
 
       window.throttleFirebaseSync = function() {
