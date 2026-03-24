@@ -449,11 +449,23 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       <div style="margin-bottom: 24px;">
         <label style="font-weight: 600; margin-bottom: 8px;">&#128273; Password</label>
         <input type="password" id="authPassword" placeholder="Minimum 6 characters" style="padding: 12px; font-size: 15px; border-radius: 8px; border: 2px solid var(--border); transition: border-color 0.2s;">
+        <button type="button" onclick="handlePasswordReset()" style="background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; text-align:left; padding:4px 0 0 0; text-decoration:underline;">Forgot password?</button>
       </div>
       
       <div style="display:flex; flex-direction:column; gap:12px;">
         <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="padding: 12px; font-size: 15px; justify-content: center;">Sign In</button>
         <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="padding: 12px; font-size: 13px; justify-content: center; border-color: transparent;">No account yet? <strong>Sign Up</strong></button>
+        
+        <div id="authSeparator" style="display: flex; align-items: center; margin: 16px 0;">
+          <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
+          <span style="padding: 0 10px; color: var(--text2); font-size: 13px;">OR</span>
+          <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
+        </div>
+        
+        <button class="btn btn-s" id="googleSignInBtn" onclick="handleGoogleSignIn()" style="padding: 12px; font-size: 15px; justify-content: center; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: white; color: #333;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18">
+          <span id="googleSignInBtnText">Sign in with Google</span>
+        </button>
       </div>
       
       <div id="authLoggedInView" style="display:none; text-align: center;">
@@ -1382,6 +1394,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       firebase.initializeApp(firebaseConfig);
       const auth = firebase.auth();
       const db = firebase.firestore();
+      const googleProvider = new firebase.auth.GoogleAuthProvider();
 
       let isSignUpMode = false;
       let syncTimeout = null;
@@ -1390,7 +1403,9 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       function toggleAuthMode() {
         isSignUpMode = !isSignUpMode;
         document.getElementById('authActionBtn').innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
-        document.getElementById('authToggleBtn').innerText = isSignUpMode ? 'Already have an account? Sign In' : 'Need an account? Sign Up';
+        document.getElementById('authToggleBtn').innerHTML = isSignUpMode ? 'Already have an account? <strong>Sign In</strong>' : 'Need an account? <strong>Sign Up</strong>';
+        const googleText = document.getElementById('googleSignInBtnText');
+        if (googleText) googleText.innerText = isSignUpMode ? 'Sign up with Google' : 'Sign in with Google';
       }
 
       function handleAuthAction() {
@@ -1411,6 +1426,37 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         });
       }
 
+      function handleGoogleSignIn() {
+        const errDiv = document.getElementById('authError');
+        errDiv.innerText = '';
+        auth.signInWithPopup(googleProvider)
+          .then(() => {
+            closeModals();
+          })
+          .catch(err => {
+            errDiv.innerText = err.message;
+          });
+      }
+
+      function handlePasswordReset() {
+        const email = document.getElementById('authEmail').value;
+        const errDiv = document.getElementById('authError');
+        if (!email) {
+          errDiv.style.color = 'var(--incorrect)';
+          errDiv.innerText = 'Enter your email above to reset your password.';
+          return;
+        }
+        auth.sendPasswordResetEmail(email)
+          .then(() => {
+            errDiv.style.color = 'var(--correct)';
+            errDiv.innerText = 'Password reset email sent! Check your inbox.';
+          })
+          .catch(err => {
+            errDiv.style.color = 'var(--incorrect)';
+            errDiv.innerText = err.message;
+          });
+      }
+
       function handleSignOut() {
         auth.signOut().then(() => {
           closeModals();
@@ -1426,6 +1472,8 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const passInput = document.getElementById('authPassword');
         const actionBtn = document.getElementById('authActionBtn');
         const toggleBtn = document.getElementById('authToggleBtn');
+        const googleBtn = document.getElementById('googleSignInBtn');
+        const separator = document.getElementById('authSeparator');
         const labels = document.getElementById('authModalBody').querySelectorAll('label');
 
         if (user) {
@@ -1439,8 +1487,10 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
             passInput.style.display = 'none';
             actionBtn.style.display = 'none';
             toggleBtn.style.display = 'none';
+            if (googleBtn) googleBtn.style.display = 'none';
+            if (separator) separator.style.display = 'none';
             labels.forEach(l => l.style.display = 'none');
-            document.getElementById('authCurrentUser').innerText = user.email;
+            document.getElementById('authCurrentUser').innerText = user.displayName || user.email || 'User';
           }
           pullFromCloud();
         } else {
@@ -1454,6 +1504,8 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
             passInput.style.display = 'block';
             actionBtn.style.display = 'block';
             toggleBtn.style.display = 'block';
+            if (googleBtn) googleBtn.style.display = 'flex';
+            if (separator) separator.style.display = 'flex';
             labels.forEach(l => l.style.display = 'block');
           }
         }
