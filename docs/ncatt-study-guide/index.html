@@ -270,6 +270,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
           <button class="icon-btn" id="zenBtn" onclick="toggleZenMode()" title="Zen / Focus Mode" style="display:none">&#129496;</button>
           <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Toggle Sound">&#128264;</button>
           <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle Theme">&#127769;</button>
+          <button class="icon-btn" id="authBtn" onclick="openModal('authModal')" title="Sign In / Account" style="color:var(--accent); font-weight:bold; width:auto; padding:0 10px;">Sign In</button>
           <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Keyboard Shortcuts">&#9000;</button>
         </div>
       </header>
@@ -432,6 +433,24 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     </div>
     <div style="margin-top:16px"><button class="btn btn-p" onclick="closeModals()">Close</button></div>
   </div></div>
+  <div class="modal-overlay" id="authModal"><div class="modal" id="authModalBody">
+    <h3 id="authModalTitle">&#128274; Sign In / Sign Up</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Sync your progress across devices via Cloud.</p>
+    <div id="authError" style="color:var(--incorrect);font-size:12px;margin-bottom:10px;"></div>
+    <label>Email</label>
+    <input type="email" id="authEmail" placeholder="you@example.com">
+    <label>Password</label>
+    <input type="password" id="authPassword" placeholder="Minimum 6 characters">
+    <div style="margin-top:12px; display:flex; gap:10px;">
+      <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="flex:1;">Sign In</button>
+      <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="flex:1;">Need an account? Sign Up</button>
+    </div>
+    <div id="authLoggedInView" style="display:none;">
+      <p style="font-size:14px; margin-bottom:12px; color:var(--text);">Logged in as: <strong id="authCurrentUser"></strong></p>
+      <button class="btn btn-d" onclick="handleSignOut()" style="width:100%;">Sign Out</button>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-s" onclick="closeModals()">Close</button></div>
+  </div></div>
   <div class="modal-overlay" id="importExportModal"><div class="modal">
     <h3>&#128229; Import / Export Progress</h3>
     <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Export your study data to back it up, or import from a previous backup.</p>
@@ -449,7 +468,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
     // ======== DATA LAYER ========
     const LS = (k,d) => { try { let v=localStorage.getItem('ncatt_'+k); return v?JSON.parse(v):d; } catch(e){return d;} };
-    const SS = (k,v) => { try { localStorage.setItem('ncatt_'+k,JSON.stringify(v)); } catch(e){} };
+    const SS = (k,v) => { try { localStorage.setItem('ncatt_'+k,JSON.stringify(v)); if(window.throttleFirebaseSync) window.throttleFirebaseSync(); } catch(e){} };
     const today = () => new Date().toISOString().slice(0,10);
 
     let masteryData = LS('mastery', {});
@@ -1331,6 +1350,140 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     applyDashLayout();
     switchView('dashboard');
 
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        projectId: "tnt2destroy-portal",
+        appId: "1:743605738064:web:00e4e3aff0ab6845294f55",
+        storageBucket: "tnt2destroy-portal.firebasestorage.app",
+        apiKey: "AIzaSyDNHBJzyeJjZeFnynfWftWjIw3in5ho3wQ",
+        authDomain: "tnt2destroy-portal.firebaseapp.com",
+        messagingSenderId: "743605738064"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      let isSignUpMode = false;
+      let syncTimeout = null;
+      let currentUser = null;
+
+      function toggleAuthMode() {
+        isSignUpMode = !isSignUpMode;
+        document.getElementById('authActionBtn').innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
+        document.getElementById('authToggleBtn').innerText = isSignUpMode ? 'Already have an account? Sign In' : 'Need an account? Sign Up';
+      }
+
+      function handleAuthAction() {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPassword').value;
+        const errDiv = document.getElementById('authError');
+        errDiv.innerText = '';
+        if(!email || !pass) { errDiv.innerText = 'Please enter email and password.'; return; }
+        
+        const promise = isSignUpMode 
+            ? auth.createUserWithEmailAndPassword(email, pass)
+            : auth.signInWithEmailAndPassword(email, pass);
+            
+        promise.then(() => {
+          closeModals();
+        }).catch(err => {
+          errDiv.innerText = err.message;
+        });
+      }
+
+      function handleSignOut() {
+        auth.signOut().then(() => {
+          closeModals();
+          window.location.reload();
+        });
+      }
+
+      auth.onAuthStateChanged((user) => {
+        currentUser = user;
+        const authBtn = document.getElementById('authBtn');
+        const loggedInView = document.getElementById('authLoggedInView');
+        const emailInput = document.getElementById('authEmail');
+        const passInput = document.getElementById('authPassword');
+        const actionBtn = document.getElementById('authActionBtn');
+        const toggleBtn = document.getElementById('authToggleBtn');
+        const labels = document.getElementById('authModalBody').querySelectorAll('label');
+
+        if (user) {
+          if (authBtn) {
+            authBtn.innerText = 'Account';
+            authBtn.style.color = 'var(--correct)';
+          }
+          if (loggedInView) {
+            loggedInView.style.display = 'block';
+            emailInput.style.display = 'none';
+            passInput.style.display = 'none';
+            actionBtn.style.display = 'none';
+            toggleBtn.style.display = 'none';
+            labels.forEach(l => l.style.display = 'none');
+            document.getElementById('authCurrentUser').innerText = user.email;
+          }
+          pullFromCloud();
+        } else {
+          if (authBtn) {
+            authBtn.innerText = 'Sign In';
+            authBtn.style.color = 'var(--accent)';
+          }
+          if (loggedInView) {
+            loggedInView.style.display = 'none';
+            emailInput.style.display = 'block';
+            passInput.style.display = 'block';
+            actionBtn.style.display = 'block';
+            toggleBtn.style.display = 'block';
+            labels.forEach(l => l.style.display = 'block');
+          }
+        }
+      });
+
+      function pullFromCloud() {
+        if(!currentUser) return;
+        db.collection('users').doc(currentUser.uid).get().then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            let changed = false;
+            ['mastery','notes','streak','sessions','missed','achievements','firstAttempts','timeStats','missCount','timerSetting','dailyGoal','bookmarks','flagged'].forEach(k => {
+              if (data[k] !== undefined) {
+                const currentStr = localStorage.getItem('ncatt_'+k);
+                const cloudStr = JSON.stringify(data[k]);
+                if (currentStr !== cloudStr) {
+                  localStorage.setItem('ncatt_'+k, cloudStr);
+                  changed = true;
+                }
+              }
+            });
+            if (changed) {
+              window.location.reload();
+            }
+          } else {
+            window.throttleFirebaseSync();
+          }
+        }).catch(err => console.error("Error fetching cloud data:", err));
+      }
+
+      window.throttleFirebaseSync = function() {
+        if(!currentUser) return;
+        if(syncTimeout) clearTimeout(syncTimeout);
+        syncTimeout = setTimeout(() => {
+           const payload = {};
+           ['mastery','notes','streak','sessions','missed','achievements','firstAttempts','timeStats','missCount','timerSetting','dailyGoal','bookmarks','flagged'].forEach(k => {
+               try {
+                   let v = localStorage.getItem('ncatt_'+k);
+                   if (v) payload[k] = JSON.parse(v);
+               } catch(e) {}
+           });
+           db.collection('users').doc(currentUser.uid).set(payload, {merge: true})
+             .then(() => console.log('Synced to cloud'))
+             .catch(err => console.error('Sync failed', err));
+        }, 1500);
+      };
     </script>
 </body>
 </html>
