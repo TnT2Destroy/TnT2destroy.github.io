@@ -1117,7 +1117,7 @@
     let qStartTime = 0;
 
     // ======== QUESTION PROCESSING ========
-    const allQuestions = allQuestionsRaw.map((q, i) => ({...q, globalId: i}));
+    const allQuestions = allQuestionsRaw.map(function(q, i) { var obj = Object.assign({}, q); obj.globalId = i; return obj; });
     const subjects = {};
     allQuestions.forEach(q => {
       if (!subjects[q.subject]) subjects[q.subject] = {};
