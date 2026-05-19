@@ -739,7 +739,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sb-header" onclick="switchView('dashboard')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                <span>AET Study Suite</span>
+                <span>NCATT AET Study Assist</span>
             </div>
             
             <div class="sb-menu" id="sidebarMenu">
@@ -756,10 +756,10 @@
                     <span>Search Bank</span>
                 </div>
                 
-                <div class="sb-title">Study Engine Modes</div>
+                <div class="sb-title">STUDY MODES</div>
                 <div class="nav-item" id="nav-flashcard" onclick="switchView('flashcard')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                    <span>Flashcard Deck</span>
+                    <span>Flashcard Mode</span>
                 </div>
                 <div class="nav-item" id="nav-weakfocus" onclick="startWeakFocus()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
@@ -767,7 +767,7 @@
                 </div>
                 <div class="nav-item" id="nav-randmix" onclick="startRandomMix()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
-                    <span>Random Matrix Mix</span>
+                    <span>Random Mix</span>
                 </div>
                 <div class="nav-item" id="nav-exam" onclick="startExam()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -775,7 +775,7 @@
                 </div>
                 
                 <div class="sb-title" onclick="toggleSubjectList()" id="subjectListTitle" style="cursor:pointer;">
-                    <span>System Directories</span>
+                    <span>SUBJECTS</span>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" id="subjectArrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
                 <div id="subjectList"></div>
@@ -783,10 +783,10 @@
             
             <div class="sb-footer">
                 <div style="display:flex; gap:8px">
-                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('importExportModal')">Data Sync</button>
-                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('settingsModal')">Config</button>
+                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('importExportModal')">Import/Export</button>
+                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('settingsModal')">Settings</button>
                 </div>
-                <button class="btn btn-d" style="width:100%; padding:8px;" onclick="resetProgress()">Wipe Core Cache</button>
+                <button class="btn btn-d" style="width:100%; padding:8px;" onclick="resetProgress()">Reset All Progress</button>
             </div>
         </aside>
 
@@ -797,7 +797,7 @@
                     <button class="hamburger" onclick="toggleSidebar()">
                         <svg width="24" height="24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                     </button>
-                    <div class="breadcrumb" id="breadcrumb">Core / <span class="hl">Dashboard</span></div>
+                    <div class="breadcrumb" id="breadcrumb">Home / <span class="hl">Dashboard</span></div>
                 </div>
                 
                 <div class="top-controls">
@@ -807,19 +807,19 @@
                     </div>
                     <div class="score-pill" id="scorePill" style="display:none">
                         <span id="scoreText">Q1</span>
-                        <span id="masteryBadge" class="mastery-badge m0">Incomplete Matrix</span>
+                        <span id="masteryBadge" class="mastery-badge m0">Needs Work</span>
                     </div>
-                    <button class="icon-btn" id="zenBtn" onclick="toggleZenMode()" title="Focus HUD Mode" style="display:none">
+                    <button class="icon-btn" id="zenBtn" onclick="toggleZenMode()" title="Zen / Focus Mode" style="display:none">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path></svg>
                     </button>
-                    <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Audio System Monitor">
+                    <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Toggle Sound">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                     </button>
-                    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Visual Array Spectrum">
+                    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle Theme">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                     </button>
-                    <button class="icon-btn" id="authBtn" onclick="openModal('authModal')" title="Network Sync Link" style="color:var(--accent2); font-weight:600; width:auto; padding:0 14px;">Connect</button>
-                    <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Hotkeys Manifest">
+                    <button class="icon-btn" id="authBtn" onclick="openModal('authModal')" title="Sign In / Account" style="color:var(--accent2); font-weight:600; width:auto; padding:0 14px;">Sign In</button>
+                    <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Keyboard Shortcuts">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
                     </button>
                 </div>
@@ -830,14 +830,14 @@
             <!-- Workspace Matrix: Dashboard View -->
             <div class="view active" id="view-dashboard">
                 <div class="dash-header">
-                   <div>Telemetry Center Overview</div>
-                   <button class="btn btn-s" style="font-size:11px; padding:6px 12px" onclick="resetDashLayout()">Realign HUD Modules</button>
+                   <div>Dashboard Overview</div>
+                   <button class="btn btn-s" style="font-size:11px; padding:6px 12px" onclick="resetDashLayout()">Reset Dashboard Layout</button>
                 </div>
                 <div class="dash-column" id="dashDropzone">
                     <div class="dash-module" id="widget-streakGoal" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px" id="streakGoalRow">
-                            <div class="streak-card" id="streakCard"><div class="streak-num" id="streakNum">0</div><div><div class="streak-label">Runtime Engine Streak</div><div class="streak-info" id="streakInfo">Initialize operations to build streak tracking.</div></div></div>
-                            <div class="goal-card" id="goalCard"><div class="goal-ring" id="goalRing">0%</div><div><div class="goal-label">Operational Daily Target</div><div class="goal-text" id="goalText">0 / 20 processes cleared</div></div></div>
+                            <div class="streak-card" id="streakCard"><div class="streak-num" id="streakNum">0</div><div><div class="streak-label">Daily Study Streak</div><div class="streak-info" id="streakInfo">Practice daily to build your streak.</div></div></div>
+                            <div class="goal-card" id="goalCard"><div class="goal-ring" id="goalRing">0%</div><div><div class="goal-label">Daily Study Goal</div><div class="goal-text" id="goalText">0 / 20 questions completed</div></div></div>
                         </div>
                     </div>
                     <div class="dash-module" id="widget-quote" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
@@ -851,17 +851,17 @@
                         <div class="ach-grid" id="achGrid"></div>
                     </div>
                     <div class="dash-module" id="widget-subjects" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
-                        <div class="section-header">Subject Field Calibration</div>
+                        <div class="section-header">Subject Mastery Progress</div>
                         <div id="dashSubjects"></div>
                     </div>
                     <div class="dash-module" id="widget-heatmap" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
-                        <div class="section-header">System Utilization Heatmap (60-Day Span)</div>
+                        <div class="section-header">Daily Study Activity Heatmap (60-Day Span)</div>
                         <div class="heatmap" id="heatmap"></div>
                     </div>
                     <div class="dash-module" id="widget-history" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><div class="section-header">Fault Registry Log</div><div id="recentMissed" style="max-height:300px; overflow-y:auto"></div></div>
-                            <div><div class="section-header">Historical Session Blocks</div><div id="sessionHistory" style="max-height:300px; overflow-y:auto"></div></div>
+                            <div><div class="section-header">Recent Missed Questions</div><div id="recentMissed" style="max-height:300px; overflow-y:auto"></div></div>
+                            <div><div class="section-header">Recent Study Sessions</div><div id="sessionHistory" style="max-height:300px; overflow-y:auto"></div></div>
                         </div>
                     </div>
                 </div>
@@ -869,72 +869,72 @@
 
             <!-- Workspace Matrix: Deep Analytics View -->
             <div class="view" id="view-analytics">
-                <div class="dash-header">Data Analytics Diagnostics</div>
+                <div class="dash-header">Study Performance Analytics</div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
                     <div class="dash-module">
-                        <h3 style="margin-bottom:12px; color:var(--accent2)">Execution Latency per Node</h3>
-                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">Mean processing velocity array configuration.</p>
+                        <h3 style="margin-bottom:12px; color:var(--accent2)">Average Response Time per Subject</h3>
+                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">Track how quickly you answer questions in each subject area.</p>
                         <div class="stat-val" id="avgTimeOverall">-- s</div>
-                        <div class="stat-sub">Global System Process Mean Time</div>
+                        <div class="stat-sub">Overall Average Response Time</div>
                         <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:16px" id="timeSubjects"></div>
                     </div>
                     <div class="dash-module">
-                        <h3 style="margin-bottom:12px; color:var(--incorrect)">Critical Discrepancy Faults</h3>
-                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">Primary data nodes reflecting frequent calculation errors.</p>
+                        <h3 style="margin-bottom:12px; color:var(--incorrect)">Top Weak Areas (Most Missed Questions)</h3>
+                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">These are the questions you miss most frequently. Focus on reviewing these.</p>
                         <table class="table" id="weaklinksTable"></table>
                     </div>
                 </div>
             </div>
 
-            <!-- Workspace Matrix: Process Question Engine Quiz View -->
+            <!-- Practice Mode View -->
             <div class="view" id="view-quiz" ontouchstart="touchStart(event)" ontouchend="touchEnd(event)">
                 <div class="q-card" id="qCard">
                     <div class="q-meta">
                         <span id="topicTag"></span>
                         <div style="display:flex; gap:12px;">
-                            <span class="q-tool-btn" id="flagBtn" onclick="toggleFlag()" title="Flag item for systemic review" style="cursor:pointer;">[!]</span>
-                            <span class="q-tool-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Mark directory node" style="cursor:pointer;">[*]</span>
+                            <span class="q-tool-btn" id="flagBtn" onclick="toggleFlag()" title="Flag question for review" style="cursor:pointer;">[!]</span>
+                            <span class="q-tool-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Bookmark question" style="cursor:pointer;">[*]</span>
                         </div>
                     </div>
-                    <div class="q-text" id="qText">Awaiting matrix generation sequence...</div>
+                    <div class="q-text" id="qText">Awaiting question selection...</div>
                     <div class="options" id="optionsBox"></div>
                     <div class="note-area">
-                        <div class="note-toggle" onclick="toggleNote()">Engineering Data Entry Log <span id="noteArrow">►</span></div>
-                        <textarea class="note-input" id="noteInput" placeholder="Log diagnostic notes relative to this sector... " oninput="saveNote()"></textarea>
+                        <div class="note-toggle" onclick="toggleNote()">Study Notes <span id="noteArrow">►</span></div>
+                        <textarea class="note-input" id="noteInput" placeholder="Write custom notes for this question here..." oninput="saveNote()"></textarea>
                     </div>
                 </div>
                 <div class="end-scr" id="endScreen" style="display:none; text-align:center; margin:auto">
-                    <h2 style="font-size:24px; margin-bottom:8px; color:var(--correct)">Data Stream Completed</h2>
-                    <p style="color:var(--text2); margin-bottom:20px">All sector questions fully filtered and resolved.</p>
-                    <button class="btn btn-p" onclick="reloadCurrentSubject()">Re-run Module Operations</button>
+                    <h2 style="font-size:24px; margin-bottom:8px; color:var(--correct)">Practice Completed</h2>
+                    <p style="color:var(--text2); margin-bottom:20px">All questions in this category have been answered.</p>
+                    <button class="btn btn-p" onclick="reloadCurrentSubject()">Restart Category</button>
                 </div>
             </div>
 
-            <!-- Workspace Matrix: Flashcard Mode View -->
+            <!-- Flashcard Mode View -->
             <div class="view" id="view-flashcard">
                 <div class="fc-container">
                     <div style="font-size:12px; color:var(--text2); font-family:'JetBrains Mono', monospace" id="fcMeta"></div>
                     <div class="fc-card" id="fcCard" onclick="flipCard()">
                         <div class="fc-inner">
-                            <div class="fc-front"><div class="fc-meta" id="fcTopic"></div><div class="fc-q" id="fcQuestion"></div><div style="font-size:12px; color:var(--text2); margin-top:20px">Trigger matrix block or hotkey [F] to rotate</div></div>
-                            <div class="fc-back"><div style="font-size:11px; color:var(--correct); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px">Resolved Data State</div><div class="fc-a" id="fcAnswer"></div></div>
+                            <div class="fc-front"><div class="fc-meta" id="fcTopic"></div><div class="fc-q" id="fcQuestion"></div><div style="font-size:12px; color:var(--text2); margin-top:20px">Click card or press [F] to flip</div></div>
+                            <div class="fc-back"><div style="font-size:11px; color:var(--correct); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px">Correct Answer</div><div class="fc-a" id="fcAnswer"></div></div>
                         </div>
                     </div>
                     <div class="fc-btns">
-                        <button class="btn btn-d" onclick="fcMark(false)">Fault Encountered</button>
-                        <button class="btn btn-p" onclick="fcMark(true)" style="background:var(--correct)">Calculation Confirmed</button>
+                        <button class="btn btn-d" onclick="fcMark(false)">Incorrect / Forgot</button>
+                        <button class="btn btn-p" onclick="fcMark(true)" style="background:var(--correct)">Correct / Remembered</button>
                     </div>
-                    <div style="font-size:12px; color:var(--text2); font-family:'JetBrains Mono', monospace">Arrays: [← Key] Fault | Verified State [Key →]</div>
+                    <div style="font-size:12px; color:var(--text2); font-family:'JetBrains Mono', monospace">Hotkeys: [← Key] Forgot | Remembered [Key →]</div>
                 </div>
             </div>
 
-            <!-- Workspace Matrix: Simulation Test Matrix View -->
+            <!-- Exam Mode View -->
             <div class="view" id="view-exam">
                 <div id="examContent">
                     <div class="exam-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px">
-                        <div style="font-size:18px; font-weight:700">Flight Certification Mock Simulation</div>
+                        <div style="font-size:18px; font-weight:700">Exam Simulation Mode</div>
                         <div class="exam-timer" id="examTimer" style="font-size:22px; font-weight:700; color:var(--warning); font-family:'JetBrains Mono', monospace">60:00</div>
-                        <div style="font-size:13px; color:var(--text2); font-family:'JetBrains Mono', monospace">Array Block Progress: <span id="examProgress">0</span>/50</div>
+                        <div style="font-size:13px; color:var(--text2); font-family:'JetBrains Mono', monospace">Progress: <span id="examProgress">0</span>/50</div>
                     </div>
                     <div class="q-card">
                         <div class="q-meta"><span id="examTopic"></span></div>
@@ -942,35 +942,35 @@
                         <div class="options" id="examOptions"></div>
                     </div>
                     <div style="display:flex; justify-content:flex-end; margin-top:20px">
-                        <button class="btn btn-p" id="examNextBtn" onclick="examNext()" disabled>Advance To Next Node ➔</button>
+                        <button class="btn btn-p" id="examNextBtn" onclick="examNext()" disabled>Next Question ➔</button>
                     </div>
                 </div>
                 <div class="exam-result" id="examResult" style="display:none; text-align:center; padding:40px">
-                    <div style="font-size:18px; color:var(--text2)">Simulation Evaluation Terminated</div>
+                    <div style="font-size:18px; color:var(--text2)">Exam Completed</div>
                     <div class="exam-score" id="examScore" style="font-size:64px; font-weight:800; margin:16px 0; font-family:'JetBrains Mono', monospace"></div>
                     <div style="font-size:20px; font-weight:700; margin-bottom:8px" id="examVerdict"></div>
                     <div style="color:var(--text2); margin-bottom:24px" id="examDetail"></div>
-                    <button class="btn btn-p" onclick="switchView('dashboard')" style="margin:0 auto">Return to Telemetry Root</button>
+                    <button class="btn btn-p" onclick="switchView('dashboard')" style="margin:0 auto">Return to Dashboard</button>
                 </div>
             </div>
 
-            <!-- Workspace Matrix: Search Bank Component View -->
+            <!-- Search Bank View -->
             <div class="view" id="view-bank">
                 <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap">
-                    <input type="text" id="searchBar" class="search-bar" style="flex:1; min-width:240px" placeholder="Filter target directory keywords..." oninput="filterBank()">
+                    <input type="text" id="searchBar" class="search-bar" style="flex:1; min-width:240px" placeholder="Search questions, options, and topics..." oninput="filterBank()">
                     <select id="masteryFilter" class="search-bar" style="width:160px" onchange="filterBank()">
-                        <option value="all">All Calibrations</option>
-                        <option value="0">Fault Matrix</option>
-                        <option value="1">Compiling</option>
-                        <option value="2">Calculated</option>
-                        <option value="3">Mastered Array</option>
+                        <option value="all">All Mastery Levels</option>
+                        <option value="0">Needs Work</option>
+                        <option value="1">Learning</option>
+                        <option value="2">Familiar</option>
+                        <option value="3">Mastered</option>
                     </select>
                     <select id="bookmarkFilter" class="search-bar" style="width:160px" onchange="filterBank()">
-                        <option value="all">All Data Nodes</option>
-                        <option value="bookmarked">Bookmarked Nodes</option>
-                        <option value="flagged">Flagged Deviations</option>
+                        <option value="all">All Questions</option>
+                        <option value="bookmarked">Bookmarked</option>
+                        <option value="flagged">Flagged</option>
                     </select>
-                    <button id="notesFilterBtn" class="btn btn-s" onclick="toggleNotesFilter()" style="white-space:nowrap">Contains Core Entry Log</button>
+                    <button id="notesFilterBtn" class="btn btn-s" onclick="toggleNotesFilter()" style="white-space:nowrap">Has Custom Notes</button>
                 </div>
                 <div id="bankResults"></div>
             </div>
@@ -978,72 +978,74 @@
             <!-- Workspace Matrix: Local Hardware Print View -->
             <div class="view" id="view-print"><div id="printContent" class="print-sheet"></div></div>
 
-            <!-- Context Control Navigation Footer -->
+            <!-- Control Navigation Footer -->
             <footer class="action-bar" id="actionBar" style="display:none">
                 <div class="btn-group">
-                    <button class="btn btn-s" id="btnPrev" disabled onclick="prevQuestion()">Reverse Vector</button>
-                    <button class="btn btn-w" id="btn5050" onclick="use5050()">Isolate 50/50 Nodes</button>
+                    <button class="btn btn-s" id="btnPrev" disabled onclick="prevQuestion()">Previous Question</button>
+                    <button class="btn btn-w" id="btn5050" onclick="use5050()">Use 50/50 Hint</button>
                     <div class="feedback" id="feedback"></div>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-s" id="btnShowAns" onclick="showAnswer()">Decompile Solution</button>
-                    <button class="btn btn-s" id="btnSkip" onclick="skipQuestion()">Bypass Node</button>
-                    <button class="btn btn-p" id="btnNext" onclick="nextQuestion()" style="display:none">Advance State ➔</button>
+                    <button class="btn btn-s" id="btnShowAns" onclick="showAnswer()">Show Answer</button>
+                    <button class="btn btn-s" id="btnSkip" onclick="skipQuestion()">Skip</button>
+                    <button class="btn btn-p" id="btnNext" onclick="nextQuestion()" style="display:none">Next Question ➔</button>
                 </div>
             </footer>
         </main>
     </div>
 
-    <!-- Modals Engine Configurations Layout Layer -->
+    <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal"><div class="modal">
-        <h3>HUD Matrix Configuration</h3>
-        <label>Daily Process Target Clear Count</label>
+        <h3>Application Settings</h3>
+        <label>Daily Study Goal (Questions)</label>
         <input type="number" id="goalInput" min="1" max="500" value="20" onchange="saveGoal()">
-        <label>Internal Question Node Timer (Seconds, 0 = Off)</label>
+        <label>Question Timer (Seconds, 0 = Off)</label>
         <input type="number" id="timerInput" min="0" max="300" value="0" onchange="saveTimerSetting()">
-        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Save Array Configurations</button></div>
+        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Save Settings</button></div>
     </div></div>
 
+    <!-- Keyboard Shortcuts Modal -->
     <div class="modal-overlay" id="shortcutsModal"><div class="modal">
-        <h3>System Intercept Command Mapping</h3>
+        <h3>Keyboard Shortcuts Mapping</h3>
         <div class="kb-grid">
-            <span class="kb-key">1</span><span>Target Option Alpha</span>
-            <span class="kb-key">2</span><span>Target Option Bravo</span>
-            <span class="kb-key">3</span><span>Target Option Charlie</span>
-            <span class="kb-key">4</span><span>Target Option Delta</span>
-            <span class="kb-key">5</span><span>Isolate Alternate Options (50/50)</span>
-            <span class="kb-key">Enter</span><span>Advance Engine Execution State</span>
-            <span class="kb-key">Backspace</span><span>Revert Node Stream Vector</span>
-            <span class="kb-key">S</span><span>Bypass Active Node Assignment</span>
-            <span class="kb-key">F</span><span>Flip Active Deck Index Card</span>
-            <span class="kb-key">T</span><span>Toggle Color Scheme Array</span>
-            <span class="kb-key">Z</span><span>Trigger HUD Focus Isolation Mode</span>
-            <span class="kb-key">?</span><span>Display Operations Manifest</span>
+            <span class="kb-key">1</span><span>Select Option A</span>
+            <span class="kb-key">2</span><span>Select Option B</span>
+            <span class="kb-key">3</span><span>Select Option C</span>
+            <span class="kb-key">4</span><span>Select Option D</span>
+            <span class="kb-key">5</span><span>Use 50/50 Hint</span>
+            <span class="kb-key">Enter</span><span>Next Question / Submit</span>
+            <span class="kb-key">Backspace</span><span>Previous Question</span>
+            <span class="kb-key">S</span><span>Skip Question</span>
+            <span class="kb-key">F</span><span>Flip Flashcard</span>
+            <span class="kb-key">T</span><span>Toggle Theme</span>
+            <span class="kb-key">Z</span><span>Toggle Zen Focus Mode</span>
+            <span class="kb-key">?</span><span>Show Shortcuts Help</span>
         </div>
-        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Resume Task</button></div>
+        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Close</button></div>
     </div></div>
 
+    <!-- Auth Modal -->
     <div class="modal-overlay" id="authModal">
         <div class="modal" id="authModalBody" style="padding: 32px;">
-            <h3 id="authModalTitle" style="font-size: 20px; margin-bottom: 8px;">Cloud Matrix Directory Sync</h3>
-            <p style="font-size:13px; color:var(--text2); margin-bottom:24px; line-height:1.5;">Bind data files to network storage units to synchronize deployment sessions smoothly.</p>
+            <h3 id="authModalTitle" style="font-size: 20px; margin-bottom: 8px;">Cloud Backup & Sync</h3>
+            <p style="font-size:13px; color:var(--text2); margin-bottom:24px; line-height:1.5;">Create an account or sign in to sync your study progress and notes across devices.</p>
             
             <div id="authError" style="color:var(--incorrect); font-size:13px; margin-bottom:16px; font-weight: 600;"></div>
             
             <div style="margin-bottom: 16px;">
-                <label>User Login Registry ID (Email)</label>
-                <input type="email" id="authEmail" placeholder="mechanic@suu.edu">
+                <label>Email Address</label>
+                <input type="email" id="authEmail" placeholder="student@example.com">
             </div>
             
             <div style="margin-bottom: 24px;">
-                <label>System Encrypted Access Key (Password)</label>
-                <input type="password" id="authPassword" placeholder="Minimum 6 security bits">
-                <button type="button" onclick="handlePasswordReset()" style="background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; text-decoration:underline; padding-top:4px;">Request Access Key Vector Overwrite</button>
+                <label>Password</label>
+                <input type="password" id="authPassword" placeholder="Minimum 6 characters">
+                <button type="button" onclick="handlePasswordReset()" style="background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; text-decoration:underline; padding-top:4px;">Forgot password?</button>
             </div>
             
             <div style="display:flex; flex-direction:column; gap:12px;">
-                <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="width:100%">Verify Credentials</button>
-                <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="width:100%; border-color:transparent;">Initialize New Directory ID File Allocation</button>
+                <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="width:100%">Sign In</button>
+                <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="width:100%; border-color:transparent;">Don't have an account? Sign Up</button>
                 
                 <div id="authSeparator" style="display: flex; align-items: center; margin: 8px 0;">
                     <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
@@ -1052,28 +1054,29 @@
                 </div>
                 
                 <button class="btn btn-s" id="googleSignInBtn" onclick="handleGoogleSignIn()" style="width:100%; background: #fff; color: #1e293b; font-weight:600;">
-                    <span>Establish Link via External Google Node</span>
+                    <span>Sign In with Google</span>
                 </button>
             </div>
             
             <div id="authLoggedInView" style="display:none; text-align: center;">
-                <p style="font-size:14px; margin-bottom:20px; color:var(--text);">Active Uplink Securely Confirmed:<br><strong id="authCurrentUser" style="color: var(--accent2);"></strong></p>
-                <button class="btn btn-d" onclick="handleSignOut()" style="width:100%">Sever Network Uplink Sync</button>
+                <p style="font-size:14px; margin-bottom:20px; color:var(--text);">Successfully connected as:<br><strong id="authCurrentUser" style="color: var(--accent2);"></strong></p>
+                <button class="btn btn-d" onclick="handleSignOut()" style="width:100%">Sign Out</button>
             </div>
             
             <div style="margin-top:24px; border-top: 1px solid var(--border); padding-top: 16px;">
-                <button class="btn btn-s" onclick="closeModals()" style="width:100%">Dismiss Command Block</button>
+                <button class="btn btn-s" onclick="closeModals()" style="width:100%">Close</button>
             </div>
         </div>
     </div>
 
+    <!-- Import/Export Modal -->
     <div class="modal-overlay" id="importExportModal"><div class="modal">
-        <h3>Hardware Progress Registry Allocation</h3>
-        <p style="font-size:13px; color:var(--text2); margin-bottom:16px;">Export runtime telemetry data matrices as physical JSON structures, or decompile a raw backup array stream directly into local memory storage blocks.</p>
-        <button class="btn btn-p" onclick="exportData()" style="margin-bottom:16px; width:100%">Serialize Progress States to File (.json)</button>
-        <label>Inject Local Source File Target</label>
+        <h3>Local Data Import & Export</h3>
+        <p style="font-size:13px; color:var(--text2); margin-bottom:16px;">Export your study progress to a local JSON file, or import progress from an existing backup file.</p>
+        <button class="btn btn-p" onclick="exportData()" style="margin-bottom:16px; width:100%">Export Progress to File (.json)</button>
+        <label>Import Progress File</label>
         <input type="file" id="importFile" accept=".json" onchange="importData(event)">
-        <div style="margin-top:12px"><button class="btn btn-s" style="width:100%" onclick="closeModals()">Dismiss Transfer Unit</button></div>
+        <div style="margin-top:12px"><button class="btn btn-s" style="width:100%" onclick="closeModals()">Close</button></div>
     </div></div>
 
     <!-- Script assets, event handlers, execution layer, and initialization blocks remain untouched past this vector injection point -->
@@ -1230,9 +1233,9 @@
       if (!showQuiz && zenMode) toggleZenMode();
       if (!showQuiz) stopTimer();
       
-      if (name === 'dashboard') { renderDashboard(); document.getElementById('breadcrumb').innerHTML = 'Core / <span class="hl">Dashboard</span>'; }
-      if (name === 'analytics') { renderAnalytics(); document.getElementById('breadcrumb').innerHTML = 'Diagnostics / <span class="hl">Deep Analytics</span>'; }
-      if (name === 'bank') { renderBank(); document.getElementById('breadcrumb').innerHTML = 'Data Nodes / <span class="hl">Search Bank</span>'; }
+      if (name === 'dashboard') { renderDashboard(); document.getElementById('breadcrumb').innerHTML = 'Home / <span class="hl">Dashboard</span>'; }
+      if (name === 'analytics') { renderAnalytics(); document.getElementById('breadcrumb').innerHTML = 'Analytics / <span class="hl">Performance</span>'; }
+      if (name === 'bank') { renderBank(); document.getElementById('breadcrumb').innerHTML = 'Database / <span class="hl">Search Bank</span>'; }
       if (name === 'flashcard') { startFlashcards(); }
       
       document.getElementById('sidebar').classList.remove('open');
@@ -1297,7 +1300,7 @@
     function startWeakFocus() {
       quizMode = 'weak';
       const qs = allQuestions.filter(q => (masteryData[q.globalId]||0) <= 1);
-      if (qs.length === 0) { alert('All data sectors verified inside nominal tolerances.'); return; }
+      if (qs.length === 0) { alert('All questions mastered! Good job.'); return; }
       loadQuiz(qs, 'Weak Areas Focus');
       document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
       document.getElementById('nav-weakfocus').classList.add('active');
@@ -1332,7 +1335,7 @@
 
     // ======== QUIZ RENDERING ========
     function getMastery(lvl) {
-      const map = [{text:'Fault Matrix',cls:'m0'},{text:'Compiling',cls:'m1'},{text:'Calculated',cls:'m2'},{text:'Mastered Array',cls:'m3'}];
+      const map = [{text:'Not Started',cls:'m0'},{text:'Learning',cls:'m1'},{text:'Reviewing',cls:'m2'},{text:'Mastered',cls:'m3'}];
       return map[lvl] || map[0];
     }
 
@@ -1344,7 +1347,7 @@
       answered = false; used5050 = false; qStartTime = Date.now();
       document.getElementById('qText').textContent = q.text;
       document.getElementById('topicTag').textContent = q.topic + ' — ' + q.category;
-      document.getElementById('scoreText').textContent = 'Node ' + (queueIdx+1) + '/' + quizQueue.length;
+      document.getElementById('scoreText').textContent = 'Q. ' + (queueIdx+1) + '/' + quizQueue.length;
       document.getElementById('masteryBadge').className = 'mastery-badge ' + badge.cls;
       document.getElementById('masteryBadge').textContent = badge.text;
       document.getElementById('feedback').textContent = '';
@@ -1535,7 +1538,7 @@
       document.getElementById('fcQuestion').textContent = q.topic;
       document.getElementById('fcAnswer').textContent = ans;
       document.getElementById('fcTopic').textContent = q.category;
-      document.getElementById('fcMeta').textContent = 'Matrix Node ' + (fcIdx+1) + ' / ' + fcQueue.length;
+      document.getElementById('fcMeta').textContent = 'Card ' + (fcIdx+1) + ' / ' + fcQueue.length;
       document.getElementById('fcCard').classList.remove('flipped');
     }
     function flipCard() { document.getElementById('fcCard').classList.toggle('flipped'); }
@@ -1587,7 +1590,7 @@
       if (examIdx >= examQueue.length) { finishExam(); return; }
       const q = examQueue[examIdx];
       document.getElementById('examQText').textContent = q.text;
-      document.getElementById('examTopic').textContent = 'Node '+(examIdx+1)+'/50 — '+q.topic;
+      document.getElementById('examTopic').textContent = 'Q. '+(examIdx+1)+'/50 — '+q.topic;
       document.getElementById('examProgress').textContent = examIdx+1;
       document.getElementById('examNextBtn').disabled = true;
       const box = document.getElementById('examOptions'); box.innerHTML = '';
@@ -1618,9 +1621,9 @@
       document.getElementById('examResult').style.display = 'block';
       document.getElementById('examScore').textContent = pct + '%';
       document.getElementById('examScore').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
-      document.getElementById('examVerdict').innerHTML = pass ? '✓ OPERATIONAL COMPLIANCE ACCREDITED' : '✗ FLIGHT RE-CALIBRATION REQUIRED';
+      document.getElementById('examVerdict').innerHTML = pass ? '✓ EXAM PASSED' : '✗ EXAM FAILED';
       document.getElementById('examVerdict').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
-      document.getElementById('examDetail').textContent = examCorrect+'/50 segments matched — '+(pass?'HUD diagnostics verified nominal.':'Target metrics specify 70% threshold minimum configuration.');
+      document.getElementById('examDetail').textContent = examCorrect+'/50 correct answers — '+(pass?'Congratulations! You have passed the simulated exam.':'You need at least 70% correct to pass the exam. Keep studying!');
       if (pass) fireConfetti();
       todayCount += examAnswered; todayCorrect += examCorrect;
       SS('todayCount_'+today(), todayCount); SS('todayCorrect_'+today(), todayCorrect);
@@ -1642,14 +1645,14 @@
 
     // ======== ACHIEVEMENTS ========
     const achDefs = [
-      {id:'first10',icon:'🏆',name:'First 10 Array blocks',desc:'Calibrate 10 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=10},
-      {id:'first50',icon:'🎖️',name:'50 Array sectors',desc:'Calibrate 50 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=50},
-      {id:'first100',icon:'⚡',name:'Century Databank',desc:'Calibrate 100 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=100},
-      {id:'streak7',icon:'🔥',name:'Telemetry Stream Matrix',desc:'7-day baseline sync monitoring',check:()=>streakData.count>=7},
-      {id:'allSubjects',icon:'🌍',name:'Sector Cartographer',desc:'Scan elements across all directories',check:()=>{const subs=new Set(allQuestions.map(q=>q.subject));const attempted=new Set();for(const id in masteryData){const q=allQuestions[parseInt(id)];if(q)attempted.add(q.subject);}return attempted.size>=subs.size;}},
-      {id:'perfect10',icon:'🎯',name:'Perfect Logic Loop',desc:'10 sequential clean calculations',check:()=>consecutiveCorrect>=10},
-      {id:'daily50',icon:'⚙️',name:'Core Overclock',desc:'Resolve 50 parameters in a single monitoring shift',check:()=>todayCount>=50},
-      {id:'bookworm',icon:'💾',name:'Directory Compiler',desc:'Index 20 items to local cache cards',check:()=>bookmarks.size>=20},
+      {id:'first10',icon:'🏆',name:'Novice Scholar',desc:'Master 10 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=10},
+      {id:'first50',icon:'🎖️',name:'Apprentice',desc:'Master 50 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=50},
+      {id:'first100',icon:'⚡',name:'Master Scholar',desc:'Master 100 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=100},
+      {id:'streak7',icon:'🔥',name:'Weekly Warrior',desc:'Keep a 7-day study streak',check:()=>streakData.count>=7},
+      {id:'allSubjects',icon:'🌍',name:'All-Rounder',desc:'Study questions across all subjects',check:()=>{const subs=new Set(allQuestions.map(q=>q.subject));const attempted=new Set();for(const id in masteryData){const q=allQuestions[parseInt(id)];if(q)attempted.add(q.subject);}return attempted.size>=subs.size;}},
+      {id:'perfect10',icon:'🎯',name:'Flawless',desc:'Get 10 correct answers in a row',check:()=>consecutiveCorrect>=10},
+      {id:'daily50',icon:'⚙️',name:'Overachiever',desc:'Answer 50 questions in one day',check:()=>todayCount>=50},
+      {id:'bookworm',icon:'💾',name:'Archivist',desc:'Bookmark 20 questions',check:()=>bookmarks.size>=20},
     ];
     function checkAchievements() {
       let newUnlock = false;
@@ -1695,7 +1698,7 @@
       });
     }
     function resetDashLayout() {
-      if(!confirm('Reset telemetry console orientation layout grids?')) return;
+      if(!confirm('Reset dashboard layout?')) return;
       localStorage.removeItem('ncatt_dashLayout'); dashLayout = null;
       location.reload();
     }
@@ -1707,26 +1710,26 @@
       const total = allQuestions.length; const masteredPct = Math.round((counts[3]/total)*100)||0;
       
       document.getElementById('dashStats').innerHTML = [
-        {label:'Total Indexed Blocks',val:total,color:'var(--accent2)',sub:total+' vectors cataloged',border:'var(--accent)'},
-        {label:'Validated Arrays',val:masteredPct+'%',color:'var(--correct)',sub:counts[3]+' structural nodes matching zero tolerances',border:'var(--correct)'},
-        {label:'Active Computation',val:counts[1]+counts[2],color:'var(--warning)',sub:'Compiling processing pipelines',border:'var(--warning)'},
-        {label:'Uncalibrated Clusters',val:counts[0],color:'var(--incorrect)',sub:'Parameters scheduled for telemetry sweeps',border:'var(--incorrect)'},
-        {label:'Shift Log Count',val:todayCount,color:'var(--text)',sub:todayCorrect+' accurate inputs validated',border:'var(--border)'},
+        {label:'Total Questions',val:total,color:'var(--accent2)',sub:total+' questions in database',border:'var(--accent)'},
+        {label:'Mastered Questions',val:masteredPct+'%',color:'var(--correct)',sub:counts[3]+' questions fully mastered',border:'var(--correct)'},
+        {label:'Learning Progress',val:counts[1]+counts[2],color:'var(--warning)',sub:'Questions currently being learned',border:'var(--warning)'},
+        {label:'Unattempted Questions',val:counts[0],color:'var(--incorrect)',sub:'Questions not yet attempted',border:'var(--incorrect)'},
+        {label:'Questions Today',val:todayCount,color:'var(--text)',sub:todayCorrect+' correct answers today',border:'var(--border)'},
       ].map(s=>'<div class="stat-card" style="border-left:3px solid '+s.border+'"><div class="stat-label">'+s.label+'</div><div class="stat-val" style="color:'+s.color+'">'+s.val+'</div><div class="stat-sub">'+s.sub+'</div></div>').join('');
 
       document.getElementById('streakNum').textContent = streakData.count;
-      document.getElementById('streakInfo').textContent = streakData.lastDate ? 'System verification window sync date: '+streakData.lastDate : 'Awaiting baseline computation sequence metrics.';
+      document.getElementById('streakInfo').textContent = streakData.lastDate ? 'Last active day: '+streakData.lastDate : 'Complete a study session to start your streak.';
 
       const goalPct = Math.min(100, Math.round((todayCount/dailyGoal)*100));
       const goalRing = document.getElementById('goalRing');
       goalRing.textContent = goalPct + '%';
       goalRing.style.background = 'conic-gradient(var(--correct) '+goalPct+'%, var(--surface2) '+goalPct+'%)';
-      document.getElementById('goalText').textContent = todayCount + ' / ' + dailyGoal + ' processes executed';
+      document.getElementById('goalText').textContent = todayCount + ' / ' + dailyGoal + ' questions answered';
 
       const q = quotes[Math.floor(Math.random()*quotes.length)];
       document.getElementById('quoteCard').innerHTML = '<div style="padding-left:16px; font-style:italic; line-height:1.6;">"'+q.text+'"</div><div style="text-align:right; font-size:12px; color:var(--text2); margin-top:8px; font-weight:600;">— '+q.author+'</div>';
 
-      document.getElementById('achCount').textContent = achievements.size + '/' + achDefs.length + ' metrics active';
+      document.getElementById('achCount').textContent = achievements.size + '/' + achDefs.length + ' achievements unlocked';
       document.getElementById('achGrid').innerHTML = achDefs.map(a => {
         const unlocked = achievements.has(a.id);
         return '<div class="ach-card" style="opacity:'+(unlocked?'1':'0.35')+'; background:rgba(0,0,0,0.15); border:1px solid '+(unlocked?'var(--warning)':'var(--border)')+'; border-radius:8px; padding:16px; text-align:center;"><div style="font-size:24px; margin-bottom:4px;">'+a.icon+'</div><div style="font-size:12px; font-weight:700; margin-bottom:2px;">'+a.name+'</div><div style="font-size:10px; color:var(--text2);">'+a.desc+'</div></div>';
@@ -1737,8 +1740,8 @@
         const c = subGroups[sub]; const t = c[0]+c[1]+c[2]+c[3];
         const pcts = c.map(v=>(v/t)*100);
         const acc = firstAttempts[sub] ? Math.round((firstAttempts[sub].correct/firstAttempts[sub].total)*100) : 0;
-        const accText = firstAttempts[sub] ? acc+'% validation accuracy ('+firstAttempts[sub].correct+'/'+firstAttempts[sub].total+')' : 'Matrix sequence non-initiated';
-        subHtml += '<div class="sub-card"><div class="sub-title"><span>'+sub+'</span><span style="font-size:11px; font-weight:500; color:var(--text2)">'+t+' Vectors — '+accText+'</span></div>';
+        const accText = firstAttempts[sub] ? acc+'% accuracy on first attempt ('+firstAttempts[sub].correct+'/'+firstAttempts[sub].total+')' : 'No first-attempt history';
+        subHtml += '<div class="sub-card"><div class="sub-title"><span>'+sub+'</span><span style="font-size:11px; font-weight:500; color:var(--text2)">'+t+' Questions — '+accText+'</span></div>';
         subHtml += '<div class="prog-bar">';
         ['seg0','seg1','seg2','seg3'].forEach((cls,i) => { if (pcts[i]>0) subHtml += '<div class="prog-seg '+cls+'" style="width:'+pcts[i]+'%"></div>'; });
         subHtml += '</div></div>';
@@ -1746,13 +1749,13 @@
       document.getElementById('dashSubjects').innerHTML = subHtml;
 
       const missedEl = document.getElementById('recentMissed');
-      if (missedRecent.length === 0) { missedEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">Fault log clean. Telemetry lines showing peak alignment.</div>'; }
-      else { missedEl.innerHTML = missedRecent.slice(0,10).map(m => '<div style="padding:10px; border-bottom:1px solid var(--border); font-size:13px;"><span style="color:var(--incorrect); margin-right:8px;">[FAULT]</span>'+m.text+'<span style="float:right; color:var(--text2); font-size:11px;">'+m.date+'</span></div>').join(''); }
+      if (missedRecent.length === 0) { missedEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">No missed questions yet. Good job!</div>'; }
+      else { missedEl.innerHTML = missedRecent.slice(0,10).map(m => '<div style="padding:10px; border-bottom:1px solid var(--border); font-size:13px;"><span style="color:var(--incorrect); margin-right:8px;">[MISSED]</span>'+m.text+'<span style="float:right; color:var(--text2); font-size:11px;">'+m.date+'</span></div>').join(''); }
 
     const sessEl = document.getElementById('sessionHistory');
-    if (sessionHistory.length === 0) { sessEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">Log lines clear. Awaiting historical session generation.</div>'; }
+    if (sessionHistory.length === 0) { sessEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">No study history yet. Start learning to record your progress!</div>'; }
     else {
-      let sh = '<div class="session-row header" style="display:grid; grid-template-columns:1fr 80px 80px 80px; padding:8px 12px; font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase;"><span>Date Stamp</span><span>Checked</span><span>Correct</span><span>Duration</span></div>';
+      let sh = '<div class="session-row header" style="display:grid; grid-template-columns:1fr 80px 80px 80px; padding:8px 12px; font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase;"><span>Date</span><span>Attempted</span><span>Correct</span><span>Duration</span></div>';
       sessionHistory.slice(0,10).forEach(s => {
         const d = new Date(s.date); const dur = s.duration<60?s.duration+'s':Math.round(s.duration/60)+'m';
         sh += '<div class="session-row" style="display:grid; grid-template-columns:1fr 80px 80px 80px; padding:8px 12px; font-size:12px; border-bottom:1px solid var(--border);"><span>'+d.toLocaleDateString()+'</span><span>'+s.answered+'</span><span style="color:var(--correct)">'+s.correct+'</span><span>'+dur+'</span></div>';
@@ -1765,7 +1768,7 @@
         const d = new Date(Date.now()-i*86400000).toISOString().slice(0,10);
         const cnt = LS('todayCount_'+d, 0);
         let cls = ''; if (cnt>=1) cls='heat-1'; if (cnt>=10) cls='heat-2'; if (cnt>=25) cls='heat-3'; if (cnt>=50) cls='heat-4';
-        heatHtml += '<div class="heat-cell '+cls+'" title="Shift Frame '+d+': '+cnt+' computations logged"></div>';
+        heatHtml += '<div class="heat-cell '+cls+'" title="Activity on '+d+': '+cnt+' questions answered"></div>';
       }
       heatEl.innerHTML = heatHtml;
     }
@@ -1791,15 +1794,15 @@
         const slowWarn = parseFloat(avg) > parseFloat(overallAvg)*1.5 ? '<span style="color:var(--incorrect); font-size:11px; margin-left:8px; font-weight:700;">[WARN: LATENCY DETECTED]</span>' : '';
         tsHtml += '<div style="display:flex; justify-content:space-between; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.01)"><div style="color:var(--text2); text-overflow:ellipsis; white-space:nowrap; overflow:hidden; padding-right:12px">'+sub+'</div><div><strong>'+avg+'s</strong>'+slowWarn+'</div></div>';
       }
-      document.getElementById('timeSubjects').innerHTML = tsHtml || '<div style="font-size:13px; color:var(--text2)">Compile operational shifts to register latency statistics.</div>';
+      document.getElementById('timeSubjects').innerHTML = tsHtml || '<div style="font-size:13px; color:var(--text2)">Complete study sessions to generate response time statistics.</div>';
 
       const misses = Object.keys(missCount).map(id => ({ id: parseInt(id), count: missCount[id] }));
       misses.sort((a,b) => b.count - a.count);
       const top10 = misses.slice(0, 10);
       
-      let wlHtml = '<tr><th>Sector Assignment</th><th>Indexed Context</th><th style="text-align:center;">Fault Frequency</th></tr>';
+      let wlHtml = '<tr><th>Subject</th><th>Question</th><th style="text-align:center;">Times Missed</th></tr>';
       if (top10.length === 0) {
-        wlHtml = '<tr><td colspan="3" style="text-align:center; color:var(--text2); padding:20px;">Diagnostic logs indicating zero recurring failures across active directories.</td></tr>';
+        wlHtml = '<tr><td colspan="3" style="text-align:center; color:var(--text2); padding:20px;">No recurring mistakes logged. Outstanding!</td></tr>';
       } else {
         top10.forEach(m => {
           const q = allQuestions[m.id]; if(!q) return;
@@ -1837,10 +1840,10 @@
         return tm && lm && flagBM && nm;
       });
       if (matches.length > 100 && q.length < 2 && fl==='all' && bf==='all' && !notesFilterActive) {
-        resultsEl.innerHTML = '<p style="color:var(--text2); font-size:13px; margin-bottom:12px;">Displaying upper 100 directory lines. Apply target constraints to isolate strings.</p>';
+        resultsEl.innerHTML = '<p style="color:var(--text2); font-size:13px; margin-bottom:12px;">Displaying first 100 questions. Use filters or search to narrow down.</p>';
         matches = matches.slice(0,100);
       } else if (matches.length === 0) {
-        resultsEl.innerHTML = '<p style="color:var(--text2); padding:16px;">Query parameter failed to return records matching specified filter parameters.</p>';
+        resultsEl.innerHTML = '<p style="color:var(--text2); padding:16px;">No matching questions found in database.</p>';
       }
       matches.forEach(item => {
         const ans = item.options.find(o=>o.isCorrect).text;
@@ -1851,7 +1854,7 @@
         const note = userNotes[item.globalId];
         const el = document.createElement('div'); el.className = 'bank-item';
         let icons = ''; if(starred) icons+=' [★]'; if(flagged) icons+=' [⚑]'; if(note) icons+=' [📝]';
-        el.innerHTML = '<div class="b-meta" style="font-size:11px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase;"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+icons+'</span></div><div class="b-q" style="font-size:15px; color:var(--text); margin-bottom:6px;"><span style="color:var(--accent2); font-weight:700; font-family:\'JetBrains Mono\', monospace;">Node.'+(item.globalId+1)+'</span> '+item.text+'</div><div class="b-ans" style="color:var(--correct); font-weight:600; font-size:14px;">✔ Verified Definition State: '+ans+'</div>'+(note?'<div style="font-size:12px; color:var(--text2); margin-top:8px; padding-top:6px; border-top:1px dashed var(--border); font-style:italic;">📝 Registry Entry Entry: '+note+'</div>':'');
+        el.innerHTML = '<div class="b-meta" style="font-size:11px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase;"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+icons+'</span></div><div class="b-q" style="font-size:15px; color:var(--text); margin-bottom:6px;"><span style="color:var(--accent2); font-weight:700; font-family:\'JetBrains Mono\', monospace;">Q.'+(item.globalId+1)+'</span> '+item.text+'</div><div class="b-ans" style="color:var(--correct); font-weight:600; font-size:14px;">✔ Correct Answer: '+ans+'</div>'+(note?'<div style="font-size:12px; color:var(--text2); margin-top:8px; padding-top:6px; border-top:1px dashed var(--border); font-style:italic;">📝 My Note: '+note+'</div>':'');
         resultsEl.appendChild(el);
       });
     }
@@ -1886,13 +1889,13 @@
           if (data.timeStats) { timeStats = data.timeStats; SS('timeStats', timeStats); }
           if (data.missCount) { missCount = data.missCount; SS('missCount', missCount); }
           if (data.dashLayout) { dashLayout = data.dashLayout; SS('dashLayout', dashLayout); }
-          alert('Core progress registers rehydrated.'); closeModals(); renderDashboard(); applyDashLayout();
-        } catch(err) { alert('Data configuration import aborted: '+err.message); }
+          alert('User data imported successfully.'); closeModals(); renderDashboard(); applyDashLayout();
+        } catch(err) { alert('Import failed: '+err.message); }
       };
       reader.readAsText(file);
     }
     function resetProgress() {
-      if (!confirm('Purge total hardware study memory caches? This routine wipes all progress lines.')) return;
+      if (!confirm('Reset all your study progress? This cannot be undone.')) return;
       masteryData={}; bookmarks=new Set(); userNotes={}; streakData={count:0,lastDate:null}; sessionHistory=[]; missedRecent=[]; achievements=new Set(); firstAttempts={}; consecutiveCorrect=0; todayCount=0; todayCorrect=0; flaggedQuestions=new Set(); timeStats={}; missCount={};
       ['mastery','bookmarks','flagged','notes','streak','sessions','missed','achievements','firstAttempts','consecutive','timeStats','missCount'].forEach(k=>{
         const arr = ['bookmarks','achievements','flagged'].includes(k);
@@ -2002,7 +2005,7 @@
         const pass = document.getElementById('authPassword').value;
         const errDiv = document.getElementById('authError');
         errDiv.innerText = '';
-        if(!email || !pass) { errDiv.innerText = 'Email and key strings required.'; return; }
+        if(!email || !pass) { errDiv.innerText = 'Email and password are required.'; return; }
         
         const promise = isSignUpMode 
             ? auth.createUserWithEmailAndPassword(email, pass)
@@ -2032,13 +2035,13 @@
         const errDiv = document.getElementById('authError');
         if (!email) {
           errDiv.style.color = 'var(--incorrect)';
-          errDiv.innerText = 'Target identification email string missing.';
+          errDiv.innerText = 'Please enter your email address.';
           return;
         }
         auth.sendPasswordResetEmail(email)
           .then(() => {
             errDiv.style.color = 'var(--correct)';
-            errDiv.innerText = 'Password clear script transmitted to target inbox.';
+            errDiv.innerText = 'Password reset email sent. Please check your inbox.';
           })
           .catch(err => {
             errDiv.style.color = 'var(--incorrect)';
@@ -2079,7 +2082,7 @@
             if (googleBtn) googleBtn.style.display = 'none';
             if (separator) separator.style.display = 'none';
             labels.forEach(l => l.style.display = 'none');
-            document.getElementById('authCurrentUser').innerText = user.displayName || user.email || 'User Node';
+            document.getElementById('authCurrentUser').innerText = user.displayName || user.email || 'Student';
           }
           pullFromCloud();
         } else {
@@ -2138,7 +2141,7 @@
           } else {
             window.throttleFirebaseSync();
           }
-        }, err => console.error("Cloud synchronization baseline error:", err));
+        }, err => console.error("Cloud sync error:", err));
       }
 
       window.throttleFirebaseSync = function() {
@@ -2153,8 +2156,8 @@
                } catch(e) {}
            });
            db.collection('users').doc(currentUser.uid).set(payload, {merge: true})
-             .then(() => console.log('Uplink synchronized.'))
-             .catch(err => console.error('Uplink failed', err));
+             .then(() => console.log('Cloud data synced.'))
+             .catch(err => console.error('Cloud sync failed', err));
         }, 1500);
       };
     </script>
