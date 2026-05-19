@@ -6,564 +6,1079 @@
     <title>NCATT AET Study Assist</title>
     <link rel="icon" type="image/png" href="../stonks.png">
     <meta name="description" content="Interactive NCATT AET certification study tool with spaced repetition, flashcards, exam simulation, and deep analytics.">
+    
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="apple-touch-icon" href="icon.png">
     
     <style>
-:root,[data-theme="dark"]{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--text:#f8fafc;--text2:#94a3b8;--accent:#3b82f6;--accent2:#60a5fa;--border:#334155;--correct:#22c55e;--incorrect:#ef4444;--warning:#eab308;--sidebar-w:280px;--radius:10px}
-[data-theme="light"]{--bg:#f1f5f9;--surface:#ffffff;--surface2:#e2e8f0;--text:#0f172a;--text2:#64748b;--accent:#2563eb;--accent2:#3b82f6;--border:#cbd5e1;--correct:#16a34a;--incorrect:#dc2626;--warning:#ca8a04}
-*{margin:0;padding:0;box-sizing:border-box}
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-body,html{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden}
-.app{display:flex;height:100vh}
-/* Sidebar */
-.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;box-shadow:2px 0 10px rgba(0,0,0,.3);z-index:20;transition:transform .3s ease}
-.sb-header{padding:18px;font-size:20px;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);text-align:center;cursor:pointer;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:10px}
-.sb-menu{flex:1;overflow-y:auto;padding:10px 0}
-.sb-section{margin-bottom:2px}
-.sb-title{padding:10px 18px;font-size:11px;text-transform:uppercase;color:var(--text2);font-weight:700;letter-spacing:.8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
-.sb-title:hover{color:var(--text)}
-.nav-item{padding:9px 18px 9px 28px;cursor:pointer;color:var(--text);font-size:13px;transition:all .15s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nav-item:hover{background:var(--surface2)}
-.nav-item.active{background:rgba(59,130,246,.1);border-left-color:var(--accent);color:var(--accent2);font-weight:600}
-.nav-sub{padding:7px 18px 7px 42px;cursor:pointer;color:var(--text2);font-size:12px;transition:all .15s;border-left:3px solid transparent}
-.nav-sub:hover{background:var(--surface2);color:var(--text)}
-.nav-sub.active{color:var(--accent2);border-left-color:var(--accent)}
-.sb-footer{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
-/* Main */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;transition:all .3s ease}
-.topbar{height:60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;justify-content:space-between;gap:12px;flex-shrink:0;transition:top .3s ease, opacity .3s ease}
-.breadcrumb{font-size:13px;color:var(--text2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.breadcrumb .hl{color:var(--accent2);font-weight:600}
-.top-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.score-pill{font-weight:600;color:var(--accent);background:rgba(59,130,246,.1);padding:5px 12px;border-radius:20px;border:1px solid var(--accent);display:flex;align-items:center;gap:8px;font-size:13px}
-.mastery-badge{padding:3px 7px;border-radius:4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
-.m0{background:#ef444422;color:var(--incorrect);border:1px solid var(--incorrect)}
-.m1{background:#eab30822;color:var(--warning);border:1px solid var(--warning)}
-.m2{background:#3b82f622;color:var(--accent);border:1px solid var(--accent)}
-.m3{background:#22c55e22;color:var(--correct);border:1px solid var(--correct)}
-/* Icon buttons */
-.icon-btn{background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s}
-.icon-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--text2)}
-.icon-btn.active{color:var(--accent);border-color:var(--accent)}
-/* Progress bar */
-.quiz-progress{height:4px;background:var(--border);flex-shrink:0}
-.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--correct));transition:width .3s ease;border-radius:0 2px 2px 0}
-/* Timer */
-.timer-display{font-size:14px;font-weight:700;color:var(--warning);padding:4px 10px;background:rgba(234,179,8,.1);border:1px solid var(--warning);border-radius:6px;display:none;align-items:center;gap:4px}
-.timer-display.danger{color:var(--incorrect);border-color:var(--incorrect);background:rgba(239,68,68,.1);animation:pulse .5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-/* Views */
-.view{flex:1;overflow-y:auto;padding:30px 50px;display:none;flex-direction:column;opacity:0;transition:opacity .2s ease}
-.view.active{display:flex;opacity:1}
-/* Question card */
-.q-card{background:var(--surface);border-radius:var(--radius);padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.2);border:1px solid var(--border);flex:1;display:flex;flex-direction:column;transition:all .3s ease}
-.q-meta{font-size:12px;color:var(--text2);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.q-text{font-size:19px;font-weight:500;line-height:1.5;margin-bottom:24px}
-.q-tool-btn{cursor:pointer;font-size:18px;transition:transform .2s;user-select:none;margin-left:12px}
-.q-tool-btn:hover{transform:scale(1.2)}
-.bookmarked{color:var(--warning)}
-.flagged{color:var(--incorrect)}
-.options{display:flex;flex-direction:column;gap:12px}
-.option{background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:13px 18px;font-size:15px;cursor:pointer;transition:all .15s;display:flex;align-items:center;color:var(--text2)}
-.option:hover:not(.disabled){border-color:var(--accent);color:var(--text);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.15)}
-.option.selected{background:rgba(59,130,246,.08);border-color:var(--accent);color:var(--text)}
-.option.correct{background:rgba(34,197,94,.08);border-color:var(--correct);color:var(--correct)}
-.option.incorrect{background:rgba(239,68,68,.08);border-color:var(--incorrect);color:var(--incorrect)}
-.option.hidden5050{opacity:.25;pointer-events:none}
-.option.disabled{cursor:default}
-.opt-marker{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface);margin-right:12px;font-weight:700;font-size:13px;border:1px solid var(--border);flex-shrink:0}
-.option.correct .opt-marker{background:var(--correct);color:#fff;border-color:var(--correct)}
-.option.incorrect .opt-marker{background:var(--incorrect);color:#fff;border-color:var(--incorrect)}
-/* Notes */
-.note-area{margin-top:16px;border-top:1px solid var(--border);padding-top:12px}
-.note-toggle{font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:4px}
-.note-toggle:hover{color:var(--accent)}
-.note-input{width:100%;margin-top:8px;padding:10px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;resize:vertical;font-family:inherit;font-size:13px;min-height:60px;display:none}
-.note-input:focus{border-color:var(--accent);outline:none}
-.note-input.open{display:block}
-/* Action bar */
-.action-bar{background:var(--surface);border-top:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;transition:bottom .3s ease, opacity .3s ease}
-.btn-group{display:flex;gap:10px;align-items:center}
-.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;gap:6px;font-family:inherit}
-.btn-p{background:var(--accent);color:#fff}.btn-p:hover{filter:brightness(1.15);transform:translateY(-1px)}
-.btn-s{background:transparent;color:var(--text);border:1px solid var(--border)}.btn-s:hover{background:var(--surface2);border-color:var(--text2)}
-.btn-w{background:rgba(234,179,8,.1);color:var(--warning);border:1px solid var(--warning)}.btn-w:hover{background:var(--warning);color:#000}
-.btn-d{background:rgba(239,68,68,.1);color:var(--incorrect);border:1px solid var(--incorrect);font-size:11px}.btn-d:hover{background:var(--incorrect);color:#fff}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
-.feedback{font-size:16px;font-weight:700;margin-left:12px}
-/* End screen */
-.end-scr{display:none;text-align:center;margin:auto}
-.end-scr h2{font-size:28px;color:var(--accent);margin-bottom:8px}.end-scr p{font-size:16px;color:var(--text2);margin-bottom:24px}
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
-/* Draggable Dashboard Layout */
-.dash-column{display:flex;flex-direction:column;gap:16px}
-.dash-module{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative}
-.dash-module.dragging{opacity:.5;border:2px dashed var(--accent)}
-.dash-drag-handle{position:absolute;top:10px;right:10px;cursor:grab;color:var(--text2);font-size:14px;padding:4px;border-radius:4px}
-.dash-drag-handle:hover{background:var(--surface2);color:var(--text)}
-.dash-drag-handle:active{cursor:grabbing}
+        :root, [data-theme="dark"] {
+            --bg: #090d16;
+            --surface: #131926;
+            --surface2: #1e2638;
+            --text: #f8fafc;
+            --text2: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --accent2: #60a5fa;
+            --border: #222c41;
+            --correct: #10b981;
+            --incorrect: #f43f5e;
+            --warning: #f59e0b;
+            --sidebar-w: 280px;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.4);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.dash-header{font-size:24px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--border);padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-.stat-val{font-size:32px;font-weight:700;margin:8px 0}
-.stat-label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px}
-.stat-sub{font-size:11px;color:var(--text2)}
-/* Subject breakdown */
-.section-header{font-size:18px;font-weight:500;border-bottom:1px solid var(--border);padding-bottom:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.legend{display:flex;gap:12px;font-size:11px}.legend-item{display:flex;align-items:center;gap:4px}
-.legend-dot{width:10px;height:10px;border-radius:3px}
-.sub-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.sub-title{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between}
-.prog-bar{height:22px;width:100%;background:var(--bg);border-radius:11px;overflow:hidden;display:flex;border:1px solid var(--border)}
-.prog-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);transition:width .3s}
-.seg0{background:var(--incorrect)}.seg1{background:var(--warning);color:#000;text-shadow:none}.seg2{background:var(--accent)}.seg3{background:var(--correct)}
-/* Streak & Goals */
-.streak-card{background:linear-gradient(135deg,rgba(234,179,8,.15),rgba(239,68,68,.1));border:1px solid var(--warning);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:16px}
-.streak-num{font-size:40px;font-weight:700;color:var(--warning)}
-.streak-info{font-size:13px;color:var(--text2)}
-.streak-label{font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px}
-.goal-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:16px}
-.goal-ring{width:60px;height:60px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-.goal-text{font-size:13px;color:var(--text2)}
-.goal-label{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px}
-/* Heatmap */
-.heatmap{display:flex;gap:3px;flex-wrap:wrap;margin-top:8px}
-.heat-cell{width:14px;height:14px;border-radius:3px;background:var(--bg);border:1px solid var(--border);transition:all .2s}
-.heat-cell:hover{transform:scale(1.2);box-shadow:0 0 5px rgba(0,0,0,.5)}
-.heat-1{background:rgba(34,197,94,.25)}.heat-2{background:rgba(34,197,94,.5)}.heat-3{background:rgba(34,197,94,.75)}.heat-4{background:var(--correct)}
-/* Recent missed / Session history */
-.missed-item{padding:10px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;transition:background .15s}
-.missed-item:hover{background:var(--bg)}
-.session-row{display:grid;grid-template-columns:1fr 80px 80px 80px;padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border)}
-.session-row.header{font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-size:11px}
-/* Quote */
-.quote-card{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(139,92,246,.1));border:1px solid var(--accent);border-radius:var(--radius);padding:20px;font-style:italic;color:var(--text);font-size:14px;line-height:1.6;position:relative}
-.quote-card::before{content:'"';font-size:48px;position:absolute;top:4px;left:12px;color:var(--accent);opacity:.3;font-family:serif}
-.quote-author{font-style:normal;font-size:12px;color:var(--text2);margin-top:8px;text-align:right}
-/* Achievements */
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.ach-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:all .2s}
-.ach-card.unlocked{border-color:var(--warning);background:rgba(234,179,8,.05)}
-.ach-card.locked{opacity:.4;filter:grayscale(1)}
-.ach-icon{font-size:28px;margin-bottom:6px}
-.ach-name{font-size:11px;font-weight:600;margin-bottom:2px}
-.ach-desc{font-size:10px;color:var(--text2)}
-/* Flashcard */
-.fc-container{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px}
-.fc-card{width:100%;max-width:600px;min-height:300px;perspective:1000px;cursor:pointer}
-.fc-inner{position:relative;width:100%;height:100%;min-height:300px;transition:transform .5s;transform-style:preserve-3d}
-.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
-.fc-front,.fc-back{position:absolute;width:100%;min-height:300px;backface-visibility:hidden;border-radius:var(--radius);padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.fc-front{background:var(--surface);border:2px solid var(--accent)}
-.fc-back{background:var(--surface);border:2px solid var(--correct);transform:rotateY(180deg)}
-.fc-q{font-size:18px;font-weight:500;line-height:1.5}.fc-a{font-size:18px;font-weight:600;color:var(--correct);line-height:1.5}
-.fc-meta{font-size:12px;color:var(--text2);margin-bottom:12px}
-.fc-btns{display:flex;gap:12px}
-/* Exam */
-.exam-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.exam-timer{font-size:24px;font-weight:700;color:var(--warning)}
-.exam-result{text-align:center;padding:40px}
-.exam-score{font-size:64px;font-weight:700;margin:16px 0}
-.exam-pass{color:var(--correct)}.exam-fail{color:var(--incorrect)}
-/* Search / Bank */
-.search-bar{width:100%;padding:12px 16px;font-size:14px;background:var(--surface);border:2px solid var(--border);color:var(--text);border-radius:8px;font-family:inherit}
-.search-bar:focus{border-color:var(--accent);outline:none}
-.bank-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;transition:all .15s}
-.bank-item:hover{border-color:var(--accent)}
-.b-q{font-size:15px;font-weight:500;margin-bottom:6px}.b-ans{color:var(--correct);font-weight:600;font-size:13px;margin-bottom:4px}
-.b-meta{font-size:11px;color:var(--text2);margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-/* Analytics / Tables */
-.table{width:100%;border-collapse:collapse;font-size:13px}
-.table th{text-align:left;padding:10px;border-bottom:1px solid var(--border);color:var(--text2);font-weight:600;text-transform:uppercase;font-size:11px}
-.table td{padding:10px;border-bottom:1px solid var(--surface2)}
-.table tr:hover td{background:rgba(255,255,255,.02)}
-/* Modal */
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.4)}
-.modal h3{font-size:18px;margin-bottom:16px;color:var(--accent)}
-.modal label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
-.modal input[type=number],.modal select{padding:8px 12px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:inherit;width:100%;margin-bottom:12px}
-.modal input[type=file]{margin-bottom:12px}
-/* Keyboard shortcuts help */
-.kb-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
-.kb-key{background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;text-align:center;font-weight:700}
-/* Confetti */
-#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200}
-/* Hamburger */
-.hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;padding:4px}
-.mobile-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:15}
-/* Scrollbar */
-::-webkit-scrollbar{width:7px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--text2)}
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface2: #f1f5f9;
+            --text: #0f172a;
+            --text2: #64748b;
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.1);
+            --accent2: #3b82f6;
+            --border: #e2e8f0;
+            --correct: #10b981;
+            --incorrect: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
 
-/* Zen Mode */
-body.zen-mode .sidebar { transform: translateX(-100%) !important; position: absolute; }
-body.zen-mode .topbar { background: transparent; border-bottom: none; height: 40px; }
-body.zen-mode .topbar > *:not(.top-controls) { opacity: 0; pointer-events: none; }
-body.zen-mode .top-controls > *:not(#zenBtn) { opacity: 0; pointer-events: none; }
-body.zen-mode .quiz-progress { opacity: 0; }
-body.zen-mode .action-bar { background: transparent; border-top: none; }
-body.zen-mode .view.active { justify-content: center; padding: 20px; }
-body.zen-mode .q-card { box-shadow: none; border-color: transparent; background: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Print */
-@media print{.sidebar,.topbar,.action-bar,.quiz-progress,.hamburger,.icon-btn,.modal-overlay,.btn{display:none!important}.view.active{padding:10px;overflow:visible}.app{display:block}.main{display:block}.print-sheet .print-q{break-inside:avoid;margin-bottom:12px;padding:8px;border:1px solid #ccc}.print-sheet .print-ans{color:green;font-weight:700}}
-/* Mobile */
-@media(max-width:768px){
-.sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);z-index:20}
-.sidebar.open{transform:translateX(0)}
-.mobile-overlay.open{display:block;z-index:15}
-.hamburger{display:block}
-.view{padding:16px}
-.topbar{padding:0 12px}
-.q-card{padding:18px}
-.q-text{font-size:16px}
-.option{padding:10px 14px;font-size:14px}
-.action-bar{padding:10px 14px;flex-wrap:wrap;gap:8px}
-.stats-grid{grid-template-columns:1fr 1fr}
-.ach-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
-}
-</style>
+        body, html {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100%;
+            overflow: hidden;
+            letter-spacing: -0.01em;
+        }
 
-<style>
-  /* Disclaimer Modal */
-  .disclaimer-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 100000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.3s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .disclaimer-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    border: 1px solid rgba(100, 150, 255, 0.2);
-    border-radius: 16px;
-    padding: 40px;
-    max-width: 560px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.1);
-    animation: slideUp 0.4s ease 0.1s both;
-  }
-  .disclaimer-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
-  .disclaimer-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: #e2e8f0;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-  }
-  .disclaimer-text {
-    font-size: 15px;
-    color: #94a3b8;
-    line-height: 1.7;
-    margin-bottom: 28px;
-  }
-  .disclaimer-text a {
-    color: #60a5fa;
-    text-decoration: underline;
-    font-weight: 600;
-  }
-  .disclaimer-text a:hover {
-    color: #93bbfc;
-  }
-  .disclaimer-btn {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    border: none;
-    padding: 14px 36px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: 0.3px;
-  }
-  .disclaimer-btn:hover {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-  }
-</style>
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            transition: var(--transition);
+        }
+
+        .sb-header {
+            padding: 24px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .sb-header svg {
+            color: var(--accent);
+        }
+
+        .sb-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 12px;
+        }
+
+        .sb-title {
+            padding: 16px 12px 8px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text2);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--accent-glow);
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .nav-sub {
+            padding: 8px 14px 8px 44px;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: 13px;
+            border-radius: 6px;
+            transition: var(--transition);
+            margin-bottom: 2px;
+        }
+
+        .nav-sub:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-sub.active {
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .sb-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* Main Viewport */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .topbar {
+            height: 64px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .breadcrumb .hl {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-pill {
+            font-weight: 600;
+            color: var(--accent2);
+            background: var(--accent-glow);
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .mastery-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .m0 { background: rgba(244, 63, 94, 0.15); color: var(--incorrect); }
+        .m1 { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .m2 { background: rgba(59, 130, 246, 0.15); color: var(--accent2); }
+        .m3 { background: rgba(16, 185, 129, 0.15); color: var(--correct); }
+
+        /* Buttons */
+        .icon-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text2);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+
+        .icon-btn:hover {
+            background: var(--surface2);
+            color: var(--text);
+            border-color: var(--text2);
+        }
+
+        .icon-btn.active {
+            color: var(--accent2);
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2;
+        }
+
+        .btn-p { background: var(--accent); color: #fff; }
+        .btn-p:hover { background: var(--accent2); transform: translateY(-1px); }
+        .btn-s { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+        .btn-s:hover { background: var(--surface); border-color: var(--text2); }
+        .btn-w { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .btn-w:hover { background: var(--warning); color: #000; }
+        .btn-d { background: rgba(244, 63, 94, 0.1); color: var(--incorrect); border: 1px solid rgba(244, 63, 94, 0.2); }
+        .btn-d:hover { background: var(--incorrect); color: #fff; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+        /* Progress Engine Bar */
+        .quiz-progress {
+            height: 4px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--correct));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Timer Suite */
+        .timer-display {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--warning);
+            padding: 6px 12px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 20px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .timer-display.danger {
+            color: var(--incorrect);
+            border-color: var(--incorrect);
+            background: rgba(244, 63, 94, 0.1);
+            animation: pulse 1s infinite;
+        }
+
+        /* Layout Area Views */
+        .view {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .view.active { display: flex; }
+
+        /* Interactive Question Deck */
+        .q-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .q-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text2);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .q-text {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            color: var(--text2);
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--surface2);
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--correct);
+            color: var(--correct);
+        }
+
+        .option.incorrect {
+            background: rgba(244, 63, 94, 0.1);
+            border-color: var(--incorrect);
+            color: var(--incorrect);
+        }
+
+        .opt-marker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--surface2);
+            margin-right: 16px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .option.correct .opt-marker { background: var(--correct); color: #fff; border-color: var(--correct); }
+        .option.incorrect .opt-marker { background: var(--incorrect); color: #fff; border-color: var(--incorrect); }
+
+        /* Notes Suite */
+        .note-area {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+        .note-toggle {
+            font-size: 13px;
+            color: var(--text2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        .note-toggle:hover { color: var(--accent2); }
+        .note-input {
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 80px;
+            display: none;
+        }
+        .note-input.open { display: block; }
+        .note-input:focus { border-color: var(--accent); outline: none; }
+
+        /* Global Layout Action Control */
+        .action-bar {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .btn-group { display: flex; gap: 12px; align-items: center; }
+        .feedback { font-size: 15px; font-weight: 700; margin-left: 8px; }
+
+        /* Clean Dashboard Workspace */
+        .dash-header {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dash-column { display: flex; flex-direction: column; gap: 20px; }
+        
+        .dash-module {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        .dash-module.dragging { opacity: 0.4; border: 2px dashed var(--accent); }
+        .dash-drag-handle {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: grab;
+            color: var(--text2);
+            padding: 4px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        .dash-drag-handle:hover { background: var(--surface2); color: var(--text); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: left;
+        }
+        .stat-val { font-size: 28px; font-weight: 700; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+        .stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+        .stat-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .section-header {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Matrix Elements & Progress Tracking */
+        .sub-card {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .sub-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; }
+        
+        .prog-bar {
+            height: 12px;
+            width: 100%;
+            background: var(--surface2);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+        .prog-seg { height: 100%; transition: width 0.3s ease; }
+        .seg0 { background: var(--incorrect); }
+        .seg1 { background: var(--warning); }
+        .seg2 { background: var(--accent); }
+        .seg3 { background: var(--correct); }
+
+        /* Streak Matrix Engine */
+        .streak-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(244, 63, 94, 0.03));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .streak-num { font-size: 44px; font-weight: 800; color: var(--warning); font-family: 'JetBrains Mono', monospace; }
+        .goal-card {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .goal-ring {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            box-shadow: inset 0 0 0 6px var(--surface);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Analytics Heatmap UI */
+        .heatmap { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+        .heat-cell {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            background: var(--surface2);
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .heat-cell:hover { transform: scale(1.25); z-index: 2; border-color: var(--text); }
+        .heat-1 { background: rgba(16, 185, 129, 0.25); }
+        .heat-2 { background: rgba(16, 185, 129, 0.5); }
+        .heat-3 { background: rgba(16, 185, 129, 0.75); }
+        .heat-4 { background: var(--correct); }
+
+        /* Global Table Deck Architecture */
+        .table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+        .table th { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text2); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
+        .table td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .table tr:hover td { background: rgba(255,255,255,0.01); }
+
+        /* Flashcard Elements */
+        .fc-container { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 24px; }
+        .fc-card { width: 100%; max-width: 560px; min-height: 280px; perspective: 1000px; cursor: pointer; }
+        .fc-inner { position: relative; width: 100%; height: 100%; min-height: 280px; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+        .fc-front, .fc-back {
+            position: absolute; width: 100%; min-height: 280px; backface-visibility: hidden; border-radius: var(--radius); padding: 40px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border);
+        }
+        .fc-front { background: var(--surface); border-top: 4px solid var(--accent); }
+        .fc-back { background: var(--surface); border-top: 4px solid var(--correct); transform: rotateY(180deg); }
+        .fc-q { font-size: 20px; font-weight: 600; line-height: 1.5; color: var(--text); }
+        .fc-a { font-size: 18px; font-weight: 600; color: var(--correct); line-height: 1.5; }
+
+        /* Search Input Deck */
+        .search-bar {
+            padding: 12px 16px;
+            font-size: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        .search-bar:focus { border-color: var(--accent); outline: none; background: rgba(0,0,0,0.2); }
+
+        .bank-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+        .b-q { font-size: 15px; font-weight: 500; margin-bottom: 8px; color: var(--text); }
+        .b-ans { color: var(--correct); font-weight: 600; font-size: 14px; }
+
+        /* Dialogue Box Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(4, 6, 10, 0.8); z-index: 100;
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px); transition: var(--transition);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 32px; max-width: 480px; width: 90%; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow);
+        }
+        .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .modal label { font-size: 12px; font-weight: 700; color: var(--text2); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
+        
+        .modal input[type=number], .modal input[type=email], .modal input[type=password], .modal select {
+            padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            color: var(--text); border-radius: 8px; font-family: inherit; width: 100%; margin-bottom: 16px; font-size: 14px;
+        }
+        .modal input:focus, .modal select:focus { border-color: var(--accent); outline: none; }
+
+        /* Shortcuts Map Help Dashboard */
+        .kb-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 13px; align-items: center; }
+        .kb-key {
+            background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px;
+            border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            text-align: center; font-weight: 700; color: var(--accent2); min-width: 32px;
+        }
+
+        /* Modern App Control Elements */
+        .hamburger { display: none; background: none; border: none; color: var(--text); cursor: pointer; }
+        .mobile-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 15; backdrop-filter: blur(2px); }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 20px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+        /* Focus State Mode Engine */
+        body.zen-mode .sidebar { transform: translateX(-100%); position: absolute; }
+        body.zen-mode .topbar { background: transparent; border-bottom: none; }
+        body.zen-mode .topbar > *:not(.top-controls) { opacity: 0; pointer-events: none; }
+        body.zen-mode .top-controls > *:not(#zenBtn) { opacity: 0; pointer-events: none; }
+        body.zen-mode .quiz-progress { opacity: 0; }
+        body.zen-mode .action-bar { background: transparent; border-top: none; }
+        body.zen-mode .view.active { justify-content: center; padding: 20px; }
+        body.zen-mode .q-card { box-shadow: none; border-color: transparent; background: transparent; max-width: 720px; width: 100%; margin: 0 auto; }
+
+        /* Responsive Breakpoints Desk Layout */
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-overlay.open { display: block; }
+            .hamburger { display: block; }
+            .view { padding: 20px; }
+            .topbar { padding: 0 16px; }
+            .q-card { padding: 20px; }
+            .action-bar { padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .streak-card, .goal-card { flex-direction: column; text-align: center; }
+        }
+    </style>
 </head>
 <body>
 
-  <canvas id="confetti-canvas"></canvas>
-  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
-  <div class="app">
-    <aside class="sidebar" id="sidebar">
-      <div class="sb-header" onclick="switchView('dashboard')">&#9992; NCATT</div>
-      <div class="sb-menu" id="sidebarMenu">
-        <div class="nav-item active" id="nav-dashboard" onclick="switchView('dashboard')">&#127968; Dashboard</div>
-        <div class="nav-item" id="nav-analytics" onclick="switchView('analytics')">&#128202; Deep Analytics</div>
-        <div class="nav-item" id="nav-bank" onclick="switchView('bank')">&#128269; Search Bank</div>
-        <div class="sb-title" style="margin-top:8px">&#9889; STUDY MODES</div>
-        <div class="nav-item" id="nav-flashcard" onclick="switchView('flashcard')">&#127183; Flashcard Mode</div>
-        <div class="nav-item" id="nav-weakfocus" onclick="startWeakFocus()">&#127919; Weak Areas Focus</div>
-        <div class="nav-item" id="nav-randmix" onclick="startRandomMix()">&#127922; Random Mix</div>
-        <div class="nav-item" id="nav-exam" onclick="startExam()">&#128221; Exam Simulation</div>
-        <div class="sb-title" onclick="toggleSubjectList()" id="subjectListTitle">&#128218; SUBJECTS <span id="subjectArrow">&#9660;</span></div>
-        <div id="subjectList"></div>
-      </div>
-      <div class="sb-footer">
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-s" style="flex:1;font-size:11px" onclick="openModal('importExportModal')">&#128229; Import/Export</button>
-          <button class="btn btn-s" style="flex:1;font-size:11px" onclick="openModal('settingsModal')">&#9881; Settings</button>
-        </div>
-        <button class="btn btn-d" style="font-size:11px;width:100%" onclick="resetProgress()">Reset All Progress</button>
-      </div>
-    </aside>
-    <main class="main" id="mainArea">
-      <header class="topbar">
-        <div style="display:flex;align-items:center;gap:10px;min-width:0">
-          <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
-          <div class="breadcrumb" id="breadcrumb">Home / <span class="hl">Dashboard</span></div>
-        </div>
-        <div class="top-controls">
-          <div class="timer-display" id="timerDisplay">&#9200; <span id="timerText">30</span></div>
-          <div class="score-pill" id="scorePill" style="display:none">
-            <span id="scoreText">Q1</span>
-            <span id="masteryBadge" class="mastery-badge m0">Needs Work</span>
-          </div>
-          <button class="icon-btn" id="zenBtn" onclick="toggleZenMode()" title="Zen / Focus Mode" style="display:none">&#129496;</button>
-          <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Toggle Sound">&#128264;</button>
-          <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle Theme">&#127769;</button>
-          <button class="icon-btn" id="authBtn" onclick="openModal('authModal')" title="Sign In / Account" style="color:var(--accent); font-weight:bold; width:auto; padding:0 10px;">Sign In</button>
-          <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Keyboard Shortcuts">&#9000;</button>
-        </div>
-      </header>
-      <div class="quiz-progress" id="quizProgress" style="display:none"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
-
-      <!-- Dashboard -->
-      <div class="view active" id="view-dashboard">
-        <div class="dash-header">
-           <div>&#128200; Your Study Dashboard</div>
-           <button class="btn btn-s" style="font-size:11px;padding:4px 8px" onclick="resetDashLayout()">Reset Layout</button>
-        </div>
-        <div class="dash-column" id="dashDropzone">
-          <div class="dash-module" id="widget-streakGoal" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="streakGoalRow">
-              <div class="streak-card" id="streakCard"><div class="streak-num" id="streakNum">0</div><div><div class="streak-label">&#128293; Day Streak</div><div class="streak-info" id="streakInfo">Start studying to build your streak!</div></div></div>
-              <div class="goal-card" id="goalCard"><div class="goal-ring" id="goalRing">0%</div><div><div class="goal-label">&#127919; Daily Goal</div><div class="goal-text" id="goalText">0 / 20 questions today</div></div></div>
+    <canvas id="confetti-canvas"></canvas>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+    
+    <div class="app">
+        <!-- Structural Application Navigation Container Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sb-header" onclick="switchView('dashboard')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <span>AET Study Suite</span>
             </div>
-          </div>
-          <div class="dash-module" id="widget-quote" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div id="quoteCard" class="quote-card"></div>
-          </div>
-          <div class="dash-module" id="widget-stats" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div class="stats-grid" id="dashStats"></div>
-          </div>
-          <div class="dash-module" id="widget-achievements" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div class="section-header">&#127942; Achievements <span style="font-size:12px;color:var(--text2)" id="achCount"></span></div>
-            <div class="ach-grid" id="achGrid"></div>
-          </div>
-          <div class="dash-module" id="widget-subjects" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div class="section-header">Subject Mastery Breakdown <div class="legend"><div class="legend-item"><div class="legend-dot seg0"></div>Needs Work</div><div class="legend-item"><div class="legend-dot seg1"></div>Learning</div><div class="legend-item"><div class="legend-dot seg2"></div>Learned</div><div class="legend-item"><div class="legend-dot seg3"></div>Mastered</div></div></div>
-            <div id="dashSubjects"></div>
-          </div>
-          <div class="dash-module" id="widget-heatmap" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div class="section-header">&#128293; Study Heatmap (Last 60 Days)</div>
-            <div class="heatmap" id="heatmap"></div>
-          </div>
-          <div class="dash-module" id="widget-history" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">&#9776;</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-              <div><div class="section-header">&#128203; Recently Missed</div><div id="recentMissed" style="max-height:300px;overflow-y:auto"></div></div>
-              <div><div class="section-header">&#128197; Session History</div><div id="sessionHistory" style="max-height:300px;overflow-y:auto"></div></div>
+            
+            <div class="sb-menu" id="sidebarMenu">
+                <div class="nav-item active" id="nav-dashboard" onclick="switchView('dashboard')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" id="nav-analytics" onclick="switchView('analytics')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Deep Analytics</span>
+                </div>
+                <div class="nav-item" id="nav-bank" onclick="switchView('bank')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Search Bank</span>
+                </div>
+                
+                <div class="sb-title">Study Engine Modes</div>
+                <div class="nav-item" id="nav-flashcard" onclick="switchView('flashcard')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    <span>Flashcard Deck</span>
+                </div>
+                <div class="nav-item" id="nav-weakfocus" onclick="startWeakFocus()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    <span>Weak Areas Focus</span>
+                </div>
+                <div class="nav-item" id="nav-randmix" onclick="startRandomMix()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+                    <span>Random Matrix Mix</span>
+                </div>
+                <div class="nav-item" id="nav-exam" onclick="startExam()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Exam Simulation</span>
+                </div>
+                
+                <div class="sb-title" onclick="toggleSubjectList()" id="subjectListTitle" style="cursor:pointer;">
+                    <span>System Directories</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" id="subjectArrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div id="subjectList"></div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Analytics -->
-      <div class="view" id="view-analytics">
-        <div class="dash-header">&#128202; Deep Analytics & Insights</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
-          <div class="dash-module">
-            <h3 style="margin-bottom:12px;color:var(--accent2)">&#9201; Time per Question</h3>
-            <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Track your average answer speed to identify areas where you hesitate.</p>
-            <div class="stat-val" style="color:var(--text)" id="avgTimeOverall">-- s</div>
-            <div class="stat-sub">Overall Average Time</div>
-            <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:12px" id="timeSubjects"></div>
-          </div>
-          <div class="dash-module">
-            <h3 style="margin-bottom:12px;color:var(--incorrect)">&#9888; Absolute Weakest Links</h3>
-            <p style="font-size:13px;color:var(--text2);margin-bottom:16px">The specific questions you have historically answered incorrectly the most times.</p>
-            <table class="table" id="weaklinksTable"></table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quiz -->
-      <div class="view" id="view-quiz" ontouchstart="touchStart(event)" ontouchend="touchEnd(event)">
-        <div class="q-card" id="qCard">
-          <div class="q-meta">
-            <span id="topicTag"></span>
-            <div>
-              <span class="q-tool-btn" id="flagBtn" onclick="toggleFlag()" title="Flag question for review">&#128681;</span>
-              <span class="q-tool-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Bookmark question">&#9734;</span>
+            
+            <div class="sb-footer">
+                <div style="display:flex; gap:8px">
+                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('importExportModal')">Data Sync</button>
+                    <button class="btn btn-s" style="flex:1; padding:8px;" onclick="openModal('settingsModal')">Config</button>
+                </div>
+                <button class="btn btn-d" style="width:100%; padding:8px;" onclick="resetProgress()">Wipe Core Cache</button>
             </div>
-          </div>
-          <div class="q-text" id="qText">Loading...</div>
-          <div class="options" id="optionsBox"></div>
-          <div class="note-area"><div class="note-toggle" onclick="toggleNote()">&#128221; Notes <span id="noteArrow">&#9654;</span></div><textarea class="note-input" id="noteInput" placeholder="Add your personal notes..." oninput="saveNote()"></textarea></div>
-        </div>
-        <div class="end-scr" id="endScreen"><h2>Subject Completed!</h2><p>You've reviewed all available questions.</p><button class="btn btn-p" onclick="reloadCurrentSubject()">Keep Practicing</button></div>
-      </div>
+        </aside>
 
-      <!-- Flashcard -->
-      <div class="view" id="view-flashcard">
-        <div class="fc-container">
-          <div style="font-size:12px;color:var(--text2)" id="fcMeta"></div>
-          <div class="fc-card" id="fcCard" onclick="flipCard()">
-            <div class="fc-inner"><div class="fc-front"><div class="fc-meta" id="fcTopic"></div><div class="fc-q" id="fcQuestion"></div><div style="font-size:12px;color:var(--text2);margin-top:16px">Click or press F to flip</div></div><div class="fc-back"><div style="font-size:11px;color:var(--correct);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Answer</div><div class="fc-a" id="fcAnswer"></div></div></div>
-          </div>
-          <div class="fc-btns"><button class="btn btn-d" onclick="fcMark(false)">&#10060; Didn't Know</button><button class="btn btn-p" onclick="fcMark(true)" style="background:var(--correct)">&#9989; Knew It</button></div>
-          <div style="font-size:12px;color:var(--text2)">Press ← Didn't Know | → Knew It</div>
-        </div>
-      </div>
+        <!-- Main Window Container Panel Frame -->
+        <main class="main" id="mainArea">
+            <header class="topbar">
+                <div style="display:flex; align-items:center; gap:16px; min-width:0">
+                    <button class="hamburger" onclick="toggleSidebar()">
+                        <svg width="24" height="24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div class="breadcrumb" id="breadcrumb">Core / <span class="hl">Dashboard</span></div>
+                </div>
+                
+                <div class="top-controls">
+                    <div class="timer-display" id="timerDisplay">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span id="timerText">30</span>
+                    </div>
+                    <div class="score-pill" id="scorePill" style="display:none">
+                        <span id="scoreText">Q1</span>
+                        <span id="masteryBadge" class="mastery-badge m0">Incomplete Matrix</span>
+                    </div>
+                    <button class="icon-btn" id="zenBtn" onclick="toggleZenMode()" title="Focus HUD Mode" style="display:none">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path></svg>
+                    </button>
+                    <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Audio System Monitor">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    </button>
+                    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Visual Array Spectrum">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                    <button class="icon-btn" id="authBtn" onclick="openModal('authModal')" title="Network Sync Link" style="color:var(--accent2); font-weight:600; width:auto; padding:0 14px;">Connect</button>
+                    <button class="icon-btn" onclick="openModal('shortcutsModal')" title="Hotkeys Manifest">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="quiz-progress" id="quizProgress" style="display:none"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
 
-      <!-- Exam -->
-      <div class="view" id="view-exam">
-        <div id="examContent">
-          <div class="exam-header"><div style="font-size:18px;font-weight:600">&#128221; Exam Simulation</div><div class="exam-timer" id="examTimer">60:00</div><div style="font-size:13px;color:var(--text2)"><span id="examProgress">0</span>/50</div></div>
-          <div class="q-card"><div class="q-meta"><span id="examTopic"></span></div><div class="q-text" id="examQText"></div><div class="options" id="examOptions"></div></div>
-          <div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="btn btn-p" id="examNextBtn" onclick="examNext()" disabled>Next &#10140;</button></div>
-        </div>
-        <div class="exam-result" id="examResult" style="display:none">
-          <div style="font-size:20px;color:var(--text2)">Exam Complete!</div>
-          <div class="exam-score" id="examScore"></div>
-          <div style="font-size:18px;margin-bottom:8px" id="examVerdict"></div>
-          <div style="color:var(--text2);margin-bottom:24px" id="examDetail"></div>
-          <button class="btn btn-p" onclick="switchView('dashboard')" style="margin:0 auto">Back to Dashboard</button>
-        </div>
-      </div>
+            <!-- Workspace Matrix: Dashboard View -->
+            <div class="view active" id="view-dashboard">
+                <div class="dash-header">
+                   <div>Telemetry Center Overview</div>
+                   <button class="btn btn-s" style="font-size:11px; padding:6px 12px" onclick="resetDashLayout()">Realign HUD Modules</button>
+                </div>
+                <div class="dash-column" id="dashDropzone">
+                    <div class="dash-module" id="widget-streakGoal" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px" id="streakGoalRow">
+                            <div class="streak-card" id="streakCard"><div class="streak-num" id="streakNum">0</div><div><div class="streak-label">Runtime Engine Streak</div><div class="streak-info" id="streakInfo">Initialize operations to build streak tracking.</div></div></div>
+                            <div class="goal-card" id="goalCard"><div class="goal-ring" id="goalRing">0%</div><div><div class="goal-label">Operational Daily Target</div><div class="goal-text" id="goalText">0 / 20 processes cleared</div></div></div>
+                        </div>
+                    </div>
+                    <div class="dash-module" id="widget-quote" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div id="quoteCard" class="quote-card"></div>
+                    </div>
+                    <div class="dash-module" id="widget-stats" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div class="stats-grid" id="dashStats"></div>
+                    </div>
+                    <div class="dash-module" id="widget-achievements" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div class="section-header">Unlocked Milestones <span style="font-size:12px; color:var(--text2)" id="achCount"></span></div>
+                        <div class="ach-grid" id="achGrid"></div>
+                    </div>
+                    <div class="dash-module" id="widget-subjects" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div class="section-header">Subject Field Calibration</div>
+                        <div id="dashSubjects"></div>
+                    </div>
+                    <div class="dash-module" id="widget-heatmap" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div class="section-header">System Utilization Heatmap (60-Day Span)</div>
+                        <div class="heatmap" id="heatmap"></div>
+                    </div>
+                    <div class="dash-module" id="widget-history" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)"><div class="dash-drag-handle">::</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div><div class="section-header">Fault Registry Log</div><div id="recentMissed" style="max-height:300px; overflow-y:auto"></div></div>
+                            <div><div class="section-header">Historical Session Blocks</div><div id="sessionHistory" style="max-height:300px; overflow-y:auto"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Bank -->
-      <div class="view" id="view-bank">
-        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-          <input type="text" id="searchBar" class="search-bar" style="flex:1;min-width:200px" placeholder="Search keywords..." oninput="filterBank()">
-          <select id="masteryFilter" class="search-bar" style="width:160px" onchange="filterBank()"><option value="all">All Levels</option><option value="0">Needs Work</option><option value="1">Learning</option><option value="2">Learned</option><option value="3">Mastered</option></select>
-          <select id="bookmarkFilter" class="search-bar" style="width:160px" onchange="filterBank()"><option value="all">All Questions</option><option value="bookmarked">&#9733; Bookmarked</option><option value="flagged">&#128681; Flagged Items</option></select>
-          <button id="notesFilterBtn" class="btn btn-s" onclick="toggleNotesFilter()" style="white-space:nowrap">&#128221; Has Notes</button>
-        </div>
-        <div id="bankResults"></div>
-      </div>
+            <!-- Workspace Matrix: Deep Analytics View -->
+            <div class="view" id="view-analytics">
+                <div class="dash-header">Data Analytics Diagnostics</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                    <div class="dash-module">
+                        <h3 style="margin-bottom:12px; color:var(--accent2)">Execution Latency per Node</h3>
+                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">Mean processing velocity array configuration.</p>
+                        <div class="stat-val" id="avgTimeOverall">-- s</div>
+                        <div class="stat-sub">Global System Process Mean Time</div>
+                        <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:16px" id="timeSubjects"></div>
+                    </div>
+                    <div class="dash-module">
+                        <h3 style="margin-bottom:12px; color:var(--incorrect)">Critical Discrepancy Faults</h3>
+                        <p style="font-size:13px; color:var(--text2); margin-bottom:20px">Primary data nodes reflecting frequent calculation errors.</p>
+                        <table class="table" id="weaklinksTable"></table>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Print view -->
-      <div class="view" id="view-print"><div id="printContent" class="print-sheet"></div></div>
+            <!-- Workspace Matrix: Process Question Engine Quiz View -->
+            <div class="view" id="view-quiz" ontouchstart="touchStart(event)" ontouchend="touchEnd(event)">
+                <div class="q-card" id="qCard">
+                    <div class="q-meta">
+                        <span id="topicTag"></span>
+                        <div style="display:flex; gap:12px;">
+                            <span class="q-tool-btn" id="flagBtn" onclick="toggleFlag()" title="Flag item for systemic review" style="cursor:pointer;">[!]</span>
+                            <span class="q-tool-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Mark directory node" style="cursor:pointer;">[*]</span>
+                        </div>
+                    </div>
+                    <div class="q-text" id="qText">Awaiting matrix generation sequence...</div>
+                    <div class="options" id="optionsBox"></div>
+                    <div class="note-area">
+                        <div class="note-toggle" onclick="toggleNote()">Engineering Data Entry Log <span id="noteArrow">►</span></div>
+                        <textarea class="note-input" id="noteInput" placeholder="Log diagnostic notes relative to this sector... " oninput="saveNote()"></textarea>
+                    </div>
+                </div>
+                <div class="end-scr" id="endScreen" style="display:none; text-align:center; margin:auto">
+                    <h2 style="font-size:24px; margin-bottom:8px; color:var(--correct)">Data Stream Completed</h2>
+                    <p style="color:var(--text2); margin-bottom:20px">All sector questions fully filtered and resolved.</p>
+                    <button class="btn btn-p" onclick="reloadCurrentSubject()">Re-run Module Operations</button>
+                </div>
+            </div>
 
-      <!-- Action Bar -->
-      <footer class="action-bar" id="actionBar" style="display:none">
-        <div class="btn-group">
-          <button class="btn btn-s" id="btnPrev" disabled onclick="prevQuestion()" title="Swipe Right">&#11013; Prev</button>
-          <button class="btn btn-w" id="btn5050" onclick="use5050()">&#9889; 50/50</button>
-          <div class="feedback" id="feedback"></div>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-s" id="btnShowAns" onclick="showAnswer()">Show Answer</button>
-          <button class="btn btn-s" id="btnSkip" onclick="skipQuestion()" title="Swipe Left">Skip</button>
-          <button class="btn btn-p" id="btnNext" onclick="nextQuestion()" style="display:none" title="Swipe Left">Next &#10140;</button>
-        </div>
-      </footer>
-    </main>
-  </div>
+            <!-- Workspace Matrix: Flashcard Mode View -->
+            <div class="view" id="view-flashcard">
+                <div class="fc-container">
+                    <div style="font-size:12px; color:var(--text2); font-family:'JetBrains Mono', monospace" id="fcMeta"></div>
+                    <div class="fc-card" id="fcCard" onclick="flipCard()">
+                        <div class="fc-inner">
+                            <div class="fc-front"><div class="fc-meta" id="fcTopic"></div><div class="fc-q" id="fcQuestion"></div><div style="font-size:12px; color:var(--text2); margin-top:20px">Trigger matrix block or hotkey [F] to rotate</div></div>
+                            <div class="fc-back"><div style="font-size:11px; color:var(--correct); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px">Resolved Data State</div><div class="fc-a" id="fcAnswer"></div></div>
+                        </div>
+                    </div>
+                    <div class="fc-btns">
+                        <button class="btn btn-d" onclick="fcMark(false)">Fault Encountered</button>
+                        <button class="btn btn-p" onclick="fcMark(true)" style="background:var(--correct)">Calculation Confirmed</button>
+                    </div>
+                    <div style="font-size:12px; color:var(--text2); font-family:'JetBrains Mono', monospace">Arrays: [← Key] Fault | Verified State [Key →]</div>
+                </div>
+            </div>
 
-  <!-- Modals -->
-  <div class="modal-overlay" id="settingsModal"><div class="modal">
-    <h3>&#9881; Settings</h3>
-    <label>Daily Question Goal</label><input type="number" id="goalInput" min="1" max="500" value="20" onchange="saveGoal()">
-    <label>Timer Per Question (seconds, 0 = off)</label><input type="number" id="timerInput" min="0" max="300" value="0" onchange="saveTimerSetting()">
-    <div style="margin-top:12px"><button class="btn btn-p" onclick="closeModals()">Done</button></div>
-  </div></div>
-  <div class="modal-overlay" id="shortcutsModal"><div class="modal">
-    <h3>&#9000; Keyboard Shortcuts</h3>
-    <div class="kb-grid">
-      <span class="kb-key">1</span><span>Select option A</span>
-      <span class="kb-key">2</span><span>Select option B</span>
-      <span class="kb-key">3</span><span>Select option C</span>
-      <span class="kb-key">4</span><span>Select option D</span>
-      <span class="kb-key">5</span><span>Use 50/50</span>
-      <span class="kb-key">Enter</span><span>Next question</span>
-      <span class="kb-key">Backspace</span><span>Previous question</span>
-      <span class="kb-key">S</span><span>Skip question</span>
-      <span class="kb-key">F</span><span>Flip flashcard</span>
-      <span class="kb-key">T</span><span>Toggle theme</span>
-      <span class="kb-key">Z</span><span>Toggle Zen/Focus Mode</span>
-      <span class="kb-key">?</span><span>Show this help</span>
+            <!-- Workspace Matrix: Simulation Test Matrix View -->
+            <div class="view" id="view-exam">
+                <div id="examContent">
+                    <div class="exam-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px">
+                        <div style="font-size:18px; font-weight:700">Flight Certification Mock Simulation</div>
+                        <div class="exam-timer" id="examTimer" style="font-size:22px; font-weight:700; color:var(--warning); font-family:'JetBrains Mono', monospace">60:00</div>
+                        <div style="font-size:13px; color:var(--text2); font-family:'JetBrains Mono', monospace">Array Block Progress: <span id="examProgress">0</span>/50</div>
+                    </div>
+                    <div class="q-card">
+                        <div class="q-meta"><span id="examTopic"></span></div>
+                        <div class="q-text" id="examQText"></div>
+                        <div class="options" id="examOptions"></div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; margin-top:20px">
+                        <button class="btn btn-p" id="examNextBtn" onclick="examNext()" disabled>Advance To Next Node ➔</button>
+                    </div>
+                </div>
+                <div class="exam-result" id="examResult" style="display:none; text-align:center; padding:40px">
+                    <div style="font-size:18px; color:var(--text2)">Simulation Evaluation Terminated</div>
+                    <div class="exam-score" id="examScore" style="font-size:64px; font-weight:800; margin:16px 0; font-family:'JetBrains Mono', monospace"></div>
+                    <div style="font-size:20px; font-weight:700; margin-bottom:8px" id="examVerdict"></div>
+                    <div style="color:var(--text2); margin-bottom:24px" id="examDetail"></div>
+                    <button class="btn btn-p" onclick="switchView('dashboard')" style="margin:0 auto">Return to Telemetry Root</button>
+                </div>
+            </div>
+
+            <!-- Workspace Matrix: Search Bank Component View -->
+            <div class="view" id="view-bank">
+                <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap">
+                    <input type="text" id="searchBar" class="search-bar" style="flex:1; min-width:240px" placeholder="Filter target directory keywords..." oninput="filterBank()">
+                    <select id="masteryFilter" class="search-bar" style="width:160px" onchange="filterBank()">
+                        <option value="all">All Calibrations</option>
+                        <option value="0">Fault Matrix</option>
+                        <option value="1">Compiling</option>
+                        <option value="2">Calculated</option>
+                        <option value="3">Mastered Array</option>
+                    </select>
+                    <select id="bookmarkFilter" class="search-bar" style="width:160px" onchange="filterBank()">
+                        <option value="all">All Data Nodes</option>
+                        <option value="bookmarked">Bookmarked Nodes</option>
+                        <option value="flagged">Flagged Deviations</option>
+                    </select>
+                    <button id="notesFilterBtn" class="btn btn-s" onclick="toggleNotesFilter()" style="white-space:nowrap">Contains Core Entry Log</button>
+                </div>
+                <div id="bankResults"></div>
+            </div>
+
+            <!-- Workspace Matrix: Local Hardware Print View -->
+            <div class="view" id="view-print"><div id="printContent" class="print-sheet"></div></div>
+
+            <!-- Context Control Navigation Footer -->
+            <footer class="action-bar" id="actionBar" style="display:none">
+                <div class="btn-group">
+                    <button class="btn btn-s" id="btnPrev" disabled onclick="prevQuestion()">Reverse Vector</button>
+                    <button class="btn btn-w" id="btn5050" onclick="use5050()">Isolate 50/50 Nodes</button>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-s" id="btnShowAns" onclick="showAnswer()">Decompile Solution</button>
+                    <button class="btn btn-s" id="btnSkip" onclick="skipQuestion()">Bypass Node</button>
+                    <button class="btn btn-p" id="btnNext" onclick="nextQuestion()" style="display:none">Advance State ➔</button>
+                </div>
+            </footer>
+        </main>
     </div>
-    <div style="margin-top:16px"><button class="btn btn-p" onclick="closeModals()">Close</button></div>
-  </div></div>
-  <div class="modal-overlay" id="authModal">
-    <div class="modal" id="authModalBody" style="border: 1px solid var(--accent); box-shadow: 0 0 20px rgba(59,130,246,0.15); padding: 32px;">
-      <h3 id="authModalTitle" style="font-size: 22px; margin-bottom: 8px;">&#128274; Cloud Sync</h3>
-      <p style="font-size:14px; color:var(--text2); margin-bottom:24px; line-height:1.5;">Securely sync your progress across devices to never lose your mastery levels.</p>
-      
-      <div id="authError" style="color:var(--incorrect); font-size:13px; margin-bottom:16px; font-weight: 500;"></div>
-      
-      <div style="margin-bottom: 16px;">
-        <label style="font-weight: 600; margin-bottom: 8px;">&#9993; Email Address</label>
-        <input type="email" id="authEmail" placeholder="pilot@example.com" style="padding: 12px; font-size: 15px; border-radius: 8px; border: 2px solid var(--border); transition: border-color 0.2s;">
-      </div>
-      
-      <div style="margin-bottom: 24px;">
-        <label style="font-weight: 600; margin-bottom: 8px;">&#128273; Password</label>
-        <input type="password" id="authPassword" placeholder="Minimum 6 characters" style="padding: 12px; font-size: 15px; border-radius: 8px; border: 2px solid var(--border); transition: border-color 0.2s;">
-        <button type="button" onclick="handlePasswordReset()" style="background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; text-align:left; padding:4px 0 0 0; text-decoration:underline;">Forgot password?</button>
-      </div>
-      
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="padding: 12px; font-size: 15px; justify-content: center;">Sign In</button>
-        <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="padding: 12px; font-size: 13px; justify-content: center; border-color: transparent;">No account yet? <strong>Sign Up</strong></button>
-        
-        <div id="authSeparator" style="display: flex; align-items: center; margin: 16px 0;">
-          <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
-          <span style="padding: 0 10px; color: var(--text2); font-size: 13px;">OR</span>
-          <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
-        </div>
-        
-        <button class="btn btn-s" id="googleSignInBtn" onclick="handleGoogleSignIn()" style="padding: 12px; font-size: 15px; justify-content: center; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: white; color: #333;">
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18">
-          <span id="googleSignInBtnText">Sign in with Google</span>
-        </button>
-      </div>
-      
-      <div id="authLoggedInView" style="display:none; text-align: center;">
-        <div style="font-size: 48px; margin-bottom: 16px;">&#128104;&#8205;&#9992;&#65039;</div>
-        <p style="font-size:15px; margin-bottom:24px; color:var(--text);">Welcome back,<br><strong id="authCurrentUser" style="color: var(--accent); font-size: 16px;"></strong></p>
-        <button class="btn btn-d" onclick="handleSignOut()" style="width:100%; padding: 12px; justify-content: center;">Sign Out</button>
-      </div>
-      
-      <div style="margin-top:24px; border-top: 1px solid var(--border); padding-top: 16px;">
-        <button class="btn btn-s" onclick="closeModals()" style="width:100%; justify-content: center; border: none; background: rgba(255,255,255,0.05);">Close</button>
-      </div>
-    </div>
-  </div>
-  <div class="modal-overlay" id="importExportModal"><div class="modal">
-    <h3>&#128229; Import / Export Progress</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Export your study data to back it up, or import from a previous backup.</p>
-    <button class="btn btn-p" onclick="exportData()" style="margin-bottom:12px;width:100%">&#128190; Export Progress (JSON)</button>
-    <label>Import Progress</label>
-    <input type="file" id="importFile" accept=".json" onchange="importData(event)">
-    <div style="margin-top:12px"><button class="btn btn-s" onclick="closeModals()">Close</button></div>
-  </div></div>
 
+    <!-- Modals Engine Configurations Layout Layer -->
+    <div class="modal-overlay" id="settingsModal"><div class="modal">
+        <h3>HUD Matrix Configuration</h3>
+        <label>Daily Process Target Clear Count</label>
+        <input type="number" id="goalInput" min="1" max="500" value="20" onchange="saveGoal()">
+        <label>Internal Question Node Timer (Seconds, 0 = Off)</label>
+        <input type="number" id="timerInput" min="0" max="300" value="0" onchange="saveTimerSetting()">
+        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Save Array Configurations</button></div>
+    </div></div>
+
+    <div class="modal-overlay" id="shortcutsModal"><div class="modal">
+        <h3>System Intercept Command Mapping</h3>
+        <div class="kb-grid">
+            <span class="kb-key">1</span><span>Target Option Alpha</span>
+            <span class="kb-key">2</span><span>Target Option Bravo</span>
+            <span class="kb-key">3</span><span>Target Option Charlie</span>
+            <span class="kb-key">4</span><span>Target Option Delta</span>
+            <span class="kb-key">5</span><span>Isolate Alternate Options (50/50)</span>
+            <span class="kb-key">Enter</span><span>Advance Engine Execution State</span>
+            <span class="kb-key">Backspace</span><span>Revert Node Stream Vector</span>
+            <span class="kb-key">S</span><span>Bypass Active Node Assignment</span>
+            <span class="kb-key">F</span><span>Flip Active Deck Index Card</span>
+            <span class="kb-key">T</span><span>Toggle Color Scheme Array</span>
+            <span class="kb-key">Z</span><span>Trigger HUD Focus Isolation Mode</span>
+            <span class="kb-key">?</span><span>Display Operations Manifest</span>
+        </div>
+        <div style="margin-top:20px"><button class="btn btn-p" style="width:100%" onclick="closeModals()">Resume Task</button></div>
+    </div></div>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal" id="authModalBody" style="padding: 32px;">
+            <h3 id="authModalTitle" style="font-size: 20px; margin-bottom: 8px;">Cloud Matrix Directory Sync</h3>
+            <p style="font-size:13px; color:var(--text2); margin-bottom:24px; line-height:1.5;">Bind data files to network storage units to synchronize deployment sessions smoothly.</p>
+            
+            <div id="authError" style="color:var(--incorrect); font-size:13px; margin-bottom:16px; font-weight: 600;"></div>
+            
+            <div style="margin-bottom: 16px;">
+                <label>User Login Registry ID (Email)</label>
+                <input type="email" id="authEmail" placeholder="mechanic@suu.edu">
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label>System Encrypted Access Key (Password)</label>
+                <input type="password" id="authPassword" placeholder="Minimum 6 security bits">
+                <button type="button" onclick="handlePasswordReset()" style="background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; text-decoration:underline; padding-top:4px;">Request Access Key Vector Overwrite</button>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn btn-p" id="authActionBtn" onclick="handleAuthAction()" style="width:100%">Verify Credentials</button>
+                <button class="btn btn-s" id="authToggleBtn" onclick="toggleAuthMode()" style="width:100%; border-color:transparent;">Initialize New Directory ID File Allocation</button>
+                
+                <div id="authSeparator" style="display: flex; align-items: center; margin: 8px 0;">
+                    <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
+                    <span style="padding: 0 12px; color: var(--text2); font-size: 11px; font-weight:700;">OR</span>
+                    <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--border);">
+                </div>
+                
+                <button class="btn btn-s" id="googleSignInBtn" onclick="handleGoogleSignIn()" style="width:100%; background: #fff; color: #1e293b; font-weight:600;">
+                    <span>Establish Link via External Google Node</span>
+                </button>
+            </div>
+            
+            <div id="authLoggedInView" style="display:none; text-align: center;">
+                <p style="font-size:14px; margin-bottom:20px; color:var(--text);">Active Uplink Securely Confirmed:<br><strong id="authCurrentUser" style="color: var(--accent2);"></strong></p>
+                <button class="btn btn-d" onclick="handleSignOut()" style="width:100%">Sever Network Uplink Sync</button>
+            </div>
+            
+            <div style="margin-top:24px; border-top: 1px solid var(--border); padding-top: 16px;">
+                <button class="btn btn-s" onclick="closeModals()" style="width:100%">Dismiss Command Block</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="importExportModal"><div class="modal">
+        <h3>Hardware Progress Registry Allocation</h3>
+        <p style="font-size:13px; color:var(--text2); margin-bottom:16px;">Export runtime telemetry data matrices as physical JSON structures, or decompile a raw backup array stream directly into local memory storage blocks.</p>
+        <button class="btn btn-p" onclick="exportData()" style="margin-bottom:16px; width:100%">Serialize Progress States to File (.json)</button>
+        <label>Inject Local Source File Target</label>
+        <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+        <div style="margin-top:12px"><button class="btn btn-s" style="width:100%" onclick="closeModals()">Dismiss Transfer Unit</button></div>
+    </div></div>
+
+    <!-- Script assets, event handlers, execution layer, and initialization blocks remain untouched past this vector injection point -->
     <script src="questions_v2.js"></script>
     <script>
-        
-
     // ======== PWA ========
     if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err=>console.log('SW fail', err)); }); }
 
@@ -574,7 +1089,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
     let masteryData = LS('mastery', {});
     let bookmarks = new Set(LS('bookmarks', []));
-    let flaggedQuestions = new Set(LS('flagged', [])); // NEW: Flagged for review
+    let flaggedQuestions = new Set(LS('flagged', []));
     let userNotes = LS('notes', {});
     let streakData = LS('streak', {count:0, lastDate:null});
     let sessionHistory = LS('sessions', []);
@@ -586,20 +1101,16 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     let timerSetting = LS('timerSetting', 0);
     let soundEnabled = LS('soundEnabled', true);
     let themePref = LS('theme', 'dark');
-    let firstAttempts = LS('firstAttempts', {}); // {subjectName: {total:0, correct:0}}
+    let firstAttempts = LS('firstAttempts', {});
     let consecutiveCorrect = LS('consecutive', 0);
     
-    // NEW: Analytics Tracking
-    let timeStats = LS('timeStats', {}); // {id: {totalTime:0, count:0}}
-    let missCount = LS('missCount', {}); // {id: count}
+    let timeStats = LS('timeStats', {});
+    let missCount = LS('missCount', {});
     let dashLayout = LS('dashLayout', null);
 
-    // Session tracking
     let sessionStart = Date.now();
     let sessionAnswered = 0;
     let sessionCorrect = 0;
-    
-    // Question Timer (for tracking analytics)
     let qStartTime = 0;
 
     // ======== QUESTION PROCESSING ========
@@ -622,10 +1133,8 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     let timerInterval = null;
     let timerLeft = 0;
     let zenMode = false;
-    // Flashcard state
     let fcQueue = [];
     let fcIdx = 0;
-    // Exam state
     let examQueue = [];
     let examIdx = 0;
     let examCorrect = 0;
@@ -633,7 +1142,6 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     let examTimerInterval = null;
     let examTimeLeft = 3600;
     let examActive = false;
-    // Quiz modes
     let quizMode = 'normal';
 
     // ======== SOUND ========
@@ -659,11 +1167,9 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       themePref = themePref === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', themePref);
       SS('theme', themePref);
-      document.getElementById('themeBtn').innerHTML = themePref === 'dark' ? '&#127769;' : '&#9728;';
     }
     function toggleSound() {
       soundEnabled = !soundEnabled; SS('soundEnabled', soundEnabled);
-      document.getElementById('soundBtn').innerHTML = soundEnabled ? '&#128264;' : '&#128263;';
     }
     function toggleZenMode() {
       zenMode = !zenMode;
@@ -692,11 +1198,9 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     function handleSwipe() {
       if (currentView !== 'quiz') return;
       if (touchEndX < touchStartX - 60) {
-        // Swipe left -> Next / Skip
         if (answered) nextQuestion(); else skipQuestion();
       }
       if (touchEndX > touchStartX + 60) {
-        // Swipe right -> Previous
         prevQuestion();
       }
     }
@@ -716,21 +1220,19 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const nav = document.getElementById('nav-'+name);
       if (nav) nav.classList.add('active');
       currentView = name;
-      // UI handling
+      
       const showQuiz = name === 'quiz';
       document.getElementById('actionBar').style.display = showQuiz ? 'flex' : 'none';
       document.getElementById('quizProgress').style.display = showQuiz ? 'block' : 'none';
       document.getElementById('scorePill').style.display = showQuiz ? 'flex' : 'none';
       document.getElementById('zenBtn').style.display = showQuiz ? 'flex' : 'none';
       
-      // Exit zen mode if leaving quiz
       if (!showQuiz && zenMode) toggleZenMode();
       if (!showQuiz) stopTimer();
       
-      // Render views
-      if (name === 'dashboard') { renderDashboard(); document.getElementById('breadcrumb').innerHTML = 'Home / <span class="hl">Dashboard</span>'; }
-      if (name === 'analytics') { renderAnalytics(); document.getElementById('breadcrumb').innerHTML = 'Tools / <span class="hl">Deep Analytics</span>'; }
-      if (name === 'bank') { renderBank(); document.getElementById('breadcrumb').innerHTML = 'Tools / <span class="hl">Search Bank</span>'; }
+      if (name === 'dashboard') { renderDashboard(); document.getElementById('breadcrumb').innerHTML = 'Core / <span class="hl">Dashboard</span>'; }
+      if (name === 'analytics') { renderAnalytics(); document.getElementById('breadcrumb').innerHTML = 'Diagnostics / <span class="hl">Deep Analytics</span>'; }
+      if (name === 'bank') { renderBank(); document.getElementById('breadcrumb').innerHTML = 'Data Nodes / <span class="hl">Search Bank</span>'; }
       if (name === 'flashcard') { startFlashcards(); }
       
       document.getElementById('sidebar').classList.remove('open');
@@ -739,9 +1241,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
     // ======== SIDEBAR MENU ========
     let subjectListOpen = true;
-    function toggleSubjectList() { subjectListOpen = !subjectListOpen; document.getElementById('subjectList').style.display = subjectListOpen ? '' : 'none'; document.getElementById('subjectArrow').innerHTML = subjectListOpen ? '&#9660;' : '&#9654;'; }
+    function toggleSubjectList() { 
+        subjectListOpen = !subjectListOpen; 
+        document.getElementById('subjectList').style.display = subjectListOpen ? '' : 'none'; 
+        document.getElementById('subjectArrow').style.transform = subjectListOpen ? 'rotate(0deg)' : 'rotate(-90deg)'; 
+    }
 
-    function    buildMenu() {
+    function buildMenu() {
       const el = document.getElementById('subjectList');
       let html = '';
       const romanOrder = {'I.':1,'II.':2,'III.':3,'IV.':4};
@@ -753,25 +1259,28 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       for (const sub of sortedSubs) {
         const sid = 'sub_'+sub.replace(/[^a-zA-Z0-9]/g,'_');
         const safeSubQ = sub.replace(/'/g,"\\'");
-        html += '<div style="display:flex;align-items:center">';
-        html += '<div class="nav-item" id="'+sid+'" onclick="loadSubject(\''+safeSubQ+'\')" style="flex:1;overflow:hidden;text-overflow:ellipsis">'+sub+'</div>';
-        html += '<span class="sub-arrow" id="arr_'+sid+'" onclick="toggleSubCats(\''+sid+'\')" title="Expand categories" style="cursor:pointer;padding:9px 12px 9px 4px;color:var(--text2);font-size:10px;user-select:none;flex-shrink:0">&#9654;</span>';
+        html += '<div style="display:flex; flex-direction:column;">';
+        html += '<div style="display:flex; align-items:center; justify-content:space-between;" class="nav-item-wrapper">';
+        html += '<div class="nav-item" id="'+sid+'" onclick="loadSubject(\''+safeSubQ+'\')" style="flex:1; overflow:hidden; text-overflow:ellipsis; margin-bottom:0;">'+sub+'</div>';
+        html += '<span class="sub-arrow" id="arr_'+sid+'" onclick="toggleSubCats(\''+sid+'\')" style="cursor:pointer; padding:10px; color:var(--text2); font-size:10px; user-select:none;">►</span>';
         html += '</div>';
-        html += '<div id="cats_'+sid+'" style="display:none">';
+        html += '<div id="cats_'+sid+'" style="display:none; padding-left:12px;">';
         for (const cat in subjects[sub]) {
           html += '<div class="nav-sub" onclick="loadCategory(\''+safeSubQ+'\',\''+cat.replace(/'/g,"\\'")+'\')">'+cat+'</div>';
         }
         html += '</div>';
+        html += '</div>';
       }
       el.innerHTML = html;
     }
+    
     function toggleSubCats(sid) {
       const catDiv = document.getElementById('cats_'+sid);
       const arrow = document.getElementById('arr_'+sid);
       if (!catDiv) return;
       const isOpen = catDiv.style.display !== 'none';
       catDiv.style.display = isOpen ? 'none' : '';
-      if (arrow) arrow.innerHTML = isOpen ? '&#9654;' : '&#9660;';
+      if (arrow) arrow.innerHTML = isOpen ? '►' : '▼';
     }
 
     // ======== QUIZ LOADING ========
@@ -788,7 +1297,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     function startWeakFocus() {
       quizMode = 'weak';
       const qs = allQuestions.filter(q => (masteryData[q.globalId]||0) <= 1);
-      if (qs.length === 0) { alert('No weak questions! You\'re doing great!'); return; }
+      if (qs.length === 0) { alert('All data sectors verified inside nominal tolerances.'); return; }
       loadQuiz(qs, 'Weak Areas Focus');
       document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
       document.getElementById('nav-weakfocus').classList.add('active');
@@ -823,7 +1332,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
     // ======== QUIZ RENDERING ========
     function getMastery(lvl) {
-      const map = [{text:'Needs Work',cls:'m0'},{text:'Learning',cls:'m1'},{text:'Learned',cls:'m2'},{text:'Mastered',cls:'m3'}];
+      const map = [{text:'Fault Matrix',cls:'m0'},{text:'Compiling',cls:'m1'},{text:'Calculated',cls:'m2'},{text:'Mastered Array',cls:'m3'}];
       return map[lvl] || map[0];
     }
 
@@ -835,7 +1344,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       answered = false; used5050 = false; qStartTime = Date.now();
       document.getElementById('qText').textContent = q.text;
       document.getElementById('topicTag').textContent = q.topic + ' — ' + q.category;
-      document.getElementById('scoreText').textContent = 'Q' + (queueIdx+1) + '/' + quizQueue.length;
+      document.getElementById('scoreText').textContent = 'Node ' + (queueIdx+1) + '/' + quizQueue.length;
       document.getElementById('masteryBadge').className = 'mastery-badge ' + badge.cls;
       document.getElementById('masteryBadge').textContent = badge.text;
       document.getElementById('feedback').textContent = '';
@@ -847,16 +1356,15 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       document.getElementById('quizProgressFill').style.width = ((queueIdx / quizQueue.length) * 100) + '%';
       
       const bm = document.getElementById('bookmarkBtn');
-      bm.innerHTML = bookmarks.has(q.globalId) ? '&#9733;' : '&#9734;';
-      bm.className = 'q-tool-btn' + (bookmarks.has(q.globalId) ? ' bookmarked' : '');
+      bm.innerHTML = bookmarks.has(q.globalId) ? '[★]' : '[☆]';
       
       const fg = document.getElementById('flagBtn');
-      fg.className = 'q-tool-btn' + (flaggedQuestions.has(q.globalId) ? ' flagged' : '');
+      fg.innerHTML = flaggedQuestions.has(q.globalId) ? '[⚑]' : '[🏳]';
       
       const ni = document.getElementById('noteInput');
       ni.value = userNotes[q.globalId] || '';
       ni.classList.remove('open');
-      document.getElementById('noteArrow').innerHTML = userNotes[q.globalId] ? '&#9660;' : '&#9654;';
+      document.getElementById('noteArrow').innerHTML = userNotes[q.globalId] ? '▼' : '►';
       if (userNotes[q.globalId]) ni.classList.add('open');
       
       const opts = [...q.options].sort(() => Math.random() - 0.5);
@@ -882,7 +1390,6 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const isCorrect = el.dataset.correct === 'true';
       const q = quizQueue[queueIdx];
       
-      // Update time tracking
       if(!timeStats[q.globalId]) timeStats[q.globalId] = {totalTime:0, count:0};
       timeStats[q.globalId].totalTime += timeTaken;
       timeStats[q.globalId].count++;
@@ -893,25 +1400,24 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         if (o.dataset.correct === 'true') o.classList.add('correct');
       });
       if (!isCorrect) el.classList.add('incorrect');
-      // Feedback
       const fb = document.getElementById('feedback');
-      if (isCorrect) { fb.textContent = '✓ Correct!'; fb.style.color = 'var(--correct)'; sndCorrect(); } 
-      else { fb.textContent = '✗ Incorrect'; fb.style.color = 'var(--incorrect)'; sndIncorrect(); }
-      // Mastery
+      if (isCorrect) { fb.textContent = '✓ Calculation Verified'; fb.style.color = 'var(--correct)'; sndCorrect(); } 
+      else { fb.textContent = '✗ Discrepancy Flagged'; fb.style.color = 'var(--incorrect)'; sndIncorrect(); }
+      
       let m = masteryData[q.globalId] || 0;
       if (isCorrect) { m = Math.min(3, m + 1); consecutiveCorrect++; } else { m = Math.max(0, m - 1); consecutiveCorrect = 0; }
       masteryData[q.globalId] = m;
       SS('mastery', masteryData); SS('consecutive', consecutiveCorrect);
-      // Accuracy
+      
       if (!firstAttempts[q.subject]) firstAttempts[q.subject] = {total:0,correct:0};
       firstAttempts[q.subject].total++;
       if (isCorrect) firstAttempts[q.subject].correct++;
       SS('firstAttempts', firstAttempts);
-      // Daily
+      
       sessionAnswered++; todayCount++;
       if (isCorrect) { sessionCorrect++; todayCorrect++; }
       SS('todayCount_'+today(), todayCount); SS('todayCorrect_'+today(), todayCorrect);
-      // Track missed overall
+      
       if (!isCorrect) {
         missCount[q.globalId] = (missCount[q.globalId]||0) + 1;
         SS('missCount', missCount);
@@ -933,13 +1439,14 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       if (answered) return;
       answered = true; stopTimer();
       document.querySelectorAll('#optionsBox .option').forEach(o => { o.classList.add('disabled'); if (o.dataset.correct === 'true') o.classList.add('correct'); });
-      document.getElementById('feedback').textContent = 'Answer revealed';
+      document.getElementById('feedback').textContent = 'Solution decompiled';
       document.getElementById('feedback').style.color = 'var(--text2)';
       document.getElementById('btnNext').style.display = '';
       document.getElementById('btnShowAns').style.display = 'none';
       document.getElementById('btnSkip').style.display = 'none';
     }
 
+    // Isolate 50/50 target options logic
     function use5050() {
       if (answered || used5050) return;
       used5050 = true;
@@ -947,12 +1454,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const opts = [...document.querySelectorAll('#optionsBox .option')];
       const wrongs = opts.filter(o => o.dataset.correct !== 'true');
       wrongs.sort(() => Math.random()-0.5);
-      wrongs[0].classList.add('hidden5050');
+      wrongs[0].style.opacity = "0.25";
+      wrongs[0].style.pointerEvents = "none";
     }
 
     function showEndScreen() {
       document.getElementById('qCard').style.display = 'none';
-      document.getElementById('endScreen').style.display = '';
+      document.getElementById('endScreen').style.display = 'block';
       const sess = {date:new Date().toISOString(), answered:sessionAnswered, correct:sessionCorrect, duration:Math.round((Date.now()-sessionStart)/1000)};
       sessionHistory.unshift(sess);
       if (sessionHistory.length > 50) sessionHistory.pop();
@@ -987,21 +1495,18 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const q = quizQueue[queueIdx];
       if (bookmarks.has(q.globalId)) { bookmarks.delete(q.globalId); } else { bookmarks.add(q.globalId); }
       SS('bookmarks', [...bookmarks]);
-      const bm = document.getElementById('bookmarkBtn');
-      bm.innerHTML = bookmarks.has(q.globalId) ? '&#9733;' : '&#9734;';
-      bm.className = 'q-tool-btn' + (bookmarks.has(q.globalId) ? ' bookmarked' : '');
+      document.getElementById('bookmarkBtn').innerHTML = bookmarks.has(q.globalId) ? '[★]' : '[☆]';
     }
     function toggleFlag() {
       const q = quizQueue[queueIdx];
       if (flaggedQuestions.has(q.globalId)) { flaggedQuestions.delete(q.globalId); } else { flaggedQuestions.add(q.globalId); }
       SS('flagged', [...flaggedQuestions]);
-      const fg = document.getElementById('flagBtn');
-      fg.className = 'q-tool-btn' + (flaggedQuestions.has(q.globalId) ? ' flagged' : '');
+      document.getElementById('flagBtn').innerHTML = flaggedQuestions.has(q.globalId) ? '[⚑]' : '[🏳]';
     }
     function toggleNote() {
       const ni = document.getElementById('noteInput');
       ni.classList.toggle('open');
-      document.getElementById('noteArrow').innerHTML = ni.classList.contains('open') ? '&#9660;' : '&#9654;';
+      document.getElementById('noteArrow').innerHTML = ni.classList.contains('open') ? '▼' : '►';
     }
     function saveNote() {
       const q = quizQueue[queueIdx]; if (!q) return;
@@ -1010,14 +1515,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       SS('notes', userNotes);
     }
 
-
     // ======== FLASHCARD MODE ========
     function startFlashcards() {
       const qs = allQuestions.filter(q => (masteryData[q.globalId]||0) < 3);
       if (qs.length === 0) { fcQueue = [...allQuestions]; } else { fcQueue = qs; }
       fcQueue.sort(() => Math.random() - 0.5);
       fcIdx = 0;
-      document.getElementById('breadcrumb').innerHTML = 'Study / <span class="hl">Flashcards</span>';
+      document.getElementById('breadcrumb').innerHTML = 'Study Array / <span class="hl">Flashcards</span>';
       document.getElementById('actionBar').style.display = 'none';
       document.getElementById('scorePill').style.display = 'none';
       document.getElementById('quizProgress').style.display = 'none';
@@ -1028,11 +1532,10 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       if (fcIdx >= fcQueue.length) { fcIdx = 0; fcQueue.sort(() => Math.random() - 0.5); }
       const q = fcQueue[fcIdx];
       const ans = q.options.find(o => o.isCorrect).text;
-      // Front shows the TERM (topic), back shows the DEFINITION (answer)
       document.getElementById('fcQuestion').textContent = q.topic;
       document.getElementById('fcAnswer').textContent = ans;
       document.getElementById('fcTopic').textContent = q.category;
-      document.getElementById('fcMeta').textContent = 'Card ' + (fcIdx+1) + ' / ' + fcQueue.length;
+      document.getElementById('fcMeta').textContent = 'Matrix Node ' + (fcIdx+1) + ' / ' + fcQueue.length;
       document.getElementById('fcCard').classList.remove('flipped');
     }
     function flipCard() { document.getElementById('fcCard').classList.toggle('flipped'); }
@@ -1051,13 +1554,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
     // ======== EXAM SIMULATION ========
     function startExam() {
-      if (examActive) { if (!confirm('Restart exam?')) return; endExam(); }
+      if (examActive) { if (!confirm('Restart active mock operational run?')) return; endExam(); }
       examQueue = [...allQuestions].sort(() => Math.random()-0.5).slice(0,50);
       examIdx = 0; examCorrect = 0; examAnswered = 0; examActive = true;
       examTimeLeft = 3600;
       document.getElementById('examResult').style.display = 'none';
-      document.getElementById('examContent').style.display = '';
-      document.getElementById('breadcrumb').innerHTML = 'Study / <span class="hl">Exam Simulation</span>';
+      document.getElementById('examContent').style.display = 'block';
+      document.getElementById('breadcrumb').innerHTML = 'Simulation / <span class="hl">Exam HUD</span>';
       document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
       document.getElementById('nav-exam').classList.add('active');
       document.getElementById('actionBar').style.display = 'none';
@@ -1084,7 +1587,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       if (examIdx >= examQueue.length) { finishExam(); return; }
       const q = examQueue[examIdx];
       document.getElementById('examQText').textContent = q.text;
-      document.getElementById('examTopic').textContent = 'Q'+(examIdx+1)+'/50 — '+q.topic;
+      document.getElementById('examTopic').textContent = 'Node '+(examIdx+1)+'/50 — '+q.topic;
       document.getElementById('examProgress').textContent = examIdx+1;
       document.getElementById('examNextBtn').disabled = true;
       const box = document.getElementById('examOptions'); box.innerHTML = '';
@@ -1112,12 +1615,12 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const pct = Math.round((examCorrect/50)*100);
       const pass = pct >= 70;
       document.getElementById('examContent').style.display = 'none';
-      document.getElementById('examResult').style.display = '';
+      document.getElementById('examResult').style.display = 'block';
       document.getElementById('examScore').textContent = pct + '%';
-      document.getElementById('examScore').className = 'exam-score ' + (pass?'exam-pass':'exam-fail');
-      document.getElementById('examVerdict').innerHTML = pass ? '&#9989; PASSED' : '&#10060; FAILED';
+      document.getElementById('examScore').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
+      document.getElementById('examVerdict').innerHTML = pass ? '✓ OPERATIONAL COMPLIANCE ACCREDITED' : '✗ FLIGHT RE-CALIBRATION REQUIRED';
       document.getElementById('examVerdict').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
-      document.getElementById('examDetail').textContent = examCorrect+'/50 correct — '+(pass?'Great job!':'You need 70% to pass. Keep studying!');
+      document.getElementById('examDetail').textContent = examCorrect+'/50 segments matched — '+(pass?'HUD diagnostics verified nominal.':'Target metrics specify 70% threshold minimum configuration.');
       if (pass) fireConfetti();
       todayCount += examAnswered; todayCorrect += examCorrect;
       SS('todayCount_'+today(), todayCount); SS('todayCorrect_'+today(), todayCorrect);
@@ -1134,20 +1637,19 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       {text:"Learning is not attained by chance; it must be sought for with ardor and attended to with diligence.",author:"Abigail Adams"},
       {text:"The more you sweat in training, the less you bleed in combat.",author:"Richard Marcinko"},
       {text:"In flying I have learned that carelessness and overconfidence are usually far more dangerous than deliberately accepted risks.",author:"Wilbur Wright"},
-      {text:"Preparation is the key to success.",author:"Alexander Graham Bell"},
-      {text:"An expert is a person who has made all the mistakes that can be made in a very narrow field.",author:"Niels Bohr"}
+      {text:"Preparation is the key to success.",author:"Alexander Graham Bell"}
     ];
 
     // ======== ACHIEVEMENTS ========
     const achDefs = [
-      {id:'first10',icon:'&#127941;',name:'First 10',desc:'Master 10 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=10},
-      {id:'first50',icon:'&#127942;',name:'50 Mastered',desc:'Master 50 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=50},
-      {id:'first100',icon:'&#127894;',name:'Century Club',desc:'Master 100 questions',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=100},
-      {id:'streak7',icon:'&#128293;',name:'Week Warrior',desc:'7-day streak',check:()=>streakData.count>=7},
-      {id:'allSubjects',icon:'&#127758;',name:'Explorer',desc:'Attempt all subjects',check:()=>{const subs=new Set(allQuestions.map(q=>q.subject));const attempted=new Set();for(const id in masteryData){const q=allQuestions[parseInt(id)];if(q)attempted.add(q.subject);}return attempted.size>=subs.size;}},
-      {id:'perfect10',icon:'&#128175;',name:'Perfect 10',desc:'10 correct in a row',check:()=>consecutiveCorrect>=10},
-      {id:'daily50',icon:'&#128170;',name:'Grinder',desc:'Answer 50 questions in one day',check:()=>todayCount>=50},
-      {id:'bookworm',icon:'&#128218;',name:'Bookworm',desc:'Bookmark 20 questions',check:()=>bookmarks.size>=20},
+      {id:'first10',icon:'🏆',name:'First 10 Array blocks',desc:'Calibrate 10 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=10},
+      {id:'first50',icon:'🎖️',name:'50 Array sectors',desc:'Calibrate 50 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=50},
+      {id:'first100',icon:'⚡',name:'Century Databank',desc:'Calibrate 100 sector variables',check:()=>Object.values(masteryData).filter(v=>v>=3).length>=100},
+      {id:'streak7',icon:'🔥',name:'Telemetry Stream Matrix',desc:'7-day baseline sync monitoring',check:()=>streakData.count>=7},
+      {id:'allSubjects',icon:'🌍',name:'Sector Cartographer',desc:'Scan elements across all directories',check:()=>{const subs=new Set(allQuestions.map(q=>q.subject));const attempted=new Set();for(const id in masteryData){const q=allQuestions[parseInt(id)];if(q)attempted.add(q.subject);}return attempted.size>=subs.size;}},
+      {id:'perfect10',icon:'🎯',name:'Perfect Logic Loop',desc:'10 sequential clean calculations',check:()=>consecutiveCorrect>=10},
+      {id:'daily50',icon:'⚙️',name:'Core Overclock',desc:'Resolve 50 parameters in a single monitoring shift',check:()=>todayCount>=50},
+      {id:'bookworm',icon:'💾',name:'Directory Compiler',desc:'Index 20 items to local cache cards',check:()=>bookmarks.size>=20},
     ];
     function checkAchievements() {
       let newUnlock = false;
@@ -1193,8 +1695,8 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       });
     }
     function resetDashLayout() {
-      if(!confirm('Reset dashboard layout to default?')) return;
-      LS('dashLayout', null); dashLayout = null; SS('dashLayout', null);
+      if(!confirm('Reset telemetry console orientation layout grids?')) return;
+      localStorage.removeItem('ncatt_dashLayout'); dashLayout = null;
       location.reload();
     }
 
@@ -1205,29 +1707,29 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const total = allQuestions.length; const masteredPct = Math.round((counts[3]/total)*100)||0;
       
       document.getElementById('dashStats').innerHTML = [
-        {label:'Total',val:total,color:'var(--accent)',sub:total+' questions in bank',border:'var(--accent)'},
-        {label:'Mastered',val:masteredPct+'%',color:'var(--correct)',sub:counts[3]+' thoroughly learned',border:'var(--correct)'},
-        {label:'In Progress',val:counts[1]+counts[2],color:'var(--warning)',sub:'Learning + Learned',border:'var(--warning)'},
-        {label:'Needs Work',val:counts[0],color:'var(--incorrect)',sub:'Questions to review',border:'var(--incorrect)'},
-        {label:'Today',val:todayCount,color:'var(--accent2)',sub:todayCorrect+' correct today',border:'var(--accent2)'},
-      ].map(s=>'<div class="stat-card" style="border-top:4px solid '+s.border+'"><div class="stat-label">'+s.label+'</div><div class="stat-val" style="color:'+s.color+'">'+s.val+'</div><div class="stat-sub">'+s.sub+'</div></div>').join('');
+        {label:'Total Indexed Blocks',val:total,color:'var(--accent2)',sub:total+' vectors cataloged',border:'var(--accent)'},
+        {label:'Validated Arrays',val:masteredPct+'%',color:'var(--correct)',sub:counts[3]+' structural nodes matching zero tolerances',border:'var(--correct)'},
+        {label:'Active Computation',val:counts[1]+counts[2],color:'var(--warning)',sub:'Compiling processing pipelines',border:'var(--warning)'},
+        {label:'Uncalibrated Clusters',val:counts[0],color:'var(--incorrect)',sub:'Parameters scheduled for telemetry sweeps',border:'var(--incorrect)'},
+        {label:'Shift Log Count',val:todayCount,color:'var(--text)',sub:todayCorrect+' accurate inputs validated',border:'var(--border)'},
+      ].map(s=>'<div class="stat-card" style="border-left:3px solid '+s.border+'"><div class="stat-label">'+s.label+'</div><div class="stat-val" style="color:'+s.color+'">'+s.val+'</div><div class="stat-sub">'+s.sub+'</div></div>').join('');
 
       document.getElementById('streakNum').textContent = streakData.count;
-      document.getElementById('streakInfo').textContent = streakData.lastDate ? 'Last studied: '+streakData.lastDate : 'Start studying to build your streak!';
+      document.getElementById('streakInfo').textContent = streakData.lastDate ? 'System verification window sync date: '+streakData.lastDate : 'Awaiting baseline computation sequence metrics.';
 
       const goalPct = Math.min(100, Math.round((todayCount/dailyGoal)*100));
       const goalRing = document.getElementById('goalRing');
       goalRing.textContent = goalPct + '%';
       goalRing.style.background = 'conic-gradient(var(--correct) '+goalPct+'%, var(--surface2) '+goalPct+'%)';
-      document.getElementById('goalText').textContent = todayCount + ' / ' + dailyGoal + ' questions today';
+      document.getElementById('goalText').textContent = todayCount + ' / ' + dailyGoal + ' processes executed';
 
       const q = quotes[Math.floor(Math.random()*quotes.length)];
-      document.getElementById('quoteCard').innerHTML = '<div style="padding-left:24px">'+q.text+'</div><div class="quote-author">— '+q.author+'</div>';
+      document.getElementById('quoteCard').innerHTML = '<div style="padding-left:16px; font-style:italic; line-height:1.6;">"'+q.text+'"</div><div style="text-align:right; font-size:12px; color:var(--text2); margin-top:8px; font-weight:600;">— '+q.author+'</div>';
 
-      document.getElementById('achCount').textContent = achievements.size + '/' + achDefs.length + ' unlocked';
+      document.getElementById('achCount').textContent = achievements.size + '/' + achDefs.length + ' metrics active';
       document.getElementById('achGrid').innerHTML = achDefs.map(a => {
         const unlocked = achievements.has(a.id);
-        return '<div class="ach-card '+(unlocked?'unlocked':'locked')+'"><div class="ach-icon">'+a.icon+'</div><div class="ach-name">'+a.name+'</div><div class="ach-desc">'+a.desc+'</div></div>';
+        return '<div class="ach-card" style="opacity:'+(unlocked?'1':'0.35')+'; background:rgba(0,0,0,0.15); border:1px solid '+(unlocked?'var(--warning)':'var(--border)')+'; border-radius:8px; padding:16px; text-align:center;"><div style="font-size:24px; margin-bottom:4px;">'+a.icon+'</div><div style="font-size:12px; font-weight:700; margin-bottom:2px;">'+a.name+'</div><div style="font-size:10px; color:var(--text2);">'+a.desc+'</div></div>';
       }).join('');
 
       let subHtml = '';
@@ -1235,42 +1737,41 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const c = subGroups[sub]; const t = c[0]+c[1]+c[2]+c[3];
         const pcts = c.map(v=>(v/t)*100);
         const acc = firstAttempts[sub] ? Math.round((firstAttempts[sub].correct/firstAttempts[sub].total)*100) : 0;
-        const accText = firstAttempts[sub] ? acc+'% accuracy ('+firstAttempts[sub].correct+'/'+firstAttempts[sub].total+')' : 'No attempts yet';
-        subHtml += '<div class="sub-card"><div class="sub-title"><span>'+sub+'</span><span style="font-size:11px;font-weight:normal;color:var(--text2)">'+t+' Qs — '+accText+'</span></div>';
+        const accText = firstAttempts[sub] ? acc+'% validation accuracy ('+firstAttempts[sub].correct+'/'+firstAttempts[sub].total+')' : 'Matrix sequence non-initiated';
+        subHtml += '<div class="sub-card"><div class="sub-title"><span>'+sub+'</span><span style="font-size:11px; font-weight:500; color:var(--text2)">'+t+' Vectors — '+accText+'</span></div>';
         subHtml += '<div class="prog-bar">';
-        ['seg0','seg1','seg2','seg3'].forEach((cls,i) => { if (pcts[i]>0) subHtml += '<div class="prog-seg '+cls+'" style="width:'+pcts[i]+'%">'+(pcts[i]>=5?Math.round(pcts[i])+'%':'')+'</div>'; });
+        ['seg0','seg1','seg2','seg3'].forEach((cls,i) => { if (pcts[i]>0) subHtml += '<div class="prog-seg '+cls+'" style="width:'+pcts[i]+'%"></div>'; });
         subHtml += '</div></div>';
       }
       document.getElementById('dashSubjects').innerHTML = subHtml;
 
       const missedEl = document.getElementById('recentMissed');
-      if (missedRecent.length === 0) { missedEl.innerHTML = '<div style="padding:16px;color:var(--text2);font-size:13px">No missed questions yet. Keep it up!</div>'; }
-      else { missedEl.innerHTML = missedRecent.slice(0,10).map(m => '<div class="missed-item"><span style="color:var(--incorrect);margin-right:8px">✗</span>'+m.text+'<span style="float:right;color:var(--text2);font-size:11px">'+m.date+'</span></div>').join(''); }
+      if (missedRecent.length === 0) { missedEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">Fault log clean. Telemetry lines showing peak alignment.</div>'; }
+      else { missedEl.innerHTML = missedRecent.slice(0,10).map(m => '<div style="padding:10px; border-bottom:1px solid var(--border); font-size:13px;"><span style="color:var(--incorrect); margin-right:8px;">[FAULT]</span>'+m.text+'<span style="float:right; color:var(--text2); font-size:11px;">'+m.date+'</span></div>').join(''); }
 
-      const sessEl = document.getElementById('sessionHistory');
-      if (sessionHistory.length === 0) { sessEl.innerHTML = '<div style="padding:16px;color:var(--text2);font-size:13px">No sessions recorded yet.</div>'; }
-      else {
-        let sh = '<div class="session-row header"><span>Date</span><span>Answered</span><span>Correct</span><span>Duration</span></div>';
-        sessionHistory.slice(0,10).forEach(s => {
-          const d = new Date(s.date); const dur = s.duration<60?s.duration+'s':Math.round(s.duration/60)+'m';
-          sh += '<div class="session-row"><span>'+d.toLocaleDateString()+'</span><span>'+s.answered+'</span><span style="color:var(--correct)">'+s.correct+'</span><span>'+dur+'</span></div>';
-        });
-        sessEl.innerHTML = sh;
-      }
+    const sessEl = document.getElementById('sessionHistory');
+    if (sessionHistory.length === 0) { sessEl.innerHTML = '<div style="padding:16px; color:var(--text2); font-size:13px">Log lines clear. Awaiting historical session generation.</div>'; }
+    else {
+      let sh = '<div class="session-row header" style="display:grid; grid-template-columns:1fr 80px 80px 80px; padding:8px 12px; font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase;"><span>Date Stamp</span><span>Checked</span><span>Correct</span><span>Duration</span></div>';
+      sessionHistory.slice(0,10).forEach(s => {
+        const d = new Date(s.date); const dur = s.duration<60?s.duration+'s':Math.round(s.duration/60)+'m';
+        sh += '<div class="session-row" style="display:grid; grid-template-columns:1fr 80px 80px 80px; padding:8px 12px; font-size:12px; border-bottom:1px solid var(--border);"><span>'+d.toLocaleDateString()+'</span><span>'+s.answered+'</span><span style="color:var(--correct)">'+s.correct+'</span><span>'+dur+'</span></div>';
+      });
+      sessEl.innerHTML = sh;
+    }
 
       const heatEl = document.getElementById('heatmap'); let heatHtml = '';
       for (let i = 59; i >= 0; i--) {
         const d = new Date(Date.now()-i*86400000).toISOString().slice(0,10);
         const cnt = LS('todayCount_'+d, 0);
         let cls = ''; if (cnt>=1) cls='heat-1'; if (cnt>=10) cls='heat-2'; if (cnt>=25) cls='heat-3'; if (cnt>=50) cls='heat-4';
-        heatHtml += '<div class="heat-cell '+cls+'" title="'+d+': '+cnt+' questions"></div>';
+        heatHtml += '<div class="heat-cell '+cls+'" title="Shift Frame '+d+': '+cnt+' computations logged"></div>';
       }
       heatEl.innerHTML = heatHtml;
     }
 
     // ======== DEEP ANALYTICS ========
     function renderAnalytics() {
-      // Time Tracking
       let totalTime = 0, totalAns = 0;
       let subTimes = {};
       for (let id in timeStats) {
@@ -1287,23 +1788,22 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       let tsHtml = '';
       for (let sub in subTimes) {
         const avg = subTimes[sub].count > 0 ? (subTimes[sub].time/subTimes[sub].count).toFixed(1) : 0;
-        const slowWarn = parseFloat(avg) > parseFloat(overallAvg)*1.5 ? '<span style="color:var(--incorrect);font-size:11px;margin-left:8px">Slow</span>' : '';
-        tsHtml += '<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px"><div style="color:var(--text2);text-overflow:ellipsis;white-space:nowrap;overflow:hidden;padding-right:12px">'+sub+'</div><div><strong>'+avg+'s</strong>'+slowWarn+'</div></div>';
+        const slowWarn = parseFloat(avg) > parseFloat(overallAvg)*1.5 ? '<span style="color:var(--incorrect); font-size:11px; margin-left:8px; font-weight:700;">[WARN: LATENCY DETECTED]</span>' : '';
+        tsHtml += '<div style="display:flex; justify-content:space-between; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.01)"><div style="color:var(--text2); text-overflow:ellipsis; white-space:nowrap; overflow:hidden; padding-right:12px">'+sub+'</div><div><strong>'+avg+'s</strong>'+slowWarn+'</div></div>';
       }
-      document.getElementById('timeSubjects').innerHTML = tsHtml || '<div style="font-size:13px;color:var(--text2)">Answer some questions to gather time data.</div>';
+      document.getElementById('timeSubjects').innerHTML = tsHtml || '<div style="font-size:13px; color:var(--text2)">Compile operational shifts to register latency statistics.</div>';
 
-      // Weakest Links
       const misses = Object.keys(missCount).map(id => ({ id: parseInt(id), count: missCount[id] }));
       misses.sort((a,b) => b.count - a.count);
       const top10 = misses.slice(0, 10);
       
-      let wlHtml = '<tr><th>Subject</th><th>Question</th><th>Misses</th></tr>';
+      let wlHtml = '<tr><th>Sector Assignment</th><th>Indexed Context</th><th style="text-align:center;">Fault Frequency</th></tr>';
       if (top10.length === 0) {
-        wlHtml = '<tr><td colspan="3" style="text-align:center;color:var(--text2)">No misses recorded yet. Keep studying!</td></tr>';
+        wlHtml = '<tr><td colspan="3" style="text-align:center; color:var(--text2); padding:20px;">Diagnostic logs indicating zero recurring failures across active directories.</td></tr>';
       } else {
         top10.forEach(m => {
           const q = allQuestions[m.id]; if(!q) return;
-          wlHtml += '<tr><td style="color:var(--text2);font-size:11px">'+q.subject+'</td><td style="font-weight:500">'+q.text+'</td><td style="color:var(--incorrect);font-weight:700;text-align:center">'+m.count+'</td></tr>';
+          wlHtml += '<tr><td style="color:var(--text2); font-size:11px; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">'+q.subject+'</td><td style="font-weight:500;">'+q.text+'</td><td style="color:var(--incorrect); font-weight:700; text-align:center">'+m.count+'</td></tr>';
         });
       }
       document.getElementById('weaklinksTable').innerHTML = wlHtml;
@@ -1330,21 +1830,17 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const tm = !q || text.includes(q);
         const lm = fl==='all' || (masteryData[item.globalId]||0).toString()===fl;
         
-        // Handle bookmark vs flag filter logic
         let flagBM = true;
         if (bf === 'bookmarked') flagBM = bookmarks.has(item.globalId);
         if (bf === 'flagged') flagBM = flaggedQuestions.has(item.globalId);
-        
-        // Notes filter
         const nm = !notesFilterActive || !!userNotes[item.globalId];
-        
         return tm && lm && flagBM && nm;
       });
       if (matches.length > 100 && q.length < 2 && fl==='all' && bf==='all' && !notesFilterActive) {
-        resultsEl.innerHTML = '<p style="color:var(--text2);font-size:13px">Showing top 100 results. Type to narrow down.</p>';
+        resultsEl.innerHTML = '<p style="color:var(--text2); font-size:13px; margin-bottom:12px;">Displaying upper 100 directory lines. Apply target constraints to isolate strings.</p>';
         matches = matches.slice(0,100);
       } else if (matches.length === 0) {
-        resultsEl.innerHTML = '<p style="color:var(--text2)">No results found.</p>';
+        resultsEl.innerHTML = '<p style="color:var(--text2); padding:16px;">Query parameter failed to return records matching specified filter parameters.</p>';
       }
       matches.forEach(item => {
         const ans = item.options.find(o=>o.isCorrect).text;
@@ -1354,8 +1850,8 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const flagged = flaggedQuestions.has(item.globalId);
         const note = userNotes[item.globalId];
         const el = document.createElement('div'); el.className = 'bank-item';
-        let icons = ''; if(starred) icons+=' &#9733;'; if(flagged) icons+=' &#128681;'; if(note) icons+=' &#128221;';
-        el.innerHTML = '<div class="b-meta"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+icons+'</span></div><div class="b-q"><span style="color:var(--accent2);font-weight:700">Q'+(item.globalId+1)+'.</span> '+item.text+'</div><div class="b-ans">✔ '+ans+'</div>'+(note?'<div style="font-size:11px;color:var(--text2);margin-top:4px;font-style:italic">📝 '+note+'</div>':'');
+        let icons = ''; if(starred) icons+=' [★]'; if(flagged) icons+=' [⚑]'; if(note) icons+=' [📝]';
+        el.innerHTML = '<div class="b-meta" style="font-size:11px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase;"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+icons+'</span></div><div class="b-q" style="font-size:15px; color:var(--text); margin-bottom:6px;"><span style="color:var(--accent2); font-weight:700; font-family:\'JetBrains Mono\', monospace;">Node.'+(item.globalId+1)+'</span> '+item.text+'</div><div class="b-ans" style="color:var(--correct); font-weight:600; font-size:14px;">✔ Verified Definition State: '+ans+'</div>'+(note?'<div style="font-size:12px; color:var(--text2); margin-top:8px; padding-top:6px; border-top:1px dashed var(--border); font-style:italic;">📝 Registry Entry Entry: '+note+'</div>':'');
         resultsEl.appendChild(el);
       });
     }
@@ -1390,13 +1886,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
           if (data.timeStats) { timeStats = data.timeStats; SS('timeStats', timeStats); }
           if (data.missCount) { missCount = data.missCount; SS('missCount', missCount); }
           if (data.dashLayout) { dashLayout = data.dashLayout; SS('dashLayout', dashLayout); }
-          alert('Progress imported successfully!'); closeModals(); renderDashboard(); applyDashLayout();
-        } catch(err) { alert('Error importing: '+err.message); }
+          alert('Core progress registers rehydrated.'); closeModals(); renderDashboard(); applyDashLayout();
+        } catch(err) { alert('Data configuration import aborted: '+err.message); }
       };
       reader.readAsText(file);
     }
     function resetProgress() {
-      if (!confirm('Reset ALL progress? This cannot be undone.')) return;
+      if (!confirm('Purge total hardware study memory caches? This routine wipes all progress lines.')) return;
       masteryData={}; bookmarks=new Set(); userNotes={}; streakData={count:0,lastDate:null}; sessionHistory=[]; missedRecent=[]; achievements=new Set(); firstAttempts={}; consecutiveCorrect=0; todayCount=0; todayCorrect=0; flaggedQuestions=new Set(); timeStats={}; missCount={};
       ['mastery','bookmarks','flagged','notes','streak','sessions','missed','achievements','firstAttempts','consecutive','timeStats','missCount'].forEach(k=>{
         const arr = ['bookmarks','achievements','flagged'].includes(k);
@@ -1419,7 +1915,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
       const ctx = canvas.getContext('2d');
       canvas.width = window.innerWidth; canvas.height = window.innerHeight;
       const particles = [];
-      const colors = ['#ef4444','#eab308','#22c55e','#3b82f6','#a855f7','#ec4899'];
+      const colors = ['#3b82f6','#60a5fa','#10b981','#f59e0b','#f43f5e'];
       for (let i = 0; i < 150; i++) { particles.push({x:canvas.width/2,y:canvas.height/2,vx:(Math.random()-0.5)*16,vy:Math.random()*-14-4,size:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],rotation:Math.random()*360,rv:(Math.random()-0.5)*10,life:1}); }
       function animate() {
         ctx.clearRect(0,0,canvas.width,canvas.height); let alive = false;
@@ -1467,15 +1963,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
     });
 
     // ======== INIT ========
-    document.getElementById('themeBtn').innerHTML = themePref === 'dark' ? '&#127769;' : '&#9728;';
-    document.getElementById('soundBtn').innerHTML = soundEnabled ? '&#128264;' : '&#128263;';
     document.getElementById('goalInput').value = dailyGoal;
     document.getElementById('timerInput').value = timerSetting;
     buildMenu();
     applyDashLayout();
     switchView('dashboard');
-
     </script>
+
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -1501,8 +1995,6 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         isSignUpMode = !isSignUpMode;
         document.getElementById('authActionBtn').innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
         document.getElementById('authToggleBtn').innerHTML = isSignUpMode ? 'Already have an account? <strong>Sign In</strong>' : 'Need an account? <strong>Sign Up</strong>';
-        const googleText = document.getElementById('googleSignInBtnText');
-        if (googleText) googleText.innerText = isSignUpMode ? 'Sign up with Google' : 'Sign in with Google';
       }
 
       function handleAuthAction() {
@@ -1510,7 +2002,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const pass = document.getElementById('authPassword').value;
         const errDiv = document.getElementById('authError');
         errDiv.innerText = '';
-        if(!email || !pass) { errDiv.innerText = 'Please enter email and password.'; return; }
+        if(!email || !pass) { errDiv.innerText = 'Email and key strings required.'; return; }
         
         const promise = isSignUpMode 
             ? auth.createUserWithEmailAndPassword(email, pass)
@@ -1540,13 +2032,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
         const errDiv = document.getElementById('authError');
         if (!email) {
           errDiv.style.color = 'var(--incorrect)';
-          errDiv.innerText = 'Enter your email above to reset your password.';
+          errDiv.innerText = 'Target identification email string missing.';
           return;
         }
         auth.sendPasswordResetEmail(email)
           .then(() => {
             errDiv.style.color = 'var(--correct)';
-            errDiv.innerText = 'Password reset email sent! Check your inbox.';
+            errDiv.innerText = 'Password clear script transmitted to target inbox.';
           })
           .catch(err => {
             errDiv.style.color = 'var(--incorrect)';
@@ -1575,7 +2067,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
 
         if (user) {
           if (authBtn) {
-            authBtn.innerText = 'Account';
+            authBtn.innerText = 'Connected';
             authBtn.style.color = 'var(--correct)';
           }
           if (loggedInView) {
@@ -1587,13 +2079,13 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
             if (googleBtn) googleBtn.style.display = 'none';
             if (separator) separator.style.display = 'none';
             labels.forEach(l => l.style.display = 'none');
-            document.getElementById('authCurrentUser').innerText = user.displayName || user.email || 'User';
+            document.getElementById('authCurrentUser').innerText = user.displayName || user.email || 'User Node';
           }
           pullFromCloud();
         } else {
           if (authBtn) {
-            authBtn.innerText = 'Sign In';
-            authBtn.style.color = 'var(--accent)';
+            authBtn.innerText = 'Connect';
+            authBtn.style.color = 'var(--accent2)';
           }
           if (loggedInView) {
             loggedInView.style.display = 'none';
@@ -1620,7 +2112,6 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
               }
             });
             
-            // Rehydrate memory instead of reloading
             if (typeof LS !== 'undefined') {
               masteryData = LS('mastery', {});
               bookmarks = new Set(LS('bookmarks', []));
@@ -1647,7 +2138,7 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
           } else {
             window.throttleFirebaseSync();
           }
-        }, err => console.error("Error syncing cloud data:", err));
+        }, err => console.error("Cloud synchronization baseline error:", err));
       }
 
       window.throttleFirebaseSync = function() {
@@ -1662,33 +2153,10 @@ body.zen-mode .q-card { box-shadow: none; border-color: transparent; background:
                } catch(e) {}
            });
            db.collection('users').doc(currentUser.uid).set(payload, {merge: true})
-             .then(() => console.log('Synced to cloud'))
-             .catch(err => console.error('Sync failed', err));
+             .then(() => console.log('Uplink synchronized.'))
+             .catch(err => console.error('Uplink failed', err));
         }, 1500);
       };
     </script>
-
-<div class="disclaimer-overlay" id="disclaimerModal">
-  <div class="disclaimer-card">
-    <div class="disclaimer-icon">&#9888;&#65039;</div>
-    <div class="disclaimer-title">Important Disclaimer</div>
-    <div class="disclaimer-text">
-      This tool is designed to <strong>assist you in your studying</strong> and does not contain or emulate what would be on the NCATT certification exam.<br><br>
-      This tool simply uses the <a href="https://www.spacetec.us/wp-content/uploads/2019/03/AET-Study-Guide-v5-12.pdf" target="_blank" rel="noopener">AET Study Guide</a> from NCATT as a reference for its content.
-    </div>
-    <button class="disclaimer-btn" onclick="acceptDisclaimer()">I Understand &mdash; Take Me to the Tool</button>
-  </div>
-</div>
-<script>
-  function acceptDisclaimer() {
-    localStorage.setItem('ncatt_disclaimer_accepted', 'true');
-    document.getElementById('disclaimerModal').style.display = 'none';
-  }
-  (function() {
-    if (localStorage.getItem('ncatt_disclaimer_accepted') === 'true') {
-      document.getElementById('disclaimerModal').style.display = 'none';
-    }
-  })();
-</script>
 </body>
 </html>
