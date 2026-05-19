@@ -6910,5 +6910,365 @@ const allQuestionsRaw = [
                 "isCorrect": false
             }
         ]
+    },
+    {
+        "subject": "I. Introductory and General Requirements",
+        "category": "Basic Circuit Troubleshooting",
+        "topic": "Troubleshooting Process",
+        "text": "What is the first step in troubleshooting a malfunctioning avionics circuit?",
+        "options": [
+            {
+                "text": "Isolate the problem by verifying the symptoms, checking if the issue is ongoing or intermittent, and determining operating conditions when the fault occurs",
+                "isCorrect": true
+            },
+            {
+                "text": "Immediately replace the most expensive component in the circuit",
+                "isCorrect": false
+            },
+            {
+                "text": "Disconnect all wiring from the aircraft and test each wire individually",
+                "isCorrect": false
+            },
+            {
+                "text": "Apply maximum voltage to the circuit to force the fault to appear",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "I. Introductory and General Requirements",
+        "category": "Basic Circuit Troubleshooting",
+        "topic": "Voltmeter Troubleshooting",
+        "text": "When troubleshooting a circuit with zero output voltage, what is a logical first measurement to take?",
+        "options": [
+            {
+                "text": "Check the input voltage with a voltmeter — if input voltage is present but output is zero, the fault is within the circuit between input and output",
+                "isCorrect": true
+            },
+            {
+                "text": "Measure the output current with an ammeter connected in parallel",
+                "isCorrect": false
+            },
+            {
+                "text": "Use an oscilloscope to measure the DC resistance of the load",
+                "isCorrect": false
+            },
+            {
+                "text": "Check the circuit breaker last, after testing all individual components",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "I. Introductory and General Requirements",
+        "category": "Basic Circuit Troubleshooting",
+        "topic": "Open Circuit Fault",
+        "text": "In a series circuit, a technician measures full source voltage across one resistor and zero volts across all others. What does this indicate?",
+        "options": [
+            {
+                "text": "The resistor showing full voltage is open — in a series circuit, all source voltage appears across the open component because no current flows",
+                "isCorrect": true
+            },
+            {
+                "text": "The resistor is shorted, allowing all current to bypass it",
+                "isCorrect": false
+            },
+            {
+                "text": "The power supply is providing too much voltage to the circuit",
+                "isCorrect": false
+            },
+            {
+                "text": "All other resistors have failed simultaneously",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "I. Introductory and General Requirements",
+        "category": "Basic Circuit Troubleshooting",
+        "topic": "Short Circuit Detection",
+        "text": "A circuit breaker keeps tripping immediately after being reset. What is the most likely cause?",
+        "options": [
+            {
+                "text": "A short circuit exists in the wiring or a component, causing excessive current that exceeds the breaker's rating",
+                "isCorrect": true
+            },
+            {
+                "text": "The circuit breaker itself is too large for the circuit",
+                "isCorrect": false
+            },
+            {
+                "text": "An open circuit is preventing current from flowing through the load",
+                "isCorrect": false
+            },
+            {
+                "text": "The battery voltage is too low to keep the breaker engaged",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "I. Introductory and General Requirements",
+        "category": "Basic Circuit Troubleshooting",
+        "topic": "Ohmmeter Safety",
+        "text": "Why must circuit power be removed before using an ohmmeter to troubleshoot?",
+        "options": [
+            {
+                "text": "An ohmmeter supplies its own internal voltage to measure resistance — applying external circuit power can give false readings and damage the meter",
+                "isCorrect": true
+            },
+            {
+                "text": "Ohmmeters only work on AC circuits, so DC power must be removed first",
+                "isCorrect": false
+            },
+            {
+                "text": "Power must be removed to allow the ohmmeter to measure voltage instead of resistance",
+                "isCorrect": false
+            },
+            {
+                "text": "There is no safety reason; it is simply a matter of convenience",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "II. Common Maintenance Practices",
+        "category": "Technical Publications",
+        "topic": "Schematic Diagrams",
+        "text": "What is the primary purpose of a schematic diagram in aircraft electronics maintenance?",
+        "options": [
+            {
+                "text": "To show an electrical system using standardized symbols rather than pictures, primarily used for troubleshooting circuit faults",
+                "isCorrect": true
+            },
+            {
+                "text": "To show the physical location of every component inside the aircraft",
+                "isCorrect": false
+            },
+            {
+                "text": "To provide a step-by-step installation procedure for new equipment",
+                "isCorrect": false
+            },
+            {
+                "text": "To display the aircraft's weight and balance data for flight planning",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "II. Common Maintenance Practices",
+        "category": "Technical Publications",
+        "topic": "Airworthiness Directives",
+        "text": "What is the difference between a manufacturer's service bulletin and an FAA Airworthiness Directive (AD)?",
+        "options": [
+            {
+                "text": "Service bulletins are recommendations from the manufacturer and are generally optional; Airworthiness Directives are mandatory FAA requirements that must be complied with",
+                "isCorrect": true
+            },
+            {
+                "text": "Both are optional suggestions that manufacturers provide for improved performance",
+                "isCorrect": false
+            },
+            {
+                "text": "Airworthiness Directives are issued by the manufacturer, while service bulletins come from the FAA",
+                "isCorrect": false
+            },
+            {
+                "text": "Service bulletins are mandatory, and Airworthiness Directives are optional guidelines",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "II. Common Maintenance Practices",
+        "category": "Technical Publications",
+        "topic": "Block Diagrams",
+        "text": "How does a block diagram differ from a schematic diagram?",
+        "options": [
+            {
+                "text": "A block diagram shows functional units as blocks with arrows indicating signal flow direction — it is a high-level overview, while a schematic shows individual component-level detail for troubleshooting",
+                "isCorrect": true
+            },
+            {
+                "text": "Block diagrams and schematic diagrams are identical and interchangeable",
+                "isCorrect": false
+            },
+            {
+                "text": "Block diagrams show physical component locations, while schematics show system functions",
+                "isCorrect": false
+            },
+            {
+                "text": "Block diagrams are only used for hydraulic systems, not electrical systems",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "II. Common Maintenance Practices",
+        "category": "Technical Publications",
+        "topic": "Wiring Diagrams",
+        "text": "What information does an aircraft wiring diagram provide to a technician?",
+        "options": [
+            {
+                "text": "It shows how components are connected together electrically — including wiring routes, connectors, terminal boards, and wire identification — used for troubleshooting and repair",
+                "isCorrect": true
+            },
+            {
+                "text": "It only shows the voltage at each point in the circuit under normal conditions",
+                "isCorrect": false
+            },
+            {
+                "text": "Wiring diagrams show mechanical assembly instructions for mounting equipment",
+                "isCorrect": false
+            },
+            {
+                "text": "They display only the wire colors and have no connection information",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "II. Common Maintenance Practices",
+        "category": "Technical Publications",
+        "topic": "MEL",
+        "text": "What is a Minimum Equipment List (MEL) in aircraft operations?",
+        "options": [
+            {
+                "text": "An FAA-approved list of instruments or equipment that may be inoperative while still allowing the aircraft to be operated safely under specific conditions",
+                "isCorrect": true
+            },
+            {
+                "text": "A list of the minimum tools a technician must carry to perform maintenance",
+                "isCorrect": false
+            },
+            {
+                "text": "A manufacturer's list of optional accessories that can be installed on the aircraft",
+                "isCorrect": false
+            },
+            {
+                "text": "A checklist used by the pilot before every takeoff that cannot be modified",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "IV. Aircraft Fundamentals",
+        "category": "Aircraft Structures",
+        "topic": "Forces of Flight",
+        "text": "What are the four forces acting on an aircraft in flight?",
+        "options": [
+            {
+                "text": "Lift (upward), Weight (downward), Thrust (forward), and Drag (backward) — lift must equal weight and thrust must equal drag for steady, level flight",
+                "isCorrect": true
+            },
+            {
+                "text": "Gravity, friction, acceleration, and centripetal force",
+                "isCorrect": false
+            },
+            {
+                "text": "Lift, torque, momentum, and compression",
+                "isCorrect": false
+            },
+            {
+                "text": "Thrust, drag, tension, and pressure",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "IV. Aircraft Fundamentals",
+        "category": "Aircraft Structures",
+        "topic": "Axes of Flight",
+        "text": "An aircraft rolls to the left. Which axis of flight is involved, and what control surface causes this motion?",
+        "options": [
+            {
+                "text": "The longitudinal axis (nose to tail) — ailerons on the trailing edges of the wings control roll",
+                "isCorrect": true
+            },
+            {
+                "text": "The lateral axis (wing tip to wing tip) — the elevator controls roll",
+                "isCorrect": false
+            },
+            {
+                "text": "The vertical axis (top to bottom) — the rudder controls roll",
+                "isCorrect": false
+            },
+            {
+                "text": "The horizontal axis — flaps control roll movement",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "IV. Aircraft Fundamentals",
+        "category": "Aircraft Structures",
+        "topic": "Fuselage Types",
+        "text": "What is the most common type of fuselage construction used in modern aircraft?",
+        "options": [
+            {
+                "text": "Semimonocoque — it derives its strength from internal structural members (bulkheads, longerons, stringers) combined with the stressed outer skin",
+                "isCorrect": true
+            },
+            {
+                "text": "Truss construction using welded steel tubes with fabric covering",
+                "isCorrect": false
+            },
+            {
+                "text": "True monocoque, which has no internal structure at all",
+                "isCorrect": false
+            },
+            {
+                "text": "Geodesic construction using interwoven basket-weave frames",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "IV. Aircraft Fundamentals",
+        "category": "Aircraft Structures",
+        "topic": "Empennage",
+        "text": "What components make up the empennage of an aircraft?",
+        "options": [
+            {
+                "text": "The tail section — including the vertical fin (stabilizer) with the rudder attached, and the horizontal stabilizer with the elevator attached",
+                "isCorrect": true
+            },
+            {
+                "text": "The wing root fairings and the main landing gear assemblies",
+                "isCorrect": false
+            },
+            {
+                "text": "The engine nacelles and propeller hub assemblies",
+                "isCorrect": false
+            },
+            {
+                "text": "The cockpit instrument panel and avionics bay",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "subject": "IV. Aircraft Fundamentals",
+        "category": "Aircraft Structures",
+        "topic": "Center of Gravity",
+        "text": "Why is the center of gravity (CG) critical to safe aircraft operation?",
+        "options": [
+            {
+                "text": "The CG is the point where all weight is concentrated — if it falls outside the allowable range, the aircraft becomes uncontrollable because the tail surfaces cannot maintain proper pitch balance",
+                "isCorrect": true
+            },
+            {
+                "text": "The CG only matters during ground operations, not in flight",
+                "isCorrect": false
+            },
+            {
+                "text": "CG position determines the aircraft's maximum speed but not its stability",
+                "isCorrect": false
+            },
+            {
+                "text": "The CG is only relevant for cargo aircraft, not passenger planes",
+                "isCorrect": false
+            }
+        ]
     }
 ];
