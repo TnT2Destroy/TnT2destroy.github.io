@@ -1,7 +1,9 @@
-const CACHE_NAME = 'ncatt-v1';
+const CACHE_NAME = 'ncatt-v2';
 const urlsToCache = [
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './questions_v2.js',
+  './calculations.js'
 ];
 
 self.addEventListener('install', event => {
