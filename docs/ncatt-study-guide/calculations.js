@@ -53,14 +53,16 @@ function getCanvasContext(canvas, width, height) {
  */
 function drawTerminal(ctx, x, y, label) {
   ctx.beginPath();
-  ctx.arc(x, y, 4, 0, 2 * Math.PI);
-  ctx.fillStyle = 'var(--text)';
+  ctx.arc(x, y, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = 'var(--accent2)';
   ctx.fill();
+  ctx.strokeStyle = 'var(--accent2)';
+  ctx.lineWidth = 2;
   ctx.stroke();
   
-  ctx.font = 'bold 13px Inter, sans-serif';
-  ctx.fillStyle = 'var(--text)';
-  ctx.fillText(label, x - 18, y + 4);
+  ctx.font = 'bold 14px Inter, sans-serif';
+  ctx.fillStyle = 'var(--accent2)';
+  ctx.fillText(label, x - 20, y + 5);
 }
 
 /**
@@ -68,8 +70,8 @@ function drawTerminal(ctx, x, y, label) {
  */
 function drawJunction(ctx, x, y) {
   ctx.beginPath();
-  ctx.arc(x, y, 3, 0, 2 * Math.PI);
-  ctx.fillStyle = 'var(--text)';
+  ctx.arc(x, y, 4, 0, 2 * Math.PI);
+  ctx.fillStyle = 'var(--accent2)';
   ctx.fill();
 }
 
@@ -80,8 +82,8 @@ function drawACSource(ctx, x, y, r, labelV, labelF) {
   // Main circle
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 2 * Math.PI);
-  ctx.strokeStyle = 'var(--text)';
-  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = 'var(--accent2)';
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   // Sine wave inside
@@ -93,17 +95,18 @@ function drawACSource(ctx, x, y, r, labelV, labelF) {
     const ty = y - Math.sin((tx - x) / (r * 0.5) * Math.PI) * (r * 0.35);
     ctx.lineTo(tx, ty);
   }
-  ctx.lineWidth = 1.8;
+  ctx.strokeStyle = 'var(--accent2)';
+  ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Labels
-  ctx.font = 'bold 12px Inter, sans-serif';
-  ctx.fillStyle = 'var(--accent2)';
+  // Labels - positioned clearly outside the circle
+  ctx.font = 'bold 13px Inter, sans-serif';
+  ctx.fillStyle = 'var(--correct)';
   ctx.textAlign = 'center';
-  ctx.fillText(labelV, x, y - r - 8);
-  ctx.font = '500 11px Inter, sans-serif';
-  ctx.fillStyle = 'var(--text)';
-  ctx.fillText(labelF, x, y + r + 16);
+  ctx.fillText(labelV, x, y - r - 10);
+  ctx.font = 'bold 12px Inter, sans-serif';
+  ctx.fillStyle = 'var(--warning)';
+  ctx.fillText(labelF, x, y + r + 18);
 }
 
 /**
@@ -112,7 +115,7 @@ function drawACSource(ctx, x, y, r, labelV, labelF) {
 function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
   ctx.save();
   ctx.strokeStyle = 'var(--text)';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2.5;
   
   if (isVertical) {
     // Top lead
@@ -132,7 +135,7 @@ function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
       const curY = startY + i * segLen;
       const midY = curY + segLen / 2;
       const endY = curY + segLen;
-      const offset = (i % 2 === 0 ? 8 : -8);
+      const offset = (i % 2 === 0 ? 10 : -10);
       ctx.lineTo(x + offset, midY);
       ctx.lineTo(x, endY);
     }
@@ -144,14 +147,14 @@ function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x, y + length);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned to the right, outside the component
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'left';
-    ctx.fillText(label, x + 22, y + length/2 - 4);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
-    ctx.fillText(valStr, x + 22, y + length/2 + 8);
+    ctx.fillText(label, x + 18, y + length/2 - 6);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
+    ctx.fillText(valStr, x + 18, y + length/2 + 8);
   } else {
     // Left lead
     ctx.beginPath();
@@ -170,7 +173,7 @@ function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
       const curX = startX + i * segLen;
       const midX = curX + segLen / 2;
       const endX = curX + segLen;
-      const offset = (i % 2 === 0 ? -8 : 8);
+      const offset = (i % 2 === 0 ? -10 : 10);
       ctx.lineTo(midX, y + offset);
       ctx.lineTo(endX, y);
     }
@@ -182,14 +185,14 @@ function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x + length, y);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned ABOVE the component, well clear of circuit
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'center';
-    ctx.fillText(label, x + length/2, y - 28);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
-    ctx.fillText(valStr, x + length/2, y - 16);
+    ctx.fillText(label, x + length/2, y - 22);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
+    ctx.fillText(valStr, x + length/2, y - 10);
   }
   ctx.restore();
 }
@@ -200,7 +203,7 @@ function drawResistor(ctx, x, y, length, isVertical, label, valStr) {
 function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
   ctx.save();
   ctx.strokeStyle = 'var(--text)';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2.5;
   
   if (isVertical) {
     // Top lead
@@ -218,7 +221,6 @@ function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
     for (let i = 0; i < numLoops; i++) {
       ctx.beginPath();
       const cy = startY + i * loopH + loopH / 2;
-      // Draw arc going right
       ctx.arc(x, cy, loopH / 1.5, -Math.PI / 2, Math.PI / 2, false);
       ctx.stroke();
     }
@@ -229,13 +231,13 @@ function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x, y + length);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned to the right, outside the component
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'left';
-    ctx.fillText(label, x + 28, y + length/2 - 4);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
+    ctx.fillText(label, x + 28, y + length/2 - 6);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
     ctx.fillText(valStr, x + 28, y + length/2 + 8);
   } else {
     // Left lead
@@ -253,7 +255,6 @@ function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
     for (let i = 0; i < numLoops; i++) {
       ctx.beginPath();
       const cx = startX + i * loopW + loopW / 2;
-      // Draw arc going up
       ctx.arc(cx, y, loopW / 1.5, Math.PI, 0, false);
       ctx.stroke();
     }
@@ -264,14 +265,14 @@ function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x + length, y);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned ABOVE the component, well clear of loops
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'center';
-    ctx.fillText(label, x + length/2, y - 30);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
-    ctx.fillText(valStr, x + length/2, y - 18);
+    ctx.fillText(label, x + length/2, y - 24);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
+    ctx.fillText(valStr, x + length/2, y - 12);
   }
   ctx.restore();
 }
@@ -282,9 +283,9 @@ function drawInductor(ctx, x, y, length, isVertical, label, valStr) {
 function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
   ctx.save();
   ctx.strokeStyle = 'var(--text)';
-  ctx.lineWidth = 2;
-  const plateGap = 6;
-  const plateSize = 16;
+  ctx.lineWidth = 2.5;
+  const plateGap = 8;
+  const plateSize = 20;
   
   if (isVertical) {
     // Top lead
@@ -294,6 +295,7 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.stroke();
     
     // Top plate
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(x - plateSize/2, y + length/2 - plateGap/2);
     ctx.lineTo(x + plateSize/2, y + length/2 - plateGap/2);
@@ -304,6 +306,7 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.moveTo(x - plateSize/2, y + length/2 + plateGap/2);
     ctx.lineTo(x + plateSize/2, y + length/2 + plateGap/2);
     ctx.stroke();
+    ctx.lineWidth = 2.5;
     
     // Bottom lead
     ctx.beginPath();
@@ -311,14 +314,14 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x, y + length);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned to the right, outside the component
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'left';
-    ctx.fillText(label, x + 22, y + length/2 - 4);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
-    ctx.fillText(valStr, x + 22, y + length/2 + 8);
+    ctx.fillText(label, x + 18, y + length/2 - 6);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
+    ctx.fillText(valStr, x + 18, y + length/2 + 8);
   } else {
     // Left lead
     ctx.beginPath();
@@ -327,6 +330,7 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.stroke();
     
     // Left plate
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(x + length/2 - plateGap/2, y - plateSize/2);
     ctx.lineTo(x + length/2 - plateGap/2, y + plateSize/2);
@@ -337,6 +341,7 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.moveTo(x + length/2 + plateGap/2, y - plateSize/2);
     ctx.lineTo(x + length/2 + plateGap/2, y + plateSize/2);
     ctx.stroke();
+    ctx.lineWidth = 2.5;
     
     // Right lead
     ctx.beginPath();
@@ -344,14 +349,14 @@ function drawCapacitor(ctx, x, y, length, isVertical, label, valStr) {
     ctx.lineTo(x + length, y);
     ctx.stroke();
     
-    // Label
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Label - positioned ABOVE the component, well clear of plates
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.fillStyle = 'var(--accent2)';
     ctx.textAlign = 'center';
-    ctx.fillText(label, x + length/2, y - 28);
-    ctx.font = '500 10px Inter, sans-serif';
-    ctx.fillStyle = 'var(--text)';
-    ctx.fillText(valStr, x + length/2, y - 16);
+    ctx.fillText(label, x + length/2, y - 22);
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'var(--correct)';
+    ctx.fillText(valStr, x + length/2, y - 10);
   }
   ctx.restore();
 }
@@ -369,13 +374,14 @@ function drawComponent(ctx, x, y, length, isVertical, type, label, valStr) {
  * High-level schematic renderer based on topology data
  */
 function drawCircuit(canvas, data) {
-  const ctx = getCanvasContext(canvas, 600, 260);
-  ctx.clearRect(0, 0, 600, 260);
+  const ctx = getCanvasContext(canvas, 600, 280);
+  ctx.clearRect(0, 0, 600, 280);
   
-  // Set default lines styling
+  // Set default lines styling - thicker for dark mode visibility
   ctx.strokeStyle = 'var(--text)';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2.5;
   ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   
   const topY = 60;
   const bottomY = 180;
