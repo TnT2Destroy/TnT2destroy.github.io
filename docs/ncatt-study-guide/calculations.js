@@ -99,14 +99,15 @@ function drawACSource(ctx, x, y, r, labelV, labelF) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Labels - positioned clearly outside the circle
+  // Labels - positioned to the left of the AC source to avoid clipping vertical lines
   ctx.font = 'bold 13px Inter, sans-serif';
   ctx.fillStyle = 'var(--correct)';
-  ctx.textAlign = 'center';
-  ctx.fillText(labelV, x, y - r - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText(labelV, x - r - 8, y - 4);
+  
   ctx.font = 'bold 12px Inter, sans-serif';
   ctx.fillStyle = 'var(--warning)';
-  ctx.fillText(labelF, x, y + r + 18);
+  ctx.fillText(labelF, x - r - 8, y + 12);
 }
 
 /**
@@ -391,10 +392,10 @@ function drawCircuit(canvas, data) {
     drawTerminal(ctx, 60, topY, 'A');
     drawTerminal(ctx, 60, bottomY, 'B');
     
-    // Bottom rail connects all
+    // Bottom rail connects all, ending exactly at the vertical L7 at x4 = 420
     ctx.beginPath();
     ctx.moveTo(60, bottomY);
-    ctx.lineTo(480, bottomY);
+    ctx.lineTo(420, bottomY);
     ctx.stroke();
     
     // Coordinates
@@ -434,68 +435,75 @@ function drawCircuit(canvas, data) {
     drawComponent(ctx, x4, topY, bottomY - topY, true, data.compType, 'L7', data.vals[6] + ' ' + data.unit);
     
   } else if (data.topology === 'series') {
-    // Draw AC source on the left
-    drawACSource(ctx, 60, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    // Draw AC source on the left (shifted center to 75 to give room on left)
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
+    const x1 = 120, x2 = 220, x3 = 320;
+    let endX = 440;
+    if (data.labels.length === 1) {
+      endX = 220;
+    } else if (data.labels.length === 2) {
+      endX = 320;
+    }
+
     // Connecting wires
     ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 - 22);
-    ctx.lineTo(60, topY);
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
     ctx.lineTo(120, topY);
     ctx.stroke();
     
     ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 + 22);
-    ctx.lineTo(60, bottomY);
-    ctx.lineTo(440, bottomY);
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(endX, bottomY);
     ctx.stroke();
-    
-    const x1 = 120, x2 = 220, x3 = 320;
     
     // Component 1
     drawComponent(ctx, x1, topY, 80, false, data.types[0], data.labels[0], data.valStrs[0]);
-    ctx.beginPath(); ctx.moveTo(x1 + 80, topY); ctx.lineTo(x2, topY); ctx.stroke();
     
     // Component 2
     if (data.labels.length > 1) {
+      ctx.beginPath(); ctx.moveTo(x1 + 80, topY); ctx.lineTo(x2, topY); ctx.stroke();
       drawComponent(ctx, x2, topY, 80, false, data.types[1], data.labels[1], data.valStrs[1]);
-      ctx.beginPath(); ctx.moveTo(x2 + 80, topY); ctx.lineTo(x3, topY); ctx.stroke();
-    } else {
-      ctx.beginPath(); ctx.moveTo(x2, topY); ctx.lineTo(x3, topY); ctx.stroke();
     }
     
     // Component 3
     if (data.labels.length > 2) {
+      ctx.beginPath(); ctx.moveTo(x2 + 80, topY); ctx.lineTo(x3, topY); ctx.stroke();
       drawComponent(ctx, x3, topY, 80, false, data.types[2], data.labels[2], data.valStrs[2]);
-      ctx.beginPath(); ctx.moveTo(x3 + 80, topY); ctx.lineTo(440, topY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x3 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
+    } else if (data.labels.length === 2) {
+      ctx.beginPath(); ctx.moveTo(x2 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
     } else {
-      ctx.beginPath(); ctx.moveTo(x3, topY); ctx.lineTo(440, topY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x1 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
     }
     
     // Right vertical return wire
     ctx.beginPath();
-    ctx.moveTo(440, topY);
-    ctx.lineTo(440, bottomY);
+    ctx.moveTo(endX, topY);
+    ctx.lineTo(endX, bottomY);
     ctx.stroke();
     
   } else if (data.topology === 'parallel') {
-    // Draw AC source
-    drawACSource(ctx, 60, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
-    
-    // Top and bottom rail connect source to branches
-    ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 - 22);
-    ctx.lineTo(60, topY);
-    ctx.lineTo(400, topY);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 + 22);
-    ctx.lineTo(60, bottomY);
-    ctx.lineTo(400, bottomY);
-    ctx.stroke();
+    // Draw AC source (shifted center to 75 to give room on left)
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
     const bx = [150, 270, 390];
+    const railEndX = data.labels.length > 2 ? bx[2] : bx[1];
+
+    // Top and bottom rail connect source to branches, ending exactly at the last branch
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(railEndX, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(railEndX, bottomY);
+    ctx.stroke();
     
     // Branch 1
     drawJunction(ctx, bx[0], topY);
@@ -512,29 +520,26 @@ function drawCircuit(canvas, data) {
       drawJunction(ctx, bx[2], topY);
       drawJunction(ctx, bx[2], bottomY);
       drawComponent(ctx, bx[2], topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
-    } else {
-      // Shorten rails if only 2 branches
-      ctx.clearRect(310, topY - 20, 300, 200);
-      ctx.beginPath();
-      ctx.moveTo(bx[1], topY); ctx.lineTo(bx[1], bottomY);
-      ctx.stroke();
     }
     
   } else if (data.topology === 'series_parallel') {
-    // Draw AC source
-    drawACSource(ctx, 60, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    // Draw AC source (shifted center to 75 to give room on left)
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
+    const p1 = 260;
+    const p2 = 360;
+
     // Wires
     ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 - 22);
-    ctx.lineTo(60, topY);
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
     ctx.lineTo(110, topY);
     ctx.stroke();
     
     ctx.beginPath();
-    ctx.moveTo(60, (topY + bottomY)/2 + 22);
-    ctx.lineTo(60, bottomY);
-    ctx.lineTo(390, bottomY);
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(p2, bottomY); // Ends exactly at Parallel Branch 2 (p2 = 360)
     ctx.stroke();
     
     // Series Component
@@ -543,17 +548,15 @@ function drawCircuit(canvas, data) {
     // Connect series to parallel branches
     ctx.beginPath();
     ctx.moveTo(190, topY);
-    ctx.lineTo(390, topY);
+    ctx.lineTo(p2, topY); // Ends exactly at Parallel Branch 2 (p2 = 360)
     ctx.stroke();
     
     // Parallel Branch 1
-    const p1 = 260;
     drawJunction(ctx, p1, topY);
     drawJunction(ctx, p1, bottomY);
     drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
     
     // Parallel Branch 2
-    const p2 = 360;
     drawJunction(ctx, p2, topY);
     drawJunction(ctx, p2, bottomY);
     drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
@@ -672,13 +675,13 @@ function genResistorSeriesEasy() {
   const V_s = 24;
   
   return {
-    topic: 'DC Resistor Circuits',
-    text: `For a series DC circuit consisting of two resistors, R1 = ${R1} Ω and R2 = ${R2} Ω, connected to a power supply. Find the total equivalent resistance (R_EQ) of the network.`,
+    topic: 'Resistor Circuits',
+    text: `For a series circuit consisting of two resistors, R1 = ${R1} Ω and R2 = ${R2} Ω, connected to a power supply. Find the total equivalent resistance (R_EQ) of the network.`,
     options: makeOptions(Req, 'Ω', v => Math.round(v)),
     circuitData: {
       topology: 'series',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R'],
       labels: ['R1', 'R2'],
       valStrs: [`${R1} Ω`, `${R2} Ω`]
@@ -705,13 +708,13 @@ function genResistorParallelEasy() {
   const V_s = 12;
   
   return {
-    topic: 'DC Resistor Circuits',
-    text: `A DC circuit has R1 = ${R1} Ω and R2 = ${R2} Ω connected in parallel. Calculate the total equivalent resistance (R_EQ) of the branch.`,
+    topic: 'Resistor Circuits',
+    text: `A circuit has R1 = ${R1} Ω and R2 = ${R2} Ω connected in parallel. Calculate the total equivalent resistance (R_EQ) of the branch.`,
     options: makeOptions(Req, 'Ω', v => Math.round(v)),
     circuitData: {
       topology: 'parallel',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R'],
       labels: ['R1', 'R2'],
       valStrs: [`${R1} Ω`, `${R2} Ω`]
@@ -733,13 +736,13 @@ function genResistorSeriesMedium() {
   const I_T = V_s / Req;
   
   return {
-    topic: 'DC Resistor Circuits',
-    text: `In a series circuit, R1 = ${R1} Ω, R2 = ${R2} Ω, and R3 = ${R3} Ω are connected to a V_s = ${V_s} V DC source. Calculate the total circuit current (I_T) in milliamperes.`,
+    topic: 'Resistor Circuits',
+    text: `In a series circuit, R1 = ${R1} Ω, R2 = ${R2} Ω, and R3 = ${R3} Ω are connected to a V_s = ${V_s} V source. Calculate the total circuit current (I_T) in milliamperes.`,
     options: makeOptions(I_T * 1000, 'mA', v => v.toFixed(1)),
     circuitData: {
       topology: 'series',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R', 'R'],
       labels: ['R1', 'R2', 'R3'],
       valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
@@ -759,13 +762,13 @@ function genResistorParallelMedium() {
   const I_T = V_s / Req;
   
   return {
-    topic: 'DC Resistor Circuits',
+    topic: 'Resistor Circuits',
     text: `Three resistors R1 = ${R1} Ω, R2 = ${R2} Ω, and R3 = ${R3} Ω are in parallel across a V_s = ${V_s} V supply. Find the total current (I_T) drawn from the source.`,
     options: makeOptions(I_T, 'A', v => v.toFixed(2)),
     circuitData: {
       topology: 'parallel',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R', 'R'],
       labels: ['R1', 'R2', 'R3'],
       valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
@@ -788,13 +791,13 @@ function genResistorSeriesParallelMedium() {
   const V_par = I_T * 40; // 12 V
   
   return {
-    topic: 'DC Resistor Circuits',
-    text: `For a series-parallel network, R1 = ${R1} Ω is in series with a parallel group of R2 = ${R2} Ω and R3 = ${R3} Ω. If connected to a ${V_s} V DC source, what is the voltage drop across the parallel bank (R2 || R3)?`,
+    topic: 'Resistor Circuits',
+    text: `For a series-parallel network, R1 = ${R1} Ω is in series with a parallel group of R2 = ${R2} Ω and R3 = ${R3} Ω. If connected to a ${V_s} V source, what is the voltage drop across the parallel bank (R2 || R3)?`,
     options: makeOptions(V_par, 'V', v => v.toFixed(1)),
     circuitData: {
       topology: 'series_parallel',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R', 'R'],
       labels: ['R1', 'R2', 'R3'],
       valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
@@ -817,13 +820,13 @@ function genResistorSeriesParallelHard() {
   const I_R3 = I_T * (R2 / (R2 + R3)); // 0.1 A
   
   return {
-    topic: 'DC Resistor Circuits',
-    text: `In a series-parallel circuit, R1 = ${R1} Ω is connected in series with the parallel combination of R2 = ${R2} Ω and R3 = ${R3} Ω. If a DC voltage of ${V_s} V is applied to the circuit, what is the current through resistor R3?`,
+    topic: 'Resistor Circuits',
+    text: `In a series-parallel circuit, R1 = ${R1} Ω is connected in series with the parallel combination of R2 = ${R2} Ω and R3 = ${R3} Ω. If a voltage of ${V_s} V is applied to the circuit, what is the current through resistor R3?`,
     options: makeOptions(I_R3, 'A', v => v.toFixed(3)),
     circuitData: {
       topology: 'series_parallel',
       voltage: V_s,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['R', 'R', 'R'],
       labels: ['R1', 'R2', 'R3'],
       valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
@@ -844,7 +847,7 @@ function genResistorLadderHard() {
   const Req = 20 * scale;
   
   return {
-    topic: 'DC Resistor Circuits',
+    topic: 'Resistor Circuits',
     text: `Simplify the complex resistor ladder circuit shown below to find the total equivalent resistance (R_EQ) measured between terminals A and B. <br>
            [Values: R1=${rVals[0]}Ω, R2=${rVals[1]}Ω, R3=${rVals[2]}Ω, R4=${rVals[3]}Ω, R5=${rVals[4]}Ω, R6=${rVals[5]}Ω, R7=${rVals[6]}Ω]`,
     options: makeOptions(Req, 'Ω', v => Math.round(v)),
@@ -879,7 +882,7 @@ function genInductorSeriesEasy() {
     circuitData: {
       topology: 'series',
       voltage: 12,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['L', 'L', 'L'],
       labels: ['L1', 'L2', 'L3'],
       valStrs: [`${L1} mH`, `${L2} mH`, `${L3} mH`]
@@ -956,7 +959,7 @@ function genInductorSeriesParallelMedium() {
     circuitData: {
       topology: 'series_parallel',
       voltage: 24,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['L', 'L', 'L'],
       labels: ['L1', 'L2', 'L3'],
       valStrs: [`${L1} mH`, `${L2} mH`, `${L3} mH`]
@@ -1011,7 +1014,7 @@ function genCapacitorParallelEasy() {
     circuitData: {
       topology: 'parallel',
       voltage: 24,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['C', 'C'],
       labels: ['C1', 'C2'],
       valStrs: [`${C1} µF`, `${C2} µF`]
@@ -1069,7 +1072,7 @@ function genCapacitorSeriesMedium() {
     circuitData: {
       topology: 'series',
       voltage: 12,
-      frequency: 0,
+      frequency: Math.random() > 0.5 ? 60 : 400,
       types: ['C', 'C'],
       labels: ['C1', 'C2'],
       valStrs: [`${C1} µF`, `${C2} µF`]
