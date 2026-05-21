@@ -392,21 +392,26 @@ function drawCircuit(canvas, data) {
     drawTerminal(ctx, 60, topY, 'A');
     drawTerminal(ctx, 60, bottomY, 'B');
     
-    // Bottom rail connects all, ending exactly at the vertical L7 at x4 = 420
-    ctx.beginPath();
-    ctx.moveTo(60, bottomY);
-    ctx.lineTo(420, bottomY);
-    ctx.stroke();
-    
-    // Coordinates
+    const numComps = data.vals.length;
     const x1 = 120, x2 = 220, x3 = 320, x4 = 420;
     
-    // Junction dots
-    drawJunction(ctx, x1, bottomY);
-    drawJunction(ctx, x2, bottomY);
-    drawJunction(ctx, x3, bottomY);
+    // Determine end coordinate based on number of components
+    let endX = x4;
+    if (numComps <= 3) endX = x2;
+    else if (numComps <= 5) endX = x3;
     
-    // Branch 1: L1 (vertical)
+    // Bottom rail connects all
+    ctx.beginPath();
+    ctx.moveTo(60, bottomY);
+    ctx.lineTo(endX, bottomY);
+    ctx.stroke();
+    
+    // Junction dots at bottom
+    drawJunction(ctx, x1, bottomY);
+    if (numComps >= 4) drawJunction(ctx, x2, bottomY);
+    if (numComps >= 6) drawJunction(ctx, x3, bottomY);
+    
+    // Branch 1: component 1 (vertical)
     ctx.beginPath();
     ctx.moveTo(60, topY);
     ctx.lineTo(x1, topY);
@@ -414,38 +419,61 @@ function drawCircuit(canvas, data) {
     drawComponent(ctx, x1, topY, bottomY - topY, true, data.compType, 'L1', data.vals[0] + ' ' + data.unit);
     drawJunction(ctx, x1, topY);
     
-    // L2 (horizontal)
-    drawComponent(ctx, x1, topY, x2 - x1, false, data.compType, 'L2', data.vals[1] + ' ' + data.unit);
-    drawJunction(ctx, x2, topY);
+    if (numComps >= 2) {
+      // component 2 (horizontal)
+      drawComponent(ctx, x1, topY, x2 - x1, false, data.compType, 'L2', data.vals[1] + ' ' + data.unit);
+    }
     
-    // Branch 2: L3 (vertical)
-    drawComponent(ctx, x2, topY, bottomY - topY, true, data.compType, 'L3', data.vals[2] + ' ' + data.unit);
+    if (numComps >= 3) {
+      // Branch 2: component 3 (vertical)
+      drawJunction(ctx, x2, topY);
+      drawComponent(ctx, x2, topY, bottomY - topY, true, data.compType, 'L3', data.vals[2] + ' ' + data.unit);
+    }
     
-    // L4 (horizontal)
-    drawComponent(ctx, x2, topY, x3 - x2, false, data.compType, 'L4', data.vals[3] + ' ' + data.unit);
-    drawJunction(ctx, x3, topY);
+    if (numComps >= 4) {
+      // component 4 (horizontal)
+      drawComponent(ctx, x2, topY, x3 - x2, false, data.compType, 'L4', data.vals[3] + ' ' + data.unit);
+    }
     
-    // Branch 3: L5 (vertical)
-    drawComponent(ctx, x3, topY, bottomY - topY, true, data.compType, 'L5', data.vals[4] + ' ' + data.unit);
+    if (numComps >= 5) {
+      // Branch 3: component 5 (vertical)
+      drawJunction(ctx, x3, topY);
+      drawComponent(ctx, x3, topY, bottomY - topY, true, data.compType, 'L5', data.vals[4] + ' ' + data.unit);
+    }
     
-    // L6 (horizontal)
-    drawComponent(ctx, x3, topY, x4 - x3, false, data.compType, 'L6', data.vals[5] + ' ' + data.unit);
+    if (numComps >= 6) {
+      // component 6 (horizontal)
+      drawComponent(ctx, x3, topY, x4 - x3, false, data.compType, 'L6', data.vals[5] + ' ' + data.unit);
+    }
     
-    // Branch 4: L7 (vertical)
-    drawComponent(ctx, x4, topY, bottomY - topY, true, data.compType, 'L7', data.vals[6] + ' ' + data.unit);
+    if (numComps >= 7) {
+      // Branch 4: component 7 (vertical)
+      drawJunction(ctx, x4, topY);
+      drawComponent(ctx, x4, topY, bottomY - topY, true, data.compType, 'L7', data.vals[6] + ' ' + data.unit);
+    }
     
   } else if (data.topology === 'series') {
-    // Draw AC source on the left (shifted center to 75 to give room on left)
+    // Draw AC source on the left
     drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
-    const x1 = 120, x2 = 220, x3 = 320;
+    const count = data.labels.length;
+    // Map components coordinates based on count
+    let xs = [];
     let endX = 440;
-    if (data.labels.length === 1) {
-      endX = 220;
-    } else if (data.labels.length === 2) {
-      endX = 320;
+    if (count === 1) {
+      xs = [120];
+      endX = 240;
+    } else if (count === 2) {
+      xs = [120, 240];
+      endX = 360;
+    } else if (count === 3) {
+      xs = [120, 240, 360];
+      endX = 480;
+    } else if (count === 4) {
+      xs = [120, 220, 320, 420];
+      endX = 540;
     }
-
+    
     // Connecting wires
     ctx.beginPath();
     ctx.moveTo(75, (topY + bottomY)/2 - 22);
@@ -459,25 +487,22 @@ function drawCircuit(canvas, data) {
     ctx.lineTo(endX, bottomY);
     ctx.stroke();
     
-    // Component 1
-    drawComponent(ctx, x1, topY, 80, false, data.types[0], data.labels[0], data.valStrs[0]);
-    
-    // Component 2
-    if (data.labels.length > 1) {
-      ctx.beginPath(); ctx.moveTo(x1 + 80, topY); ctx.lineTo(x2, topY); ctx.stroke();
-      drawComponent(ctx, x2, topY, 80, false, data.types[1], data.labels[1], data.valStrs[1]);
+    // Draw components and connections between them
+    for (let i = 0; i < count; i++) {
+      drawComponent(ctx, xs[i], topY, 80, false, data.types[i], data.labels[i], data.valStrs[i]);
+      if (i < count - 1) {
+        ctx.beginPath();
+        ctx.moveTo(xs[i] + 80, topY);
+        ctx.lineTo(xs[i+1], topY);
+        ctx.stroke();
+      }
     }
     
-    // Component 3
-    if (data.labels.length > 2) {
-      ctx.beginPath(); ctx.moveTo(x2 + 80, topY); ctx.lineTo(x3, topY); ctx.stroke();
-      drawComponent(ctx, x3, topY, 80, false, data.types[2], data.labels[2], data.valStrs[2]);
-      ctx.beginPath(); ctx.moveTo(x3 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
-    } else if (data.labels.length === 2) {
-      ctx.beginPath(); ctx.moveTo(x2 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
-    } else {
-      ctx.beginPath(); ctx.moveTo(x1 + 80, topY); ctx.lineTo(endX, topY); ctx.stroke();
-    }
+    // Wire from last component to endX
+    ctx.beginPath();
+    ctx.moveTo(xs[count-1] + 80, topY);
+    ctx.lineTo(endX, topY);
+    ctx.stroke();
     
     // Right vertical return wire
     ctx.beginPath();
@@ -486,13 +511,22 @@ function drawCircuit(canvas, data) {
     ctx.stroke();
     
   } else if (data.topology === 'parallel') {
-    // Draw AC source (shifted center to 75 to give room on left)
+    // Draw AC source
     drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
-    const bx = [150, 270, 390];
-    const railEndX = data.labels.length > 2 ? bx[2] : bx[1];
-
-    // Top and bottom rail connect source to branches, ending exactly at the last branch
+    const count = data.labels.length;
+    let bx = [150, 270, 390];
+    if (count === 2) {
+      bx = [180, 340];
+    } else if (count === 3) {
+      bx = [150, 270, 390];
+    } else if (count === 4) {
+      bx = [130, 230, 330, 430];
+    }
+    
+    const railEndX = bx[count - 1];
+    
+    // Top and bottom rail connect source to branches
     ctx.beginPath();
     ctx.moveTo(75, (topY + bottomY)/2 - 22);
     ctx.lineTo(75, topY);
@@ -505,30 +539,19 @@ function drawCircuit(canvas, data) {
     ctx.lineTo(railEndX, bottomY);
     ctx.stroke();
     
-    // Branch 1
-    drawJunction(ctx, bx[0], topY);
-    drawJunction(ctx, bx[0], bottomY);
-    drawComponent(ctx, bx[0], topY, bottomY - topY, true, data.types[0], data.labels[0], data.valStrs[0]);
-    
-    // Branch 2
-    drawJunction(ctx, bx[1], topY);
-    drawJunction(ctx, bx[1], bottomY);
-    drawComponent(ctx, bx[1], topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
-    
-    // Branch 3 (optional)
-    if (data.labels.length > 2) {
-      drawJunction(ctx, bx[2], topY);
-      drawJunction(ctx, bx[2], bottomY);
-      drawComponent(ctx, bx[2], topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
+    for (let i = 0; i < count; i++) {
+      drawJunction(ctx, bx[i], topY);
+      drawJunction(ctx, bx[i], bottomY);
+      drawComponent(ctx, bx[i], topY, bottomY - topY, true, data.types[i], data.labels[i], data.valStrs[i]);
     }
     
   } else if (data.topology === 'series_parallel') {
-    // Draw AC source (shifted center to 75 to give room on left)
+    // Draw AC source
     drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
     
     const p1 = 260;
     const p2 = 360;
-
+ 
     // Wires
     ctx.beginPath();
     ctx.moveTo(75, (topY + bottomY)/2 - 22);
@@ -539,7 +562,7 @@ function drawCircuit(canvas, data) {
     ctx.beginPath();
     ctx.moveTo(75, (topY + bottomY)/2 + 22);
     ctx.lineTo(75, bottomY);
-    ctx.lineTo(p2, bottomY); // Ends exactly at Parallel Branch 2 (p2 = 360)
+    ctx.lineTo(p2, bottomY);
     ctx.stroke();
     
     // Series Component
@@ -548,7 +571,7 @@ function drawCircuit(canvas, data) {
     // Connect series to parallel branches
     ctx.beginPath();
     ctx.moveTo(190, topY);
-    ctx.lineTo(p2, topY); // Ends exactly at Parallel Branch 2 (p2 = 360)
+    ctx.lineTo(p2, topY);
     ctx.stroke();
     
     // Parallel Branch 1
@@ -560,762 +583,1148 @@ function drawCircuit(canvas, data) {
     drawJunction(ctx, p2, topY);
     drawJunction(ctx, p2, bottomY);
     drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
+ 
+  } else if (data.topology === 'parallel_series') {
+    // Draw AC source
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    
+    const p1 = 150;
+    const p2 = 250;
+    const s1 = 300;
+    const endX = 420;
+    
+    // Top and bottom rail wires
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(p2, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(endX, bottomY);
+    ctx.stroke();
+    
+    // Parallel Branch 1
+    drawJunction(ctx, p1, topY);
+    drawJunction(ctx, p1, bottomY);
+    drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[0], data.labels[0], data.valStrs[0]);
+    
+    // Parallel Branch 2
+    drawJunction(ctx, p2, topY);
+    drawJunction(ctx, p2, bottomY);
+    drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
+    
+    // Horizontal connection to Series
+    ctx.beginPath();
+    ctx.moveTo(p2, topY);
+    ctx.lineTo(s1, topY);
+    ctx.stroke();
+    
+    // Series Component
+    drawComponent(ctx, s1, topY, 80, false, data.types[2], data.labels[2], data.valStrs[2]);
+    
+    // Connect series to return rail
+    ctx.beginPath();
+    ctx.moveTo(s1 + 80, topY);
+    ctx.lineTo(endX, topY);
+    ctx.lineTo(endX, bottomY);
+    ctx.stroke();
+ 
+  } else if (data.topology === 'two_parallel_groups') {
+    // Draw AC source
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    
+    const p1 = 140;
+    const p2 = 220;
+    const p3 = 300;
+    const p4 = 380;
+    const endX = 420;
+    
+    // Wires
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(p2, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(endX, bottomY);
+    ctx.stroke();
+    
+    // Group 1 Branch 1
+    drawJunction(ctx, p1, topY);
+    drawJunction(ctx, p1, bottomY);
+    drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[0], data.labels[0], data.valStrs[0]);
+    
+    // Group 1 Branch 2
+    drawJunction(ctx, p2, topY);
+    drawJunction(ctx, p2, bottomY);
+    drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
+    
+    // Connection between groups
+    ctx.beginPath();
+    ctx.moveTo(p2, topY);
+    ctx.lineTo(p3, topY);
+    ctx.stroke();
+    
+    // Group 2 Branch 1
+    drawJunction(ctx, p3, topY);
+    drawJunction(ctx, p3, bottomY);
+    drawComponent(ctx, p3, topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
+    
+    // Group 2 Branch 2
+    drawJunction(ctx, p4, topY);
+    drawJunction(ctx, p4, bottomY);
+    drawComponent(ctx, p4, topY, bottomY - topY, true, data.types[3], data.labels[3], data.valStrs[3]);
+    
+    // Connect to end
+    ctx.beginPath();
+    ctx.moveTo(p4, topY);
+    ctx.lineTo(endX, topY);
+    ctx.lineTo(endX, bottomY);
+    ctx.stroke();
+ 
+  } else if (data.topology === 'parallel_with_series_branch') {
+    // Draw AC source
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    
+    const p1 = 180;
+    const p2 = 300;
+    const endX = p2;
+    
+    // Top and bottom rail connect
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(p2, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(p2, bottomY);
+    ctx.stroke();
+    
+    // Branch 1: Single component
+    drawJunction(ctx, p1, topY);
+    drawJunction(ctx, p1, bottomY);
+    drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[0], data.labels[0], data.valStrs[0]);
+    
+    // Branch 2: Two components in series vertically
+    drawJunction(ctx, p2, topY);
+    drawJunction(ctx, p2, bottomY);
+    
+    // Component 1 (upper half)
+    drawComponent(ctx, p2, topY, 45, true, data.types[1], data.labels[1], data.valStrs[1]);
+    
+    // Connecting line in the middle
+    ctx.beginPath();
+    ctx.moveTo(p2, topY + 45);
+    ctx.lineTo(p2, topY + 75);
+    ctx.stroke();
+    
+    // Component 2 (lower half)
+    drawComponent(ctx, p2, topY + 75, 45, true, data.types[2], data.labels[2], data.valStrs[2]);
+ 
+  } else if (data.topology === 'series_parallel_three') {
+    // Draw AC source
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    
+    const s1 = 110;
+    const p1 = 230;
+    const p2 = 310;
+    const p3 = 390;
+    
+    // Wires from AC to Series Component
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(s1, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(p3, bottomY);
+    ctx.stroke();
+    
+    // Series component
+    drawComponent(ctx, s1, topY, 80, false, data.types[0], data.labels[0], data.valStrs[0]);
+    
+    // Wires from series to parallel bank
+    ctx.beginPath();
+    ctx.moveTo(s1 + 80, topY);
+    ctx.lineTo(p3, topY);
+    ctx.stroke();
+    
+    // Parallel Branch 1
+    drawJunction(ctx, p1, topY);
+    drawJunction(ctx, p1, bottomY);
+    drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
+    
+    // Parallel Branch 2
+    drawJunction(ctx, p2, topY);
+    drawJunction(ctx, p2, bottomY);
+    drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
+    
+    // Parallel Branch 3
+    drawJunction(ctx, p3, topY);
+    drawJunction(ctx, p3, bottomY);
+    drawComponent(ctx, p3, topY, bottomY - topY, true, data.types[3], data.labels[3], data.valStrs[3]);
+ 
+  } else if (data.topology === 'series_with_parallel_series_branch') {
+    // Draw AC source
+    drawACSource(ctx, 75, (topY + bottomY)/2, 22, data.voltage + ' V', data.frequency + ' Hz');
+    
+    const s1 = 110;
+    const p1 = 230;
+    const p2 = 330;
+    
+    // Wires
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 - 22);
+    ctx.lineTo(75, topY);
+    ctx.lineTo(s1, topY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(75, (topY + bottomY)/2 + 22);
+    ctx.lineTo(75, bottomY);
+    ctx.lineTo(p2, bottomY);
+    ctx.stroke();
+    
+    // Series Component
+    drawComponent(ctx, s1, topY, 80, false, data.types[0], data.labels[0], data.valStrs[0]);
+    
+    // Connect series to parallel
+    ctx.beginPath();
+    ctx.moveTo(s1 + 80, topY);
+    ctx.lineTo(p2, topY);
+    ctx.stroke();
+    
+    // Parallel Branch 1: single vertical component
+    drawJunction(ctx, p1, topY);
+    drawJunction(ctx, p1, bottomY);
+    drawComponent(ctx, p1, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
+    
+    // Parallel Branch 2: series components vertical
+    drawJunction(ctx, p2, topY);
+    drawJunction(ctx, p2, bottomY);
+    
+    // Component 3
+    drawComponent(ctx, p2, topY, 45, true, data.types[2], data.labels[2], data.valStrs[2]);
+    
+    // Connecting line
+    ctx.beginPath();
+    ctx.moveTo(p2, topY + 45);
+    ctx.lineTo(p2, topY + 75);
+    ctx.stroke();
+    
+    // Component 4
+    drawComponent(ctx, p2, topY + 75, 45, true, data.types[3], data.labels[3], data.valStrs[3]);
   }
 }
 
 // --- QUESTION GENERATOR & SOLVER ---
 
-/**
- * Generate a dynamic circuit problem based on difficulty and type constraints
- */
-function generateRandomCalculationQuestion(difficulty = 'medium', type = 'all') {
-  // Define available sub-generators
-  const generators = [];
-  
-  if (type === 'all' || type === 'resistors') {
-    if (difficulty === 'easy') {
-      generators.push(genResistorSeriesEasy);
-      generators.push(genResistorParallelEasy);
-    } else if (difficulty === 'medium') {
-      generators.push(genResistorSeriesMedium);
-      generators.push(genResistorParallelMedium);
-      generators.push(genResistorSeriesParallelMedium);
-    } else { // hard
-      generators.push(genResistorLadderHard);
-      generators.push(genResistorSeriesParallelHard);
-    }
-  }
-  
-  if (type === 'all' || type === 'inductors') {
-    if (difficulty === 'easy') {
-      generators.push(genInductorSeriesEasy);
-      generators.push(genInductorReactanceEasy);
-    } else if (difficulty === 'medium') {
-      generators.push(genInductorReactanceMedium);
-      generators.push(genInductorSeriesParallelMedium);
-    } else { // hard
-      generators.push(genInductorLadderHard);
-    }
-  }
+// Complex Arithmetic Helper
+const Comp = {
+  make: (r, i) => ({ r, i }),
+  add: (a, b) => ({ r: a.r + b.r, i: a.i + b.i }),
+  sub: (a, b) => ({ r: a.r - b.r, i: a.i - b.i }),
+  mul: (a, b) => ({ r: a.r * b.r - a.i * b.i, i: a.r * b.i + a.i * b.r }),
+  div: (a, b) => {
+    const d = b.r * b.r + b.i * b.i;
+    if (d === 0) return { r: 0, i: 0 };
+    return { r: (a.r * b.r + a.i * b.i) / d, i: (a.i * b.r - a.r * b.i) / d };
+  },
+  recip: (a) => {
+    const d = a.r * a.r + a.i * a.i;
+    if (d === 0) return { r: 0, i: 0 };
+    return { r: a.r / d, i: -a.i / d };
+  },
+  parallel: (a, b) => Comp.div(Comp.mul(a, b), Comp.add(a, b)),
+  mag: (a) => Math.sqrt(a.r * a.r + a.i * a.i)
+};
 
-  if (type === 'all' || type === 'capacitors') {
-    if (difficulty === 'easy') {
-      generators.push(genCapacitorParallelEasy);
-      generators.push(genCapacitorReactanceEasy);
-    } else if (difficulty === 'medium') {
-      generators.push(genCapacitorSeriesMedium);
-      generators.push(genCapacitorReactanceMedium);
-    } else { // hard
-      generators.push(genCapacitorLadderHard);
-    }
-  }
-  
-  if (type === 'all' || type === 'rlc') {
-    if (difficulty === 'easy') {
-      generators.push(genACReactanceRLC);
-    } else if (difficulty === 'medium') {
-      generators.push(genSeriesRLCImpedanceMedium);
-      generators.push(genParallelRLCCurrentMedium);
-    } else { // hard
-      generators.push(genSeriesRLCCurrentHard);
-      generators.push(genParallelRLCImpedanceHard);
-    }
-  }
-
-  // Fail-safe selection if list is empty
-  const selectedGen = generators.length > 0 
-    ? generators[Math.floor(Math.random() * generators.length)]
-    : genResistorSeriesEasy;
-    
-  const q = selectedGen();
-  q.isCalculation = true;
-  q.subject = 'V. Calculation Practice';
-  q.category = 'Circuit Calculations';
-  return q;
+function formatComplex(c) {
+  if (Math.abs(c.i) < 0.1) return `${c.r.toFixed(1)}`;
+  if (Math.abs(c.r) < 0.1) return `${c.i.toFixed(1)}j`;
+  const sign = c.i >= 0 ? '+' : '-';
+  return `(${c.r.toFixed(1)} ${sign} ${Math.abs(c.i).toFixed(1)}j)`;
 }
 
-// --- SUB-GENERATORS IMPLEMENTATION ---
+const topologiesByDifficulty = {
+  easy: ['series', 'parallel'],
+  medium: ['series', 'parallel', 'series_parallel', 'parallel_series', 'parallel_with_series_branch', 'ladder'],
+  hard: ['series', 'parallel', 'two_parallel_groups', 'series_parallel_three', 'series_with_parallel_series_branch', 'ladder']
+};
 
-// Help generate options helper
-function makeOptions(correctVal, unit, formatFn = (v) => v.toFixed(2)) {
+const rlcTopologiesByDifficulty = {
+  easy: ['series', 'parallel'],
+  medium: ['series', 'parallel', 'series_parallel', 'parallel_series'],
+  hard: ['series', 'parallel', 'two_parallel_groups', 'series_parallel_three', 'series_with_parallel_series_branch']
+};
+
+function getComponentCount(topology, difficulty) {
+  if (topology === 'ladder') {
+    return difficulty === 'medium' ? 3 : (Math.random() > 0.5 ? 5 : 7);
+  }
+  if (topology === 'series' || topology === 'parallel') {
+    return difficulty === 'easy' ? 2 : (difficulty === 'medium' ? 3 : 4);
+  }
+  if (['series_parallel', 'parallel_series', 'parallel_with_series_branch'].includes(topology)) {
+    return 3;
+  }
+  if (['two_parallel_groups', 'series_parallel_three', 'series_with_parallel_series_branch'].includes(topology)) {
+    return 4;
+  }
+  return 3;
+}
+
+function getTopicName(category) {
+  if (category === 'resistors') return 'Resistor Circuits';
+  if (category === 'inductors') return 'Inductor Circuits';
+  if (category === 'capacitors') return 'Capacitor Circuits';
+  return 'AC RLC Circuits';
+}
+
+function makeOptions(correctVal, unit, formatFn = (v) => v.toFixed(1)) {
   const correctText = `${formatFn(correctVal)} ${unit}`;
   const optsSet = new Set([correctText]);
   
-  // Generate intelligent distractors
   const multipliers = [0.5, 2.0, 10.0, 0.1, 1.5, 0.75, 1.25];
   while (optsSet.size < 4) {
     const mult = multipliers[Math.floor(Math.random() * multipliers.length)];
     let raw = correctVal * mult;
-    
-    // Add minor offset to make it look like a rounding error
-    if (Math.random() > 0.5) raw += (Math.random() - 0.5) * (correctVal * 0.1);
-    
-    // Handle very small values
+    if (Math.random() > 0.5) raw += (Math.random() - 0.5) * (correctVal * 0.15);
     if (raw < 0.01) raw = 0.01;
-    
     const distText = `${formatFn(raw)} ${unit}`;
     optsSet.add(distText);
   }
   
-  // Shuffle options
-  const list = Array.from(optsSet).map(txt => ({
+  return Array.from(optsSet).map(txt => ({
     text: txt,
     isCorrect: txt === correctText
   })).sort(() => Math.random() - 0.5);
-  
-  return list;
 }
 
-// --- DC RESISTOR GENERATORS ---
-
-function genResistorSeriesEasy() {
-  const R1 = [10, 22, 47, 100, 150, 220][Math.floor(Math.random()*6)];
-  const R2 = [10, 22, 47, 100, 150, 220][Math.floor(Math.random()*6)];
-  const Req = R1 + R2;
-  const V_s = 24;
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `For a series circuit consisting of two resistors, R1 = ${R1} Ω and R2 = ${R2} Ω, connected to a power supply. Find the total equivalent resistance (R_EQ) of the network.`,
-    options: makeOptions(Req, 'Ω', v => Math.round(v)),
-    circuitData: {
-      topology: 'series',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R'],
-      labels: ['R1', 'R2'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`]
-    },
-    walkthrough: `
-      1. Identify that the resistors are connected in series.<br>
-      2. Use the series resistance formula: <strong>R_EQ = R1 + R2</strong>.<br>
-      3. Substitute the values: R_EQ = ${R1} + ${R2} = <strong>${Req} Ω</strong>.
-    `
-  };
-}
-
-function genResistorParallelEasy() {
-  // Choose pairs that yield clean parallel combinations
-  const pairs = [
-    [100, 100, 50],
-    [60, 30, 20],
-    [40, 40, 20],
-    [120, 60, 40],
-    [200, 200, 100]
-  ];
-  const p = pairs[Math.floor(Math.random() * pairs.length)];
-  const R1 = p[0], R2 = p[1], Req = p[2];
-  const V_s = 12;
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `A circuit has R1 = ${R1} Ω and R2 = ${R2} Ω connected in parallel. Calculate the total equivalent resistance (R_EQ) of the branch.`,
-    options: makeOptions(Req, 'Ω', v => Math.round(v)),
-    circuitData: {
-      topology: 'parallel',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R'],
-      labels: ['R1', 'R2'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`]
-    },
-    walkthrough: `
-      1. Identify that the resistors are in parallel.<br>
-      2. Use the parallel resistance formula: <strong>R_EQ = (R1 * R2) / (R1 + R2)</strong> or <strong>1/R_EQ = 1/R1 + 1/R2</strong>.<br>
-      3. Substitute the values: R_EQ = (${R1} * ${R2}) / (${R1} + ${R2}) = ${R1 * R2} / ${R1 + R2} = <strong>${Req} Ω</strong>.
-    `
-  };
-}
-
-function genResistorSeriesMedium() {
-  const R1 = 50;
-  const R2 = 100;
-  const R3 = 150;
-  const Req = R1 + R2 + R3;
-  const V_s = 24;
-  const I_T = V_s / Req;
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `In a series circuit, R1 = ${R1} Ω, R2 = ${R2} Ω, and R3 = ${R3} Ω are connected to a V_s = ${V_s} V source. Calculate the total circuit current (I_T) in milliamperes.`,
-    options: makeOptions(I_T * 1000, 'mA', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'series',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R', 'R'],
-      labels: ['R1', 'R2', 'R3'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
-    },
-    walkthrough: `
-      1. Calculate total resistance (R_EQ) in series: R_EQ = R1 + R2 + R3 = ${R1} + ${R2} + ${R3} = ${Req} Ω.<br>
-      2. Use Ohm's Law to find total current: I_T = V_s / R_EQ = ${V_s} V / ${Req} Ω = ${I_T.toFixed(4)} A.<br>
-      3. Convert to milliamperes: I_T = ${I_T.toFixed(4)} * 1000 = <strong>${(I_T * 1000).toFixed(1)} mA</strong>.
-    `
-  };
-}
-
-function genResistorParallelMedium() {
-  const R1 = 60, R2 = 30, R3 = 20;
-  const Req = 10; // (1/60 + 1/30 + 1/20)^-1 = 10
-  const V_s = 12;
-  const I_T = V_s / Req;
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `Three resistors R1 = ${R1} Ω, R2 = ${R2} Ω, and R3 = ${R3} Ω are in parallel across a V_s = ${V_s} V supply. Find the total current (I_T) drawn from the source.`,
-    options: makeOptions(I_T, 'A', v => v.toFixed(2)),
-    circuitData: {
-      topology: 'parallel',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R', 'R'],
-      labels: ['R1', 'R2', 'R3'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
-    },
-    walkthrough: `
-      1. Calculate total parallel resistance (R_EQ):<br>
-         &nbsp;&nbsp; 1/R_EQ = 1/R1 + 1/R2 + 1/R3 = 1/${R1} + 1/${R2} + 1/${R3}<br>
-         &nbsp;&nbsp; 1/R_EQ = 1/60 + 2/60 + 3/60 = 6/60 = 1/10 => R_EQ = 10 Ω.<br>
-      2. Use Ohm's Law to calculate total current: I_T = V_s / R_EQ = ${V_s} V / 10 Ω = <strong>${I_T.toFixed(2)} A</strong>.
-    `
-  };
-}
-
-function genResistorSeriesParallelMedium() {
-  const R1 = 40; // Series
-  const R2 = 120, R3 = 60; // Parallel pair (Req = 40)
-  const Req = R1 + 40; // Total 80
-  const V_s = 24;
-  const I_T = V_s / Req; // 0.3 A
-  const V_par = I_T * 40; // 12 V
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `For a series-parallel network, R1 = ${R1} Ω is in series with a parallel group of R2 = ${R2} Ω and R3 = ${R3} Ω. If connected to a ${V_s} V source, what is the voltage drop across the parallel bank (R2 || R3)?`,
-    options: makeOptions(V_par, 'V', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'series_parallel',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R', 'R'],
-      labels: ['R1', 'R2', 'R3'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
-    },
-    walkthrough: `
-      1. First simplify the parallel bank: R_par = (R2 * R3) / (R2 + R3) = (${R2} * ${R3}) / (${R2} + ${R3}) = 7200 / 180 = 40 Ω.<br>
-      2. Now calculate total equivalent resistance: R_EQ = R1 + R_par = ${R1} + 40 = 80 Ω.<br>
-      3. Solve for total circuit current: I_T = V_s / R_EQ = ${V_s} V / 80 Ω = 0.3 A.<br>
-      4. Find voltage drop across parallel bank using Ohm's Law: V_par = I_T * R_par = 0.3 A * 40 Ω = <strong>${V_par.toFixed(1)} V</strong>.
-    `
-  };
-}
-
-function genResistorSeriesParallelHard() {
-  const R1 = 50; // Series
-  const R2 = 200, R3 = 200; // Parallel pair (Req = 100)
-  const Req = R1 + 100; // Total 150
-  const V_s = 30;
-  const I_T = V_s / Req; // 0.2 A
-  const I_R3 = I_T * (R2 / (R2 + R3)); // 0.1 A
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `In a series-parallel circuit, R1 = ${R1} Ω is connected in series with the parallel combination of R2 = ${R2} Ω and R3 = ${R3} Ω. If a voltage of ${V_s} V is applied to the circuit, what is the current through resistor R3?`,
-    options: makeOptions(I_R3, 'A', v => v.toFixed(3)),
-    circuitData: {
-      topology: 'series_parallel',
-      voltage: V_s,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['R', 'R', 'R'],
-      labels: ['R1', 'R2', 'R3'],
-      valStrs: [`${R1} Ω`, `${R2} Ω`, `${R3} Ω`]
-    },
-    walkthrough: `
-      1. Calculate the parallel resistance of R2 and R3: R_par = (200 * 200) / (200 + 200) = 100 Ω.<br>
-      2. Calculate total resistance: R_EQ = R1 + R_par = ${R1} + 100 = 150 Ω.<br>
-      3. Find total circuit current: I_T = V_s / R_EQ = ${V_s} V / 150 Ω = 0.2 A.<br>
-      4. Since R2 and R3 are of equal value and in parallel, they divide the total current equally: I_R3 = I_T / 2 = 0.2 A / 2 = <strong>${I_R3.toFixed(3)} A</strong>.
-    `
-  };
-}
-
-function genResistorLadderHard() {
-  // Scaled values for Resistor Ladder
-  const scale = [1, 2, 0.5, 10][Math.floor(Math.random() * 4)];
-  const rVals = [40, 10, 60, 30, 60, 30, 30].map(v => v * scale);
-  const Req = 20 * scale;
-  
-  return {
-    topic: 'Resistor Circuits',
-    text: `Simplify the complex resistor ladder circuit shown below to find the total equivalent resistance (R_EQ) measured between terminals A and B. <br>
-           [Values: R1=${rVals[0]}Ω, R2=${rVals[1]}Ω, R3=${rVals[2]}Ω, R4=${rVals[3]}Ω, R5=${rVals[4]}Ω, R6=${rVals[5]}Ω, R7=${rVals[6]}Ω]`,
-    options: makeOptions(Req, 'Ω', v => Math.round(v)),
-    circuitData: {
-      topology: 'ladder',
-      compType: 'R',
-      unit: 'Ω',
-      vals: rVals
-    },
-    walkthrough: `
-      Let's simplify this ladder network step-by-step from right to left:<br>
-      1. <strong>R6 and R7</strong> are in series on the far right: R67 = R6 + R7 = ${rVals[5]} + ${rVals[6]} = ${rVals[5] + rVals[6]} Ω.<br>
-      2. <strong>R67</strong> is in parallel with vertical <strong>R5</strong>: R5_67 = (R5 * R67) / (R5 + R67) = (${rVals[4]} * ${rVals[5] + rVals[6]}) / (${rVals[4]} + ${rVals[5] + rVals[6]}) = ${rVals[4] * (rVals[5]+rVals[6]) / (rVals[4] + rVals[5] + rVals[6])} Ω.<br>
-      3. This group is in series with horizontal <strong>R4</strong>: R4_567 = R4 + R5_67 = ${rVals[3]} + ${rVals[3]} = ${rVals[3] * 2} Ω.<br>
-      4. This group is in parallel with vertical <strong>R3</strong>: R3_4567 = (R3 * R4_567) / (R3 + R4_567) = (${rVals[2]} * ${rVals[3] * 2}) / (${rVals[2]} + ${rVals[3] * 2}) = ${rVals[2]/2} Ω.<br>
-      5. This group is in series with horizontal <strong>R2</strong>: R2_34567 = R2 + R3_4567 = ${rVals[1]} + ${rVals[2]/2} = ${rVals[1] + rVals[2]/2} Ω.<br>
-      6. Finally, this is in parallel with vertical <strong>R1</strong> at terminals A-B: R_EQ = (R1 * R2_34567) / (R1 + R2_34567) = <strong>${Req} Ω</strong>.
-    `
-  };
-}
-
-// --- DC/AC INDUCTOR GENERATORS ---
-
-function genInductorSeriesEasy() {
-  const L1 = 10, L2 = 15, L3 = 25;
-  const Leq = L1 + L2 + L3;
-  
-  return {
-    topic: 'Inductor Circuits',
-    text: `A circuit consists of three inductors in series: L1 = ${L1} mH, L2 = ${L2} mH, and L3 = ${L3} mH. Assuming no mutual coupling, calculate the total equivalent inductance (L_EQ).`,
-    options: makeOptions(Leq, 'mH', v => Math.round(v)),
-    circuitData: {
-      topology: 'series',
-      voltage: 12,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['L', 'L', 'L'],
-      labels: ['L1', 'L2', 'L3'],
-      valStrs: [`${L1} mH`, `${L2} mH`, `${L3} mH`]
-    },
-    walkthrough: `
-      1. For inductors in series (with no mutual coupling), equivalent inductance is simply the sum of individual inductances.<br>
-      2. Formula: <strong>L_EQ = L1 + L2 + L3</strong>.<br>
-      3. Calculate: L_EQ = ${L1} + ${L2} + ${L3} = <strong>${Leq} mH</strong>.
-    `
-  };
-}
-
-function genInductorReactanceEasy() {
-  const L = 50; // mH
-  const f = [60, 400][Math.floor(Math.random()*2)];
-  const X_L = 2 * Math.PI * f * (L / 1000);
-  
-  return {
-    topic: 'Inductor Circuits',
-    text: `An inductor with L = ${L} mH is connected to a power supply with a frequency of f = ${f} Hz. Calculate the inductive reactance (X_L) of the inductor.`,
-    options: makeOptions(X_L, 'Ω', v => v.toFixed(2)),
-    circuitData: {
-      topology: 'series',
-      voltage: 120,
-      frequency: f,
-      types: ['L'],
-      labels: ['L1'],
-      valStrs: [`${L} mH`]
-    },
-    walkthrough: `
-      1. The formula for inductive reactance is: <strong>X_L = 2 * π * f * L</strong>.<br>
-      2. Convert L from mH to Henries: L = ${L} mH = ${L/1000} H.<br>
-      3. Substitute f = ${f} Hz and L = ${L/1000} H:<br>
-         X_L = 2 * 3.14159 * ${f} * ${L/1000} = <strong>${X_L.toFixed(2)} Ω</strong>.
-    `
-  };
-}
-
-function genInductorReactanceMedium() {
-  const L1 = 40, L2 = 60; // Series -> 100mH
-  const Leq = L1 + L2;
-  const f = [60, 400][Math.floor(Math.random()*2)];
-  const X_L = 2 * Math.PI * f * (Leq / 1000);
-  
-  return {
-    topic: 'Inductor Circuits',
-    text: `Two inductors L1 = ${L1} mH and L2 = ${L2} mH are connected in series to an AC generator operating at ${f} Hz. Find the total inductive reactance (X_L) of this network.`,
-    options: makeOptions(X_L, 'Ω', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'series',
-      voltage: 115,
-      frequency: f,
-      types: ['L', 'L'],
-      labels: ['L1', 'L2'],
-      valStrs: [`${L1} mH`, `${L2} mH`]
-    },
-    walkthrough: `
-      1. Find total equivalent inductance (L_EQ) of the series network: L_EQ = L1 + L2 = ${L1} + ${L2} = ${Leq} mH = ${Leq/1000} H.<br>
-      2. Use the inductive reactance formula: <strong>X_L = 2 * π * f * L_EQ</strong>.<br>
-      3. Compute: X_L = 2 * π * ${f} * ${Leq/1000} = <strong>${X_L.toFixed(1)} Ω</strong>.
-    `
-  };
-}
-
-function genInductorSeriesParallelMedium() {
-  const L1 = 15; // Series
-  const L2 = 30, L3 = 60; // Parallel pair (Leq = 20)
-  const Leq = L1 + 20; // Total 35
-  
-  return {
-    topic: 'Inductor Circuits',
-    text: `A series-parallel circuit has inductor L1 = ${L1} mH in series with a parallel group of L2 = ${L2} mH and L3 = ${L3} mH. Find the total equivalent inductance (L_EQ) in mH.`,
-    options: makeOptions(Leq, 'mH', v => Math.round(v)),
-    circuitData: {
-      topology: 'series_parallel',
-      voltage: 24,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['L', 'L', 'L'],
-      labels: ['L1', 'L2', 'L3'],
-      valStrs: [`${L1} mH`, `${L2} mH`, `${L3} mH`]
-    },
-    walkthrough: `
-      1. First solve for parallel inductors L2 and L3: L_par = (L2 * L3) / (L2 + L3) = (${L2} * ${L3}) / (${L2} + ${L3}) = 1800 / 90 = 20 mH.<br>
-      2. Solve for total series inductance: L_EQ = L1 + L_par = ${L1} + 20 = <strong>${Leq} mH</strong>.
-    `
-  };
-}
-
-function genInductorLadderHard() {
-  // Scaled values for Inductor Ladder (Image 1 style!)
-  const scale = [1, 2, 0.5, 10][Math.floor(Math.random() * 4)];
-  const lVals = [40, 10, 60, 30, 60, 30, 30].map(v => v * scale);
-  const Leq = 20 * scale;
-  
-  return {
-    topic: 'Inductor Circuits',
-    text: `Find the total equivalent inductance (L_EQ) measured between terminals A and B for the complex inductor ladder schematic shown below. <br>
-           [Values: L1=${lVals[0]}mH, L2=${lVals[1]}mH, L3=${lVals[2]}mH, L4=${lVals[3]}mH, L5=${lVals[4]}mH, L6=${lVals[5]}mH, L7=${lVals[6]}mH]`,
-    options: makeOptions(Leq, 'mH', v => Math.round(v)),
-    circuitData: {
-      topology: 'ladder',
-      compType: 'L',
-      unit: 'mH',
-      vals: lVals
-    },
-    walkthrough: `
-      Let's simplify this ladder network step-by-step from right to left:<br>
-      1. <strong>L6 and L7</strong> are in series on the far right: L67 = L6 + L7 = ${lVals[5]} + ${lVals[6]} = ${lVals[5] + lVals[6]} mH.<br>
-      2. <strong>L67</strong> is in parallel with vertical <strong>L5</strong>: L5_67 = (L5 * L67) / (L5 + L67) = (${lVals[4]} * ${lVals[5] + lVals[6]}) / (${lVals[4]} + ${lVals[5] + lVals[6]}) = ${lVals[4] * (lVals[5]+lVals[6]) / (lVals[4] + lVals[5] + lVals[6])} mH.<br>
-      3. This group is in series with horizontal <strong>L4</strong>: L4_567 = L4 + L5_67 = ${lVals[3]} + ${lVals[3]} = ${lVals[3] * 2} mH.<br>
-      4. This group is in parallel with vertical <strong>L3</strong>: L3_4567 = (L3 * L4_567) / (L3 + L4_567) = (${lVals[2]} * ${lVals[3] * 2}) / (${lVals[2]} + ${lVals[3] * 2}) = ${lVals[2]/2} mH.<br>
-      5. This group is in series with horizontal <strong>L2</strong>: L2_34567 = L2 + L3_4567 = ${lVals[1]} + ${lVals[2]/2} = ${lVals[1] + lVals[2]/2} mH.<br>
-      6. Finally, this is in parallel with vertical <strong>L1</strong> at terminals A-B: L_EQ = (L1 * L2_34567) / (L1 + L2_34567) = <strong>${Leq} mH</strong>.
-    `
-  };
-}
-
-// --- DC/AC CAPACITOR GENERATORS ---
-
-function genCapacitorParallelEasy() {
-  const C1 = [1, 2.2, 4.7, 10][Math.floor(Math.random()*4)];
-  const C2 = [1, 2.2, 4.7, 10][Math.floor(Math.random()*4)];
-  const Ceq = C1 + C2;
-  
-  return {
-    topic: 'Capacitor Circuits',
-    text: `A parallel combination consists of two capacitors: C1 = ${C1} µF and C2 = ${C2} µF. Calculate the total equivalent capacitance (C_EQ).`,
-    options: makeOptions(Ceq, 'µF', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'parallel',
-      voltage: 24,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['C', 'C'],
-      labels: ['C1', 'C2'],
-      valStrs: [`${C1} µF`, `${C2} µF`]
-    },
-    walkthrough: `
-      1. For capacitors in parallel, the total capacitance is the sum of the individual capacitances (opposite of resistors).<br>
-      2. Formula: <strong>C_EQ = C1 + C2</strong>.<br>
-      3. Calculate: C_EQ = ${C1} + ${C2} = <strong>${Ceq.toFixed(1)} µF</strong>.
-    `
-  };
-}
-
-function genCapacitorReactanceEasy() {
-  const C = 10; // µF
-  const f = [60, 400][Math.floor(Math.random()*2)];
-  const X_C = 1 / (2 * Math.PI * f * (C / 1000000));
-  
-  return {
-    topic: 'Capacitor Circuits',
-    text: `A capacitor with C = ${C} µF is connected to a power supply with a frequency of f = ${f} Hz. Find its capacitive reactance (X_C).`,
-    options: makeOptions(X_C, 'Ω', v => v.toFixed(2)),
-    circuitData: {
-      topology: 'series',
-      voltage: 120,
-      frequency: f,
-      types: ['C'],
-      labels: ['C1'],
-      valStrs: [`${C} µF`]
-    },
-    walkthrough: `
-      1. The formula for capacitive reactance is: <strong>X_C = 1 / (2 * π * f * C)</strong>.<br>
-      2. Convert C from microfarads to Farads: C = ${C} µF = ${C/1000000} F.<br>
-      3. Substitute f = ${f} Hz and C = ${C/1000000} F:<br>
-         X_C = 1 / (2 * 3.14159 * ${f} * ${C/1000000}) = <strong>${X_C.toFixed(2)} Ω</strong>.
-    `
-  };
-}
-
-function genCapacitorSeriesMedium() {
-  // Pairs that yield clean series combinations
-  const pairs = [
-    [20, 20, 10],
-    [30, 15, 10],
-    [40, 40, 20],
-    [60, 30, 20],
-    [100, 100, 50]
-  ];
-  const p = pairs[Math.floor(Math.random() * pairs.length)];
-  const C1 = p[0], C2 = p[1], Ceq = p[2];
-  
-  return {
-    topic: 'Capacitor Circuits',
-    text: `A series combination consists of two capacitors: C1 = ${C1} µF and C2 = ${C2} µF. Calculate the total equivalent capacitance (C_EQ) in µF.`,
-    options: makeOptions(Ceq, 'µF', v => Math.round(v)),
-    circuitData: {
-      topology: 'series',
-      voltage: 12,
-      frequency: Math.random() > 0.5 ? 60 : 400,
-      types: ['C', 'C'],
-      labels: ['C1', 'C2'],
-      valStrs: [`${C1} µF`, `${C2} µF`]
-    },
-    walkthrough: `
-      1. For capacitors in series, use the reciprocal formula: <strong>1/C_EQ = 1/C1 + 1/C2</strong> or <strong>C_EQ = (C1 * C2) / (C1 + C2)</strong>.<br>
-      2. Substitute the values: C_EQ = (${C1} * ${C2}) / (${C1} + ${C2}) = ${C1 * C2} / ${C1 + C2} = <strong>${Ceq} µF</strong>.
-    `
-  };
-}
-
-function genCapacitorReactanceMedium() {
-  const C1 = 20, C2 = 20; // Parallel -> 40µF
-  const Ceq = C1 + C2;
-  const f = [60, 400][Math.floor(Math.random()*2)];
-  const X_C = 1 / (2 * Math.PI * f * (Ceq / 1000000));
-  
-  return {
-    topic: 'Capacitor Circuits',
-    text: `Two capacitors C1 = ${C1} µF and C2 = ${C2} µF are connected in parallel to an AC generator operating at ${f} Hz. Find the total capacitive reactance (X_C) of this network.`,
-    options: makeOptions(X_C, 'Ω', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'parallel',
-      voltage: 115,
-      frequency: f,
-      types: ['C', 'C'],
-      labels: ['C1', 'C2'],
-      valStrs: [`${C1} µF`, `${C2} µF`]
-    },
-    walkthrough: `
-      1. Find total equivalent capacitance (C_EQ) of the parallel network: C_EQ = C1 + C2 = ${C1} + ${C2} = ${Ceq} µF = ${Ceq/1000000} F.<br>
-      2. Use the capacitive reactance formula: <strong>X_C = 1 / (2 * π * f * C_EQ)</strong>.<br>
-      3. Compute: X_C = 1 / (2 * π * ${f} * ${Ceq/1000000}) = <strong>${X_C.toFixed(1)} Ω</strong>.
-    `
-  };
-}
-
-function genCapacitorLadderHard() {
-  // Scaled values for Capacitor Ladder (Image 1 style structure, but capacitor rules apply!)
-  const scale = [1, 2, 0.5, 10][Math.floor(Math.random() * 4)];
-  const cVals = [10, 20, 10, 20, 10, 20, 20].map(v => v * scale);
-  const Ceq = 20 * scale;
-  
-  return {
-    topic: 'Capacitor Circuits',
-    text: `Calculate the total equivalent capacitance (C_EQ) measured between terminals A and B for the complex capacitor ladder schematic shown below. <br>
-           [Values: C1=${cVals[0]}µF, C2=${cVals[1]}µF, C3=${cVals[2]}µF, C4=${cVals[3]}µF, C5=${cVals[4]}µF, C6=${cVals[5]}µF, C7=${cVals[6]}µF]`,
-    options: makeOptions(Ceq, 'µF', v => Math.round(v)),
-    circuitData: {
-      topology: 'ladder',
-      compType: 'C',
-      unit: 'µF',
-      vals: cVals
-    },
-    walkthrough: `
-      Let's simplify this capacitor ladder network step-by-step from right to left (remembering capacitor formulas!):<br>
-      1. <strong>C6 and C7</strong> are in series on the far right: C67 = (C6 * C7)/(C6 + C7) = (${cVals[5]} * ${cVals[6]}) / (${cVals[5]} + ${cVals[6]}) = ${cVals[5] / 2} µF.<br>
-      2. <strong>C67</strong> is in parallel with vertical <strong>C5</strong>: C5_67 = C5 + C67 = ${cVals[4]} + ${cVals[5]/2} = ${cVals[4] + cVals[5]/2} µF.<br>
-      3. This group is in series with horizontal <strong>C4</strong>: C4_567 = (C4 * C5_67)/(C4 + C5_67) = (${cVals[3]} * ${cVals[4] + cVals[5]/2}) / (${cVals[3]} + ${cVals[4] + cVals[5]/2}) = ${cVals[3]/2} µF.<br>
-      4. This group is in parallel with vertical <strong>C3</strong>: C3_4567 = C3 + C4_567 = ${cVals[2]} + ${cVals[3]/2} = ${cVals[2] + cVals[3]/2} µF.<br>
-      5. This group is in series with horizontal <strong>C2</strong>: C2_34567 = (C2 * C3_4567)/(C2 + C3_4567) = (${cVals[1]} * ${cVals[2] + cVals[3]/2}) / (${cVals[1]} + ${cVals[2] + cVals[3]/2}) = ${cVals[1]/2} µF.<br>
-      6. Finally, this is in parallel with vertical <strong>C1</strong> at terminals A-B: C_EQ = C1 + C2_34567 = ${cVals[0]} + ${cVals[1]/2} = <strong>${Ceq} µF</strong>.
-    `
-  };
-}
-
-// --- AC R-L-C CIRCUITS GENERATORS ---
-
-function genACReactanceRLC() {
-  const isL = Math.random() > 0.5;
-  const f = [60, 400][Math.floor(Math.random()*2)];
-  
-  if (isL) {
-    const L = 15.9; // mH -> X_L is about 40 ohms at 400Hz
-    const X_L = 2 * Math.PI * f * (L / 1000);
-    return {
-      topic: 'AC Reactance',
-      text: `Find the inductive reactance (X_L) of a ${L} mH inductor operating in a standard ${f} Hz aviation power distribution grid.`,
-      options: makeOptions(X_L, 'Ω', v => v.toFixed(1)),
-      circuitData: {
-        topology: 'series',
-        voltage: 115,
-        frequency: f,
-        types: ['L'],
-        labels: ['L1'],
-        valStrs: [`${L} mH`]
-      },
-      walkthrough: `
-        1. Use formula: <strong>X_L = 2 * π * f * L</strong>.<br>
-        2. Substitute f = ${f} Hz and L = ${L/1000} H:<br>
-           X_L = 2 * π * ${f} * ${L/1000} = <strong>${X_L.toFixed(1)} Ω</strong>.
-      `
-    };
-  } else {
-    const C = 26.5; // µF -> X_C is about 10 ohms at 60Hz
-    const X_C = 1 / (2 * Math.PI * f * (C / 1000000));
-    return {
-      topic: 'AC Reactance',
-      text: `Calculate the capacitive reactance (X_C) of a ${C} µF capacitor connected to a ${f} Hz AC source.`,
-      options: makeOptions(X_C, 'Ω', v => v.toFixed(1)),
-      circuitData: {
-        topology: 'series',
-        voltage: 120,
-        frequency: f,
-        types: ['C'],
-        labels: ['C1'],
-        valStrs: [`${C} µF`]
-      },
-      walkthrough: `
-        1. Use formula: <strong>X_C = 1 / (2 * π * f * C)</strong>.<br>
-        2. Substitute f = ${f} Hz and C = ${C/1000000} F:<br>
-           X_C = 1 / (2 * π * ${f} * ${C/1000000}) = <strong>${X_C.toFixed(1)} Ω</strong>.
-      `
-    };
+function solveRL_EQ(topology, vals, unitChar = 'R', unit = 'Ω') {
+  let steps = [];
+  let eq = 0;
+  if (topology === 'series') {
+    eq = vals.reduce((a, b) => a + b, 0);
+    steps.push(`Use the series formula: <strong>${unitChar}_{EQ} = ${vals.map((v, i) => `${unitChar}${i+1}`).join(' + ')}</strong>.`);
+    steps.push(`Substitute the values: ${unitChar}_{EQ} = ${vals.join(' + ')} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'parallel') {
+    const sumRecip = vals.reduce((a, b) => a + 1/b, 0);
+    eq = 1 / sumRecip;
+    steps.push(`Use the parallel formula: <strong>1/${unitChar}_{EQ} = ${vals.map((v, i) => `1/${unitChar}${i+1}`).join(' + ')}</strong>.`);
+    steps.push(`Substitute: 1/${unitChar}_{EQ} = ${vals.map(v => `1/${v}`).join(' + ')} &approx; ${sumRecip.toFixed(5)}.`);
+    steps.push(`Take the reciprocal: ${unitChar}_{EQ} = 1 / ${sumRecip.toFixed(5)} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'series_parallel') {
+    const p = (vals[1] * vals[2]) / (vals[1] + vals[2]);
+    eq = vals[0] + p;
+    steps.push(`1. Calculate parallel combination of ${unitChar}2 and ${unitChar}3: ${unitChar}_{23} = (${unitChar}2 &times; ${unitChar}3) / (${unitChar}2 + ${unitChar}3) = (${vals[1]} &times; ${vals[2]}) / (${vals[1]} + ${vals[2]}) &approx; <strong>${p.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Add series component ${unitChar}1: ${unitChar}_{EQ} = ${unitChar}1 + ${unitChar}_{23} = ${vals[0]} + ${p.toFixed(1)} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'parallel_series') {
+    const p = (vals[0] * vals[1]) / (vals[0] + vals[1]);
+    eq = p + vals[2];
+    steps.push(`1. Calculate parallel combination of ${unitChar}1 and ${unitChar}2: ${unitChar}_{12} = (${unitChar}1 &times; ${unitChar}2) / (${unitChar}1 + ${unitChar}2) = (${vals[0]} &times; ${vals[1]}) / (${vals[0]} + ${vals[1]}) &approx; <strong>${p.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Add series component ${unitChar}3: ${unitChar}_{EQ} = ${unitChar}_{12} + ${unitChar}3 = ${p.toFixed(1)} + ${vals[2]} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'two_parallel_groups') {
+    const p1 = (vals[0] * vals[1]) / (vals[0] + vals[1]);
+    const p2 = (vals[2] * vals[3]) / (vals[2] + vals[3]);
+    eq = p1 + p2;
+    steps.push(`1. Calculate first parallel group (${unitChar}1 || ${unitChar}2): ${unitChar}_{12} = (${vals[0]} &times; ${vals[1]}) / (${vals[0]} + ${vals[1]}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Calculate second parallel group (${unitChar}3 || ${unitChar}4): ${unitChar}_{34} = (${vals[2]} &times; ${vals[3]}) / (${vals[2]} + ${vals[3]}) &approx; <strong>${p2.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`3. Add groups in series: ${unitChar}_{EQ} = ${unitChar}_{12} + ${unitChar}_{34} = ${p1.toFixed(1)} + ${p2.toFixed(1)} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'parallel_with_series_branch') {
+    const s = vals[1] + vals[2];
+    eq = (vals[0] * s) / (vals[0] + s);
+    steps.push(`1. Calculate series branch (${unitChar}2 + ${unitChar}3): ${unitChar}_{23} = ${vals[1]} + ${vals[2]} = <strong>${s.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Combine in parallel with ${unitChar}1: ${unitChar}_{EQ} = (${unitChar}1 &times; ${unitChar}_{23}) / (${unitChar}1 + ${unitChar}_{23}) = (${vals[0]} &times; ${s.toFixed(1)}) / (${vals[0]} + ${s.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'series_parallel_three') {
+    const p = 1 / (1/vals[1] + 1/vals[2] + 1/vals[3]);
+    eq = vals[0] + p;
+    steps.push(`1. Calculate parallel combination of ${unitChar}2, ${unitChar}3, and ${unitChar}4: 1/${unitChar}_{234} = 1/${unitChar}2 + 1/${unitChar}3 + 1/${unitChar}4 = 1/${vals[1]} + 1/${vals[2]} + 1/${vals[3]} &approx; ${(1/vals[1] + 1/vals[2] + 1/vals[3]).toFixed(5)}.`);
+    steps.push(`   ${unitChar}_{234} = 1 / ${(1/vals[1] + 1/vals[2] + 1/vals[3]).toFixed(5)} &approx; <strong>${p.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Add series component ${unitChar}1: ${unitChar}_{EQ} = ${unitChar}1 + ${unitChar}_{234} = ${vals[0]} + ${p.toFixed(1)} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'series_with_parallel_series_branch') {
+    const s = vals[2] + vals[3];
+    const p = (vals[1] * s) / (vals[1] + s);
+    eq = vals[0] + p;
+    steps.push(`1. Calculate series portion of parallel branch (${unitChar}3 + ${unitChar}4): ${unitChar}_{34} = ${vals[2]} + ${vals[3]} = <strong>${s.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`2. Combine in parallel with ${unitChar}2: ${unitChar}_{234} = (${unitChar}2 &times; ${unitChar}_{34}) / (${unitChar}2 + ${unitChar}_{34}) = (${vals[1]} &times; ${s.toFixed(1)}) / (${vals[1]} + ${s.toFixed(1)}) &approx; <strong>${p.toFixed(1)} ${unit}</strong>.`);
+    steps.push(`3. Add series component ${unitChar}1: ${unitChar}_{EQ} = ${unitChar}1 + ${unitChar}_{234} = ${vals[0]} + ${p.toFixed(1)} = <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+  } else if (topology === 'ladder') {
+    if (vals.length === 3) {
+      const s = vals[1] + vals[2];
+      eq = (vals[0] * s) / (vals[0] + s);
+      steps.push(`1. Calculate series branch (L2 + L3): ${unitChar}_{23} = ${vals[1]} + ${vals[2]} = <strong>${s.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{23}) / (L1 + ${unitChar}_{23}) = (${vals[0]} &times; ${s.toFixed(1)}) / (${vals[0]} + ${s.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+    } else if (vals.length === 5) {
+      const s1 = vals[3] + vals[4];
+      const p1 = (vals[2] * s1) / (vals[2] + s1);
+      const s2 = vals[1] + p1;
+      eq = (vals[0] * s2) / (vals[0] + s2);
+      steps.push(`1. Start from far right branch (L4 + L5): ${unitChar}_{45} = ${vals[3]} + ${vals[4]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical L3: ${unitChar}_{345} = (L3 &times; ${unitChar}_{45}) / (L3 + ${unitChar}_{45}) = (${vals[2]} &times; ${s1.toFixed(1)}) / (${vals[2]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`3. Add series portion L2: ${unitChar}_{2345} = L2 + ${unitChar}_{345} = ${vals[1]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`4. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{2345}) / (L1 + ${unitChar}_{2345}) = (${vals[0]} &times; ${s2.toFixed(1)}) / (${vals[0]} + ${s2.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+    } else {
+      const s1 = vals[5] + vals[6];
+      const p1 = (vals[4] * s1) / (vals[4] + s1);
+      const s2 = vals[3] + p1;
+      const p2 = (vals[2] * s2) / (vals[2] + s2);
+      const s3 = vals[1] + p2;
+      eq = (vals[0] * s3) / (vals[0] + s3);
+      steps.push(`1. Start from far right branch (L6 + L7): ${unitChar}_{67} = ${vals[5]} + ${vals[6]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical L5: ${unitChar}_{567} = (L5 &times; ${unitChar}_{67}) / (L5 + ${unitChar}_{67}) = (${vals[4]} &times; ${s1.toFixed(1)}) / (${vals[4]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`3. Add series branch L4: ${unitChar}_{4567} = L4 + ${unitChar}_{567} = ${vals[3]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`4. Combine in parallel with vertical L3: ${unitChar}_{34567} = (L3 &times; ${unitChar}_{4567}) / (L3 + ${unitChar}_{4567}) = (${vals[2]} &times; ${s2.toFixed(1)}) / (${vals[2]} + ${s2.toFixed(1)}) &approx; <strong>${p2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`5. Add series branch L2: ${unitChar}_{234567} = L2 + ${unitChar}_{34567} = ${vals[1]} + ${p2.toFixed(1)} = <strong>${s3.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`6. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{234567}) / (L1 + ${unitChar}_{234567}) = (${vals[0]} &times; ${s3.toFixed(1)}) / (${vals[0]} + ${s3.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+    }
   }
+  return { eq, steps };
 }
 
-function genSeriesRLCImpedanceMedium() {
-  // Pre-configured clean Pythagorean datasets for AC impedance
-  // [R, f, L_mH, C_uF, X_L, X_C, X_T, Z]
-  const datasets = [
-    // 60 Hz sets
-    [40, 60, 106.1, 265.3, 40, 10, 30, 50],
-    [80, 60, 212.2, 132.6, 80, 20, 60, 100],
-    // 400 Hz sets
-    [30, 400, 11.94, 5.68, 30, 70, 40, 50],
-    [80, 400, 39.79, 9.95, 100, 40, 60, 100]
-  ];
+function solveC_EQ(topology, vals) {
+  let steps = [];
+  let eq = 0;
+  if (topology === 'series') {
+    const sumRecip = vals.reduce((a, b) => a + 1/b, 0);
+    eq = 1 / sumRecip;
+    steps.push(`Use the series formula for capacitors: <strong>1/C_{EQ} = ${vals.map((v, i) => `1/C${i+1}`).join(' + ')}</strong>.`);
+    steps.push(`Substitute the values: 1/C_{EQ} = ${vals.map(v => `1/${v}`).join(' + ')} &approx; ${sumRecip.toFixed(5)}.`);
+    steps.push(`Take the reciprocal: C_{EQ} = 1 / ${sumRecip.toFixed(5)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'parallel') {
+    eq = vals.reduce((a, b) => a + b, 0);
+    steps.push(`Use the parallel formula for capacitors: <strong>C_{EQ} = ${vals.map((v, i) => `C${i+1}`).join(' + ')}</strong>.`);
+    steps.push(`Substitute: C_{EQ} = ${vals.join(' + ')} = <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'series_parallel') {
+    const p = vals[1] + vals[2];
+    eq = (vals[0] * p) / (vals[0] + p);
+    steps.push(`1. Calculate parallel combination of C2 and C3: C_{23} = C2 + C3 = ${vals[1]} + ${vals[2]} = <strong>${p.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Combine in series with C1: C_{EQ} = (C1 &times; C_{23}) / (C1 + C_{23}) = (${vals[0]} &times; ${p.toFixed(1)}) / (${vals[0]} + ${p.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'parallel_series') {
+    const p = vals[0] + vals[1];
+    eq = (p * vals[2]) / (p + vals[2]);
+    steps.push(`1. Calculate parallel combination of C1 and C2: C_{12} = C1 + C2 = ${vals[0]} + ${vals[1]} = <strong>${p.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Combine in series with C3: C_{EQ} = (C_{12} &times; C3) / (C_{12} + C3) = (${p.toFixed(1)} &times; ${vals[2]}) / (${p.toFixed(1)} + ${vals[2]}) &approx; <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'two_parallel_groups') {
+    const p1 = vals[0] + vals[1];
+    const p2 = vals[2] + vals[3];
+    eq = (p1 * p2) / (p1 + p2);
+    steps.push(`1. Calculate first parallel group (C1 || C2): C_{12} = C1 + C2 = ${vals[0]} + ${vals[1]} = <strong>${p1.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Calculate second parallel group (C3 || C4): C_{34} = C3 + C4 = ${vals[2]} + ${vals[3]} = <strong>${p2.toFixed(1)} µF</strong>.`);
+    steps.push(`3. Combine groups in series: C_{EQ} = (C_{12} &times; C_{34}) / (C_{12} + C_{34}) = (${p1.toFixed(1)} &times; ${p2.toFixed(1)}) / (${p1.toFixed(1)} + ${p2.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'parallel_with_series_branch') {
+    const s = (vals[1] * vals[2]) / (vals[1] + vals[2]);
+    eq = vals[0] + s;
+    steps.push(`1. Calculate series branch (C2 + C3): C_{23} = (C2 &times; C3) / (C2 + C3) = (${vals[1]} &times; ${vals[2]}) / (${vals[1]} + ${vals[2]}) &approx; <strong>${s.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Combine in parallel with C1: C_{EQ} = C1 + C_{23} = ${vals[0]} + ${s.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'series_parallel_three') {
+    const p = vals[1] + vals[2] + vals[3];
+    eq = (vals[0] * p) / (vals[0] + p);
+    steps.push(`1. Calculate parallel combination of C2, C3, and C4: C_{234} = C2 + C3 + C4 = ${vals[1]} + ${vals[2]} + ${vals[3]} = <strong>${p.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Combine in series with C1: C_{EQ} = (C1 &times; C_{234}) / (C1 + C_{234}) = (${vals[0]} &times; ${p.toFixed(1)}) / (${vals[0]} + ${p.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'series_with_parallel_series_branch') {
+    const s = (vals[2] * vals[3]) / (vals[2] + vals[3]);
+    const p = vals[1] + s;
+    eq = (vals[0] * p) / (vals[0] + p);
+    steps.push(`1. Calculate series portion of parallel branch (C3 + C4): C_{34} = (C3 &times; C4) / (C3 + C4) = (${vals[2]} &times; ${vals[3]}) / (${vals[2]} + ${vals[3]}) &approx; <strong>${s.toFixed(1)} µF</strong>.`);
+    steps.push(`2. Combine in parallel with C2: C_{234} = C2 + C_{34} = ${vals[1]} + ${s.toFixed(1)} = <strong>${p.toFixed(1)} µF</strong>.`);
+    steps.push(`3. Combine in series with C1: C_{EQ} = (C1 &times; C_{234}) / (C1 + C_{234}) = (${vals[0]} &times; ${p.toFixed(1)}) / (${vals[0]} + ${p.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} µF</strong>.`);
+  } else if (topology === 'ladder') {
+    if (vals.length === 3) {
+      const s = (vals[1] * vals[2]) / (vals[1] + vals[2]);
+      eq = vals[0] + s;
+      steps.push(`1. Calculate series branch (L2 + L3): C_{23} = (L2 &times; L3) / (L2 + L3) = (${vals[1]} &times; ${vals[2]}) / (${vals[1]} + ${vals[2]}) &approx; <strong>${s.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical L1: C_{EQ} = L1 + C_{23} = ${vals[0]} + ${s.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+    } else if (vals.length === 5) {
+      const s1 = (vals[3] * vals[4]) / (vals[3] + vals[4]);
+      const p1 = vals[2] + s1;
+      const s2 = (vals[1] * p1) / (vals[1] + p1);
+      eq = vals[0] + s2;
+      steps.push(`1. Start from far right series branch (L4 + L5): C_{45} = (L4 &times; L5) / (L4 + L5) = (${vals[3]} &times; ${vals[4]}) / (${vals[3]} + ${vals[4]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical branch L3: C_{345} = L3 + C_{45} = ${vals[2]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
+      steps.push(`3. Combine in series with L2: C_{2345} = (L2 &times; C_{345}) / (L2 + C_{345}) = (${vals[1]} &times; ${p1.toFixed(1)}) / (${vals[1]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
+      steps.push(`4. Combine in parallel with vertical branch L1: C_{EQ} = L1 + C_{2345} = ${vals[0]} + ${s2.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+    } else {
+      const s1 = (vals[5] * vals[6]) / (vals[5] + vals[6]);
+      const p1 = vals[4] + s1;
+      const s2 = (vals[3] * p1) / (vals[3] + p1);
+      const p2 = vals[2] + s2;
+      const s3 = (vals[1] * p2) / (vals[1] + p2);
+      eq = vals[0] + s3;
+      steps.push(`1. Start from far right series branch (L6 + L7): C_{67} = (L6 &times; L7) / (L6 + L7) = (${vals[5]} &times; ${vals[6]}) / (${vals[5]} + ${vals[6]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical branch L5: C_{567} = L5 + C_{67} = ${vals[4]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
+      steps.push(`3. Combine in series with L4: C_{4567} = (L4 &times; C_{567}) / (L4 + C_{567}) = (${vals[3]} &times; ${p1.toFixed(1)}) / (${vals[3]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
+      steps.push(`4. Combine in parallel with vertical branch L3: C_{34567} = L3 + C_{4567} = ${vals[2]} + ${s2.toFixed(1)} = <strong>${p2.toFixed(1)} µF</strong>.`);
+      steps.push(`5. Combine in series with L2: C_{234567} = (L2 &times; C_{34567}) / (L2 + C_{34567}) = (${vals[1]} &times; ${p2.toFixed(1)}) / (${vals[1]} + ${p2.toFixed(1)}) &approx; <strong>${s3.toFixed(1)} µF</strong>.`);
+      steps.push(`6. Combine in parallel with vertical branch L1: C_{EQ} = L1 + C_{234567} = ${vals[0]} + ${s3.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+    }
+  }
+  return { eq, steps };
+}
+
+function solveRealNetwork(topology, X, Vs) {
+  let X_EQ = 0;
+  let simplificationSteps = [];
+  const V_comp = [];
+  const I_comp = [];
   
-  const d = datasets[Math.floor(Math.random() * datasets.length)];
-  const R = d[0], f = d[1], L = d[2], C = d[3], XL = d[4], XC = d[5], XT = d[6], Z = d[7];
-  const V_s = 120;
-  
+  if (topology === 'series') {
+    X_EQ = X.reduce((a, b) => a + b, 0);
+    simplificationSteps.push(`1. Calculate total impedance: X_{EQ} = ${X.map((_, i) => `X${i+1}`).join(' + ')} = ${X.map(x => x.toFixed(1)).join(' + ')} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    const It = Vs / X_EQ;
+    for (let i = 0; i < X.length; i++) {
+      I_comp[i] = It;
+      V_comp[i] = It * X[i];
+    }
+  } else if (topology === 'parallel') {
+    const sumRecip = X.reduce((a, b) => a + 1/b, 0);
+    X_EQ = 1 / sumRecip;
+    simplificationSteps.push(`1. Calculate total parallel impedance: 1/X_{EQ} = ${X.map((_, i) => `1/X${i+1}`).join(' + ')}`);
+    simplificationSteps.push(`   1/X_{EQ} = ${X.map(x => `1/${x.toFixed(1)}`).join(' + ')} &approx; ${sumRecip.toFixed(5)}`);
+    simplificationSteps.push(`   X_{EQ} = 1 / ${sumRecip.toFixed(5)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    const It = Vs / X_EQ;
+    for (let i = 0; i < X.length; i++) {
+      V_comp[i] = Vs;
+      I_comp[i] = Vs / X[i];
+    }
+  } else if (topology === 'series_parallel') {
+    const x23 = (X[1] * X[2]) / (X[1] + X[2]);
+    X_EQ = X[0] + x23;
+    simplificationSteps.push(`1. Simplify parallel combination (X2 || X3): X_{23} = (X2 &times; X3) / (X2 + X3) = (${X[1].toFixed(1)} &times; ${X[2].toFixed(1)}) / (${X[1].toFixed(1)} + ${X[2].toFixed(1)}) = <strong>${x23.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Add series impedance X1: X_{EQ} = X1 + X_{23} = ${X[0].toFixed(1)} + ${x23.toFixed(1)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    const It = Vs / X_EQ;
+    I_comp[0] = It;
+    V_comp[0] = It * X[0];
+    const V_par = Vs - V_comp[0];
+    V_comp[1] = V_par;
+    V_comp[2] = V_par;
+    I_comp[1] = V_par / X[1];
+    I_comp[2] = V_par / X[2];
+  } else if (topology === 'parallel_series') {
+    const x12 = (X[0] * X[1]) / (X[0] + X[1]);
+    X_EQ = x12 + X[2];
+    simplificationSteps.push(`1. Simplify parallel group (X1 || X2): X_{12} = (X1 &times; X2) / (X1 + X2) = (${X[0].toFixed(1)} &times; ${X[1].toFixed(1)}) / (${X[0].toFixed(1)} + ${X[1].toFixed(1)}) = <strong>${x12.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Add series impedance X3: X_{EQ} = X_{12} + X3 = ${x12.toFixed(1)} + ${X[2].toFixed(1)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    const It = Vs / X_EQ;
+    I_comp[2] = It;
+    V_comp[2] = It * X[2];
+    const V_par = Vs - V_comp[2];
+    V_comp[0] = V_par;
+    V_comp[1] = V_par;
+    I_comp[0] = V_par / X[0];
+    I_comp[1] = V_par / X[1];
+  } else if (topology === 'two_parallel_groups') {
+    const x12 = (X[0] * X[1]) / (X[0] + X[1]);
+    const x34 = (X[2] * X[3]) / (X[2] + X[3]);
+    X_EQ = x12 + x34;
+    simplificationSteps.push(`1. Simplify first parallel group (X1 || X2): X_{12} = (${X[0].toFixed(1)} &times; ${X[1].toFixed(1)}) / (${X[0].toFixed(1)} + ${X[1].toFixed(1)}) = <strong>${x12.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Simplify second parallel group (X3 || X4): X_{34} = (${X[2].toFixed(1)} &times; ${X[3].toFixed(1)}) / (${X[2].toFixed(1)} + ${X[3].toFixed(1)}) = <strong>${x34.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`3. Add groups in series: X_{EQ} = X_{12} + X_{34} = ${x12.toFixed(1)} + ${x34.toFixed(1)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    const It = Vs / X_EQ;
+    const V_par1 = It * x12;
+    const V_par2 = It * x34;
+    V_comp[0] = V_par1;
+    V_comp[1] = V_par1;
+    V_comp[2] = V_par2;
+    V_comp[3] = V_par2;
+    I_comp[0] = V_par1 / X[0];
+    I_comp[1] = V_par1 / X[1];
+    I_comp[2] = V_par2 / X[2];
+    I_comp[3] = V_par2 / X[3];
+  } else if (topology === 'parallel_with_series_branch') {
+    const s = X[1] + X[2];
+    X_EQ = (X[0] * s) / (X[0] + s);
+    simplificationSteps.push(`1. Simplify series branch (X2 + X3): X_{23} = ${X[1].toFixed(1)} + ${X[2].toFixed(1)} = <strong>${s.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Combine parallel branches: X_{EQ} = (X1 &times; X_{23}) / (X1 + X_{23}) = (${X[0].toFixed(1)} &times; ${s.toFixed(1)}) / (${X[0].toFixed(1)} + ${s.toFixed(1)}) = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    V_comp[0] = Vs;
+    I_comp[0] = Vs / X[0];
+    const I_br = Vs / s;
+    I_comp[1] = I_br;
+    I_comp[2] = I_br;
+    V_comp[1] = I_br * X[1];
+    V_comp[2] = I_br * X[2];
+  } else if (topology === 'series_parallel_three') {
+    const p = 1 / (1/X[1] + 1/X[2] + 1/X[3]);
+    X_EQ = X[0] + p;
+    simplificationSteps.push(`1. Simplify parallel group (X2 || X3 || X4): 1/X_{234} = 1/X2 + 1/X3 + 1/X4 = 1/${X[1].toFixed(1)} + 1/${X[2].toFixed(1)} + 1/${X[3].toFixed(1)} &approx; ${(1/X[1] + 1/X[2] + 1/X[3]).toFixed(5)}`);
+    simplificationSteps.push(`   X_{234} = 1 / ${(1/X[1] + 1/X[2] + 1/X[3]).toFixed(5)} = <strong>${p.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Add series impedance X1: X_{EQ} = X1 + X_{234} = ${X[0].toFixed(1)} + ${p.toFixed(1)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    const It = Vs / X_EQ;
+    I_comp[0] = It;
+    V_comp[0] = It * X[0];
+    const V_par = Vs - V_comp[0];
+    V_comp[1] = V_par;
+    V_comp[2] = V_par;
+    V_comp[3] = V_par;
+    I_comp[1] = V_par / X[1];
+    I_comp[2] = V_par / X[2];
+    I_comp[3] = V_par / X[3];
+  } else if (topology === 'series_with_parallel_series_branch') {
+    const s = X[2] + X[3];
+    const p = (X[1] * s) / (X[1] + s);
+    X_EQ = X[0] + p;
+    simplificationSteps.push(`1. Simplify series part of parallel branch (X3 + X4): X_{34} = ${X[2].toFixed(1)} + ${X[3].toFixed(1)} = <strong>${s.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`2. Combine in parallel with X2: X_{234} = (X2 &times; X_{34}) / (X2 + X_{34}) = (${X[1].toFixed(1)} &times; ${s.toFixed(1)}) / (${X[1].toFixed(1)} + ${s.toFixed(1)}) = <strong>${p.toFixed(1)} &Omega;</strong>`);
+    simplificationSteps.push(`3. Add series impedance X1: X_{EQ} = X1 + X_{234} = ${X[0].toFixed(1)} + ${p.toFixed(1)} = <strong>${X_EQ.toFixed(1)} &Omega;</strong>`);
+    
+    const It = Vs / X_EQ;
+    I_comp[0] = It;
+    V_comp[0] = It * X[0];
+    const V_par = Vs - V_comp[0];
+    V_comp[1] = V_par;
+    I_comp[1] = V_par / X[1];
+    const I_br = V_par / s;
+    I_comp[2] = I_br;
+    I_comp[3] = I_br;
+    V_comp[2] = I_br * X[2];
+    V_comp[3] = I_br * X[3];
+  }
+
   return {
-    topic: 'AC RLC Circuits',
-    text: `A series R-L-C circuit has R = ${R} Ω, L = ${L} mH, and C = ${C} µF connected to a ${f} Hz AC voltage source. Calculate the total impedance (Z) of this circuit.`,
-    options: makeOptions(Z, 'Ω', v => Math.round(v)),
-    circuitData: {
-      topology: 'series',
-      voltage: V_s,
-      frequency: f,
-      types: ['R', 'L', 'C'],
-      labels: ['R1', 'L1', 'C1'],
-      valStrs: [`${R} Ω`, `${L} mH`, `${C} µF`]
-    },
-    walkthrough: `
-      1. Calculate inductive reactance (X_L): X_L = 2*π*${f}*${L/1000} ≈ ${XL} Ω.<br>
-      2. Calculate capacitive reactance (X_C): X_C = 1 / (2*π*${f}*${C/1000000}) ≈ ${XC} Ω.<br>
-      3. Find total net reactance: X_T = |X_L - X_C| = |${XL} - ${XC}| = ${XT} Ω.<br>
-      4. Find total impedance Z: Z = sqrt(R^2 + X_T^2) = sqrt(${R}^2 + ${XT}^2) = sqrt(${R*R} + ${XT*XT}) = <strong>${Z} Ω</strong>.
-    `
+    X_EQ,
+    simplificationSteps,
+    V_comp,
+    I_comp
   };
 }
 
-function genParallelRLCCurrentMedium() {
-  // Parallel RLC branch currents (clean values)
-  // [R, XL, XC, V_s, IR, IL, IC, IT]
-  const datasets = [
-    [30, 20, 60, 60, 2, 3, 1, 2.83], // sqrt(2^2 + 2^2) = 2.83 A
-    [40, 30, 120, 120, 3, 4, 1, 4.24], // sqrt(3^2 + 3^2) = 4.24 A
-    [120, 60, 40, 120, 1, 2, 3, 1.41]  // sqrt(1^2 + 1^2) = 1.41 A
-  ];
-  const d = datasets[Math.floor(Math.random() * datasets.length)];
-  const R = d[0], XL = d[1], XC = d[2], V_s = d[3], IR = d[4], IL = d[5], IC = d[6], IT = d[7];
+function solveRLCNetwork(topology, components, freq, Vs) {
+  const Z = [];
+  const initSteps = [];
+  components.forEach((c, idx) => {
+    if (c.type === 'R') {
+      Z[idx] = Comp.make(c.val, 0);
+      initSteps.push(`Impedance of ${c.label}: Z_{${c.label}} = <strong>${formatComplex(Z[idx])} &Omega;</strong>`);
+    } else if (c.type === 'L') {
+      const xl = 2 * Math.PI * freq * (c.val / 1000);
+      Z[idx] = Comp.make(0, xl);
+      initSteps.push(`Reactance of ${c.label}: X_{${c.label}} = 2 &pi; f L = 2 &pi; &times; ${freq} &times; (${c.val} mH / 1000) &approx; ${xl.toFixed(1)} &Omega;<br>Z_{${c.label}} = <strong>${formatComplex(Z[idx])} &Omega;</strong>`);
+    } else if (c.type === 'C') {
+      const xc = 1 / (2 * Math.PI * freq * (c.val / 1000000));
+      Z[idx] = Comp.make(0, -xc);
+      initSteps.push(`Reactance of ${c.label}: X_{${c.label}} = 1 / (2 &pi; f C) = 1 / (2 &pi; &times; ${freq} &times; (${c.val} &mu;F / 10^6)) &approx; ${xc.toFixed(1)} &Omega;<br>Z_{${c.label}} = <strong>${formatComplex(Z[idx])} &Omega;</strong>`);
+    }
+  });
+
+  let Z_EQ, simplificationSteps = [];
+  const Vs_complex = Comp.make(Vs, 0);
+  const V_comp = [];
+  const I_comp = [];
   
+  if (topology === 'series') {
+    Z_EQ = Z[0];
+    for (let i = 1; i < Z.length; i++) {
+      Z_EQ = Comp.add(Z_EQ, Z[i]);
+    }
+    simplificationSteps.push(`Calculate total impedance by adding in series: Z_{EQ} = ${Z.map((_, i) => `Z${i+1}`).join(' + ')}`);
+    simplificationSteps.push(`Z_{EQ} = ${Z.map(formatComplex).join(' + ')} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    for (let i = 0; i < Z.length; i++) {
+      I_comp[i] = It;
+      V_comp[i] = Comp.mul(It, Z[i]);
+    }
+  } else if (topology === 'parallel') {
+    const recips = Z.map(Comp.recip);
+    let sumRecip = recips[0];
+    for (let i = 1; i < recips.length; i++) {
+      sumRecip = Comp.add(sumRecip, recips[i]);
+    }
+    Z_EQ = Comp.recip(sumRecip);
+    simplificationSteps.push(`Calculate total parallel admittance: Y_{EQ} = ${Z.map((_, i) => `1/Z${i+1}`).join(' + ')}`);
+    simplificationSteps.push(`Y_{EQ} = ${recips.map(formatComplex).join(' + ')} = ${formatComplex(sumRecip)} S`);
+    simplificationSteps.push(`Z_{EQ} = 1 / Y_{EQ} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    for (let i = 0; i < Z.length; i++) {
+      V_comp[i] = Vs_complex;
+      I_comp[i] = Comp.div(Vs_complex, Z[i]);
+    }
+  } else if (topology === 'series_parallel') {
+    const z23 = Comp.parallel(Z[1], Z[2]);
+    Z_EQ = Comp.add(Z[0], z23);
+    simplificationSteps.push(`Simplify parallel combination (Z2 || Z3): Z_{23} = (Z2 &times; Z3) / (Z2 + Z3) = (${formatComplex(Z[1])} &times; ${formatComplex(Z[2])}) / (${formatComplex(Z[1])} + ${formatComplex(Z[2])}) = <strong>${formatComplex(z23)} &Omega;</strong>`);
+    simplificationSteps.push(`Add series component Z1: Z_{EQ} = Z1 + Z_{23} = ${formatComplex(Z[0])} + ${formatComplex(z23)} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    I_comp[0] = It;
+    V_comp[0] = Comp.mul(It, Z[0]);
+    const V_par = Comp.sub(Vs_complex, V_comp[0]);
+    V_comp[1] = V_par;
+    V_comp[2] = V_par;
+    I_comp[1] = Comp.div(V_par, Z[1]);
+    I_comp[2] = Comp.div(V_par, Z[2]);
+  } else if (topology === 'parallel_series') {
+    const z12 = Comp.parallel(Z[0], Z[1]);
+    Z_EQ = Comp.add(z12, Z[2]);
+    simplificationSteps.push(`Simplify parallel combination (Z1 || Z2): Z_{12} = (Z1 &times; Z2) / (Z1 + Z2) = (${formatComplex(Z[0])} &times; ${formatComplex(Z[1])}) / (${formatComplex(Z[0])} + ${formatComplex(Z[1])}) = <strong>${formatComplex(z12)} &Omega;</strong>`);
+    simplificationSteps.push(`Add series component Z3: Z_{EQ} = Z_{12} + Z3 = ${formatComplex(z12)} + ${formatComplex(Z[2])} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    I_comp[2] = It;
+    V_comp[2] = Comp.mul(It, Z[2]);
+    const V_par = Comp.sub(Vs_complex, V_comp[2]);
+    V_comp[0] = V_par;
+    V_comp[1] = V_par;
+    I_comp[0] = Comp.div(V_par, Z[0]);
+    I_comp[1] = Comp.div(V_par, Z[1]);
+  } else if (topology === 'two_parallel_groups') {
+    const z12 = Comp.parallel(Z[0], Z[1]);
+    const z34 = Comp.parallel(Z[2], Z[3]);
+    Z_EQ = Comp.add(z12, z34);
+    simplificationSteps.push(`Simplify first parallel group (Z1 || Z2): Z_{12} = (${formatComplex(Z[0])} &times; ${formatComplex(Z[1])}) / (${formatComplex(Z[0])} + ${formatComplex(Z[1])}) = <strong>${formatComplex(z12)} &Omega;</strong>`);
+    simplificationSteps.push(`Simplify second parallel group (Z3 || Z4): Z_{34} = (${formatComplex(Z[2])} &times; ${formatComplex(Z[3])}) / (${formatComplex(Z[2])} + ${formatComplex(Z[3])}) = <strong>${formatComplex(z34)} &Omega;</strong>`);
+    simplificationSteps.push(`Add groups in series: Z_{EQ} = Z_{12} + Z_{34} = ${formatComplex(z12)} + ${formatComplex(z34)} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    const V_par1 = Comp.mul(It, z12);
+    const V_par2 = Comp.mul(It, z34);
+    V_comp[0] = V_par1;
+    V_comp[1] = V_par1;
+    V_comp[2] = V_par2;
+    V_comp[3] = V_par2;
+    I_comp[0] = Comp.div(V_par1, Z[0]);
+    I_comp[1] = Comp.div(V_par1, Z[1]);
+    I_comp[2] = Comp.div(V_par2, Z[2]);
+    I_comp[3] = Comp.div(V_par2, Z[3]);
+  } else if (topology === 'parallel_with_series_branch') {
+    const z_ser = Comp.add(Z[1], Z[2]);
+    Z_EQ = Comp.parallel(Z[0], z_ser);
+    simplificationSteps.push(`Simplify series branch (Z2 + Z3): Z_{23} = ${formatComplex(Z[1])} + ${formatComplex(Z[2])} = <strong>${formatComplex(z_ser)} &Omega;</strong>`);
+    simplificationSteps.push(`Combine parallel branches: Z_{EQ} = (Z1 &times; Z_{23}) / (Z1 + Z_{23}) = (${formatComplex(Z[0])} &times; ${formatComplex(z_ser)}) / (${formatComplex(Z[0])} + ${formatComplex(z_ser)}) = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    V_comp[0] = Vs_complex;
+    I_comp[0] = Comp.div(Vs_complex, Z[0]);
+    const I_br = Comp.div(Vs_complex, z_ser);
+    I_comp[1] = I_br;
+    I_comp[2] = I_br;
+    V_comp[1] = Comp.mul(I_br, Z[1]);
+    V_comp[2] = Comp.mul(I_br, Z[2]);
+  } else if (topology === 'series_parallel_three') {
+    const z_par = Comp.recip(Comp.add(Comp.recip(Z[1]), Comp.add(Comp.recip(Z[2]), Comp.recip(Z[3]))));
+    Z_EQ = Comp.add(Z[0], z_par);
+    simplificationSteps.push(`Simplify parallel combination (Z2 || Z3 || Z4): Z_{234} = <strong>${formatComplex(z_par)} &Omega;</strong>`);
+    simplificationSteps.push(`Add series component Z1: Z_{EQ} = Z1 + Z_{234} = ${formatComplex(Z[0])} + ${formatComplex(z_par)} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    I_comp[0] = It;
+    V_comp[0] = Comp.mul(It, Z[0]);
+    const V_par = Comp.sub(Vs_complex, V_comp[0]);
+    V_comp[1] = V_par;
+    V_comp[2] = V_par;
+    V_comp[3] = V_par;
+    I_comp[1] = Comp.div(V_par, Z[1]);
+    I_comp[2] = Comp.div(V_par, Z[2]);
+    I_comp[3] = Comp.div(V_par, Z[3]);
+  } else if (topology === 'series_with_parallel_series_branch') {
+    const z_ser = Comp.add(Z[2], Z[3]);
+    const z_par = Comp.parallel(Z[1], z_ser);
+    Z_EQ = Comp.add(Z[0], z_par);
+    simplificationSteps.push(`Simplify series part of parallel branch (Z3 + Z4): Z_{34} = ${formatComplex(Z[2])} + ${formatComplex(Z[3])} = <strong>${formatComplex(z_ser)} &Omega;</strong>`);
+    simplificationSteps.push(`Combine in parallel with Z2: Z_{234} = (Z2 &times; Z_{34}) / (Z2 + Z_{34}) = (${formatComplex(Z[1])} &times; ${formatComplex(z_ser)}) / (${formatComplex(Z[1])} + ${formatComplex(z_ser)}) = <strong>${formatComplex(z_par)} &Omega;</strong>`);
+    simplificationSteps.push(`Add series component Z1: Z_{EQ} = Z1 + Z_{234} = ${formatComplex(Z[0])} + ${formatComplex(z_par)} = <strong>${formatComplex(Z_EQ)} &Omega;</strong>`);
+    
+    const It = Comp.div(Vs_complex, Z_EQ);
+    I_comp[0] = It;
+    V_comp[0] = Comp.mul(It, Z[0]);
+    const V_par = Comp.sub(Vs_complex, V_comp[0]);
+    V_comp[1] = V_par;
+    I_comp[1] = Comp.div(V_par, Z[1]);
+    const I_br = Comp.div(V_par, z_ser);
+    I_comp[2] = I_br;
+    I_comp[3] = I_br;
+    V_comp[2] = Comp.mul(I_br, Z[2]);
+    V_comp[3] = Comp.mul(I_br, Z[3]);
+  }
+
+  const I_T = Comp.div(Vs_complex, Z_EQ);
+
   return {
-    topic: 'AC RLC Circuits',
-    text: `A parallel network consists of a resistor R = ${R} Ω, inductive reactance X_L = ${XL} Ω, and capacitive reactance X_C = ${XC} Ω. If connected to a V_s = ${V_s} V AC source, find the total current (I_T) in amperes.`,
-    options: makeOptions(IT, 'A', v => v.toFixed(2)),
-    circuitData: {
-      topology: 'parallel',
-      voltage: V_s,
-      frequency: 400,
-      types: ['R', 'L', 'C'],
-      labels: ['R1', 'X_L', 'X_C'],
-      valStrs: [`${R} Ω`, `${XL} Ω`, `${XC} Ω`]
-    },
-    walkthrough: `
-      1. Calculate individual branch currents:<br>
-         &nbsp;&nbsp; I_R = V_s / R = ${V_s} / ${R} = ${IR} A.<br>
-         &nbsp;&nbsp; I_L = V_s / X_L = ${V_s} / ${XL} = ${IL} A.<br>
-         &nbsp;&nbsp; I_C = V_s / X_C = ${V_s} / ${XC} = ${IC} A.<br>
-      2. The total current is found using vector addition (note that I_L and I_C oppose each other):<br>
-         &nbsp;&nbsp; I_T = sqrt(I_R^2 + (I_L - I_C)^2)<br>
-         &nbsp;&nbsp; I_T = sqrt(${IR}^2 + (${IL} - ${IC})^2) = sqrt(${IR*IR} + ${(IL-IC)*(IL-IC)}) = sqrt(${IR*IR + (IL-IC)*(IL-IC)}) = <strong>${IT.toFixed(2)} A</strong>.
-    `
+    Z_EQ,
+    initSteps,
+    simplificationSteps,
+    V_comp,
+    I_comp,
+    I_T
   };
 }
 
-function genSeriesRLCCurrentHard() {
-  const R = 40, f = 60, L = 106.1, C = 265.3, XL = 40, XC = 10, XT = 30, Z = 50;
-  const V_s = 120;
-  const I_T = V_s / Z; // 2.4 A
-  const V_L = I_T * XL; // 96 V
+function generateRandomCalculationQuestion(difficulty = 'medium', type = 'all') {
+  let category = type;
+  if (type === 'all') {
+    category = ['resistors', 'inductors', 'capacitors', 'rlc'][Math.floor(Math.random() * 4)];
+  }
   
-  return {
-    topic: 'AC RLC Circuits',
-    text: `For a series AC circuit with R = ${R} Ω, L = ${L} mH, and C = ${C} µF operating on a ${V_s} V, ${f} Hz source. Calculate the voltage drop across the inductor (V_L).`,
-    options: makeOptions(V_L, 'V', v => v.toFixed(1)),
-    circuitData: {
-      topology: 'series',
-      voltage: V_s,
-      frequency: f,
-      types: ['R', 'L', 'C'],
-      labels: ['R1', 'L1', 'C1'],
-      valStrs: [`${R} Ω`, `${L} mH`, `${C} µF`]
-    },
-    walkthrough: `
-      1. Find inductive reactance: X_L = 2 * π * ${f} * ${L/1000} ≈ ${XL} Ω.<br>
-      2. Find capacitive reactance: X_C = 1 / (2 * π * ${f} * ${C/1000000}) ≈ ${XC} Ω.<br>
-      3. Find total impedance Z: Z = sqrt(R^2 + (X_L - X_C)^2) = sqrt(${R}^2 + (${XL} - ${XC})^2) = 50 Ω.<br>
-      4. Find total current I_T: I_T = V_s / Z = ${V_s} V / 50 Ω = 2.4 A.<br>
-      5. Calculate inductor voltage drop: V_L = I_T * X_L = 2.4 A * ${XL} Ω = <strong>${V_L.toFixed(1)} V</strong>. (Note: this voltage is out of phase with V_R).
-    `
-  };
-}
+  let topologies = topologiesByDifficulty[difficulty];
+  if (category === 'rlc') {
+    topologies = rlcTopologiesByDifficulty[difficulty];
+  }
+  const topology = topologies[Math.floor(Math.random() * topologies.length)];
+  const N = getComponentCount(topology, difficulty);
+  
+  const components = [];
+  const labels = [];
+  const types = [];
+  const valStrs = [];
+  const vals = [];
+  
+  if (category === 'resistors') {
+    for (let i = 0; i < N; i++) {
+      types.push('R');
+      labels.push(`R${i+1}`);
+    }
+  } else if (category === 'inductors') {
+    for (let i = 0; i < N; i++) {
+      types.push('L');
+      labels.push(`L${i+1}`);
+    }
+  } else if (category === 'capacitors') {
+    for (let i = 0; i < N; i++) {
+      types.push('C');
+      labels.push(`C${i+1}`);
+    }
+  } else if (category === 'rlc') {
+    for (let i = 0; i < N; i++) {
+      types.push(['R', 'L', 'C'][Math.floor(Math.random() * 3)]);
+    }
+    const hasR = types.includes('R');
+    const hasReactive = types.includes('L') || types.includes('C');
+    if (!hasR || !hasReactive) {
+      types[0] = 'R';
+      types[1] = Math.random() > 0.5 ? 'L' : 'C';
+    }
+    const counts = { R: 0, L: 0, C: 0 };
+    for (let i = 0; i < N; i++) {
+      counts[types[i]]++;
+      labels.push(`${types[i]}${counts[types[i]]}`);
+    }
+  }
+  
+  for (let i = 0; i < N; i++) {
+    let val = 0;
+    if (types[i] === 'R') {
+      val = [10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500, 600, 800, 1000][Math.floor(Math.random() * 16)];
+    } else if (types[i] === 'L') {
+      val = [10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500][Math.floor(Math.random() * 15)];
+    } else if (types[i] === 'C') {
+      val = [1, 2, 5, 10, 15, 20, 33, 47, 50, 100][Math.floor(Math.random() * 10)];
+    }
+    vals.push(val);
+    components.push({ type: types[i], val: val, label: labels[i] });
+    const unit = types[i] === 'R' ? 'Ω' : (types[i] === 'L' ? 'mH' : 'µF');
+    valStrs.push(`${val} ${unit}`);
+  }
+  
+  const freq = Math.random() > 0.5 ? 60 : 400;
+  const Vs = [12, 24, 36, 48, 115, 120, 240][Math.floor(Math.random() * 7)];
+  
+  let qType = 'EQ';
+  if (topology !== 'ladder') {
+    if (difficulty === 'easy') {
+      qType = (category === 'resistors') ? 'EQ' : (Math.random() > 0.5 ? 'EQ' : 'X_EQ');
+    } else {
+      const choices = (category === 'resistors')
+        ? ['EQ', 'I_T', 'V_drop', 'I_branch']
+        : ['EQ', 'X_EQ', 'I_T', 'V_drop', 'I_branch'];
+      qType = choices[Math.floor(Math.random() * choices.length)];
+    }
+  }
+  
+  const targetIdx = Math.floor(Math.random() * N);
+  const targetComp = components[targetIdx];
+  
+  let questionText = '';
+  let correctVal = 0;
+  let unit = '';
+  let walkthrough = '';
+  
+  if (category === 'resistors') {
+    if (qType === 'EQ') {
+      const res = solveRL_EQ(topology, vals, 'R', 'Ω');
+      questionText = `For the resistor network shown, calculate the total equivalent resistance ($R_{EQ}$) ${topology === 'ladder' ? 'between terminals A and B' : ''}.`;
+      correctVal = res.eq;
+      unit = 'Ω';
+      walkthrough = `
+        <strong>Step-by-step simplification:</strong><br>
+        ${res.steps.join('<br>')}
+      `;
+    } else if (qType === 'I_T') {
+      const res = solveRL_EQ(topology, vals, 'R', 'Ω');
+      const I_T = Vs / res.eq;
+      const usemA = I_T < 1.0;
+      questionText = `If the circuit is connected to a ${Vs} V DC source, calculate the total circuit current ($I_T$).`;
+      correctVal = usemA ? I_T * 1000 : I_T;
+      unit = usemA ? 'mA' : 'A';
+      walkthrough = `
+        <strong>Step 1: Find the equivalent resistance R_{EQ}:</strong><br>
+        ${res.steps.join('<br>')}<br><br>
+        <strong>Step 2: Use Ohm's Law:</strong><br>
+        I_T = V_s / R_{EQ} = ${Vs} V / ${res.eq.toFixed(1)} &Omega; &approx; <strong>${(correctVal).toFixed(1)} ${unit}</strong>.
+      `;
+    } else {
+      const res = solveRealNetwork(topology, vals, Vs);
+      if (qType === 'V_drop') {
+        questionText = `For the circuit connected to a ${Vs} V DC source, calculate the voltage drop across resistor ${targetComp.label}.`;
+        correctVal = res.V_comp[targetIdx];
+        unit = 'V';
+        walkthrough = `
+          <strong>Step 1: Simplify the network to find total impedance and current:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 2: Calculate component voltage drop:</strong><br>
+          For component ${targetComp.label}, the voltage drop is: V_{${targetComp.label}} = <strong>${correctVal.toFixed(1)} V</strong>.
+        `;
+      } else {
+        const iVal = res.I_comp[targetIdx];
+        const usemA = iVal < 1.0;
+        questionText = `For the circuit connected to a ${Vs} V DC source, calculate the current flowing through resistor ${targetComp.label}.`;
+        correctVal = usemA ? iVal * 1000 : iVal;
+        unit = usemA ? 'mA' : 'A';
+        walkthrough = `
+          <strong>Step 1: Simplify the network to find total impedance and current:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 2: Calculate component current:</strong><br>
+          The current through component ${targetComp.label} is: I_{${targetComp.label}} &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+        `;
+      }
+    }
+  } else if (category === 'inductors') {
+    if (qType === 'EQ') {
+      const res = solveRL_EQ(topology, vals, 'L', 'mH');
+      questionText = `Calculate the total equivalent inductance ($L_{EQ}$) of the circuit ${topology === 'ladder' ? 'between terminals A and B' : ''}.`;
+      correctVal = res.eq;
+      unit = 'mH';
+      walkthrough = `
+        <strong>Step-by-step simplification:</strong><br>
+        ${res.steps.join('<br>')}
+      `;
+    } else if (qType === 'X_EQ') {
+      const res = solveRL_EQ(topology, vals, 'L', 'mH');
+      const X_EQ = 2 * Math.PI * freq * (res.eq / 1000);
+      questionText = `Calculate the total equivalent inductive reactance ($X_{L,EQ}$) of the network at ${freq} Hz.`;
+      correctVal = X_EQ;
+      unit = 'Ω';
+      walkthrough = `
+        <strong>Step 1: Find equivalent inductance L_{EQ}:</strong><br>
+        ${res.steps.join('<br>')}<br><br>
+        <strong>Step 2: Calculate reactance:</strong><br>
+        X_{L,EQ} = 2 &pi; f L_{EQ} = 2 &pi; &times; ${freq} &times; (${res.eq.toFixed(1)} mH / 1000) &approx; <strong>${X_EQ.toFixed(1)} &Omega;</strong>.
+      `;
+    } else if (qType === 'I_T') {
+      const res = solveRL_EQ(topology, vals, 'L', 'mH');
+      const X_EQ = 2 * Math.PI * freq * (res.eq / 1000);
+      const I_T = Vs / X_EQ;
+      const usemA = I_T < 1.0;
+      questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the total circuit current ($I_T$).`;
+      correctVal = usemA ? I_T * 1000 : I_T;
+      unit = usemA ? 'mA' : 'A';
+      walkthrough = `
+        <strong>Step 1: Find L_{EQ}:</strong><br>
+        ${res.steps.join('<br>')}<br><br>
+        <strong>Step 2: Calculate total inductive reactance X_{L,EQ}:</strong><br>
+        X_{L,EQ} = 2 &pi; f L_{EQ} = 2 &pi; &times; ${freq} &times; (${res.eq.toFixed(1)} mH / 1000) &approx; ${X_EQ.toFixed(1)} &Omega;.<br><br>
+        <strong>Step 3: Calculate total current:</strong><br>
+        I_T = V_s / X_{L,EQ} = ${Vs} V / ${X_EQ.toFixed(1)} &Omega; &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+      `;
+    } else {
+      const X = vals.map(v => 2 * Math.PI * freq * (v / 1000));
+      const res = solveRealNetwork(topology, X, Vs);
+      if (qType === 'V_drop') {
+        questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the voltage drop across inductor ${targetComp.label}.`;
+        correctVal = res.V_comp[targetIdx];
+        unit = 'V';
+        walkthrough = `
+          <strong>Step 1: Find reactances at ${freq} Hz:</strong><br>
+          ${components.map((c, i) => `X_{${c.label}} = 2 &pi; f L = 2 &pi; &times; ${freq} &times; (${c.val} mH / 1000) &approx; ${X[i].toFixed(1)} &Omega;`).join('<br>')}<br><br>
+          <strong>Step 2: Simplify the network:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 3: Calculate voltage drop:</strong><br>
+          For component ${targetComp.label}, the voltage drop is: V_{${targetComp.label}} = <strong>${correctVal.toFixed(1)} V</strong>.
+        `;
+      } else {
+        const iVal = res.I_comp[targetIdx];
+        const usemA = iVal < 1.0;
+        questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the current flowing through inductor ${targetComp.label}.`;
+        correctVal = usemA ? iVal * 1000 : iVal;
+        unit = usemA ? 'mA' : 'A';
+        walkthrough = `
+          <strong>Step 1: Find reactances at ${freq} Hz:</strong><br>
+          ${components.map((c, i) => `X_{${c.label}} = 2 &pi; f L = 2 &pi; &times; ${freq} &times; (${c.val} mH / 1000) &approx; ${X[i].toFixed(1)} &Omega;`).join('<br>')}<br><br>
+          <strong>Step 2: Simplify the network:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 3: Calculate current:</strong><br>
+          The current through ${targetComp.label} is: I_{${targetComp.label}} &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+        `;
+      }
+    }
+  } else if (category === 'capacitors') {
+    if (qType === 'EQ') {
+      const res = solveC_EQ(topology, vals);
+      questionText = `Calculate the total equivalent capacitance ($C_{EQ}$) of the circuit ${topology === 'ladder' ? 'between terminals A and B' : ''}.`;
+      correctVal = res.eq;
+      unit = 'µF';
+      walkthrough = `
+        <strong>Step-by-step simplification:</strong><br>
+        ${res.steps.join('<br>')}
+      `;
+    } else if (qType === 'X_EQ') {
+      const res = solveC_EQ(topology, vals);
+      const X_EQ = 1 / (2 * Math.PI * freq * (res.eq / 1000000));
+      questionText = `Calculate the total equivalent capacitive reactance ($X_{C,EQ}$) of the network at ${freq} Hz.`;
+      correctVal = X_EQ;
+      unit = 'Ω';
+      walkthrough = `
+        <strong>Step 1: Find equivalent capacitance C_{EQ}:</strong><br>
+        ${res.steps.join('<br>')}<br><br>
+        <strong>Step 2: Calculate reactance:</strong><br>
+        X_{C,EQ} = 1 / (2 &pi; f C_{EQ}) = 1 / (2 &pi; &times; ${freq} &times; (${res.eq.toFixed(1)} &mu;F / 10^6)) &approx; <strong>${X_EQ.toFixed(1)} &Omega;</strong>.
+      `;
+    } else if (qType === 'I_T') {
+      const res = solveC_EQ(topology, vals);
+      const X_EQ = 1 / (2 * Math.PI * freq * (res.eq / 1000000));
+      const I_T = Vs / X_EQ;
+      const usemA = I_T < 1.0;
+      questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the total circuit current ($I_T$).`;
+      correctVal = usemA ? I_T * 1000 : I_T;
+      unit = usemA ? 'mA' : 'A';
+      walkthrough = `
+        <strong>Step 1: Find C_{EQ}:</strong><br>
+        ${res.steps.join('<br>')}<br><br>
+        <strong>Step 2: Calculate total capacitive reactance X_{C,EQ}:</strong><br>
+        X_{C,EQ} = 1 / (2 &pi; f C_{EQ}) = 1 / (2 &pi; &times; ${freq} &times; (${res.eq.toFixed(1)} &mu;F / 10^6)) &approx; ${X_EQ.toFixed(1)} &Omega;.<br><br>
+        <strong>Step 3: Calculate total current:</strong><br>
+        I_T = V_s / X_{C,EQ} = ${Vs} V / ${X_EQ.toFixed(1)} &Omega; &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+      `;
+    } else {
+      const X = vals.map(v => 1 / (2 * Math.PI * freq * (v / 1000000)));
+      const res = solveRealNetwork(topology, X, Vs);
+      if (qType === 'V_drop') {
+        questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the voltage drop across capacitor ${targetComp.label}.`;
+        correctVal = res.V_comp[targetIdx];
+        unit = 'V';
+        walkthrough = `
+          <strong>Step 1: Find reactances at ${freq} Hz:</strong><br>
+          ${components.map((c, i) => `X_{${c.label}} = 1 / (2 &pi; f C) = 1 / (2 &pi; &times; ${freq} &times; (${c.val} &mu;F / 10^6)) &approx; ${X[i].toFixed(1)} &Omega;`).join('<br>')}<br><br>
+          <strong>Step 2: Simplify the network:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 3: Calculate voltage drop:</strong><br>
+          For component ${targetComp.label}, the voltage drop is: V_{${targetComp.label}} = <strong>${correctVal.toFixed(1)} V</strong>.
+        `;
+      } else {
+        const iVal = res.I_comp[targetIdx];
+        const usemA = iVal < 1.0;
+        questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the current flowing through capacitor ${targetComp.label}.`;
+        correctVal = usemA ? iVal * 1000 : iVal;
+        unit = usemA ? 'mA' : 'A';
+        walkthrough = `
+          <strong>Step 1: Find reactances at ${freq} Hz:</strong><br>
+          ${components.map((c, i) => `X_{${c.label}} = 1 / (2 &pi; f C) = 1 / (2 &pi; &times; ${freq} &times; (${c.val} &mu;F / 10^6)) &approx; ${X[i].toFixed(1)} &Omega;`).join('<br>')}<br><br>
+          <strong>Step 2: Simplify the network:</strong><br>
+          ${res.simplificationSteps.join('<br>')}<br><br>
+          <strong>Step 3: Calculate current:</strong><br>
+          The current through ${targetComp.label} is: I_{${targetComp.label}} &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+        `;
+      }
+    }
+  } else if (category === 'rlc') {
+    const res = solveRLCNetwork(topology, components, freq, Vs);
+    if (qType === 'EQ') {
+      questionText = `Calculate the total magnitude of AC impedance ($Z_{EQ}$) of the RLC network at ${freq} Hz.`;
+      correctVal = Comp.mag(res.Z_EQ);
+      unit = 'Ω';
+      walkthrough = `
+        <strong>Step 1: Calculate reactive components and impedances:</strong><br>
+        ${res.initSteps.join('<br>')}<br><br>
+        <strong>Step 2: Simplify the network complex impedances step-by-step:</strong><br>
+        ${res.simplificationSteps.join('<br>')}<br><br>
+        <strong>Step 3: Calculate magnitude of impedance:</strong><br>
+        |Z_{EQ}| = sqrt(R_{EQ}^2 + X_{EQ}^2) = sqrt(${res.Z_EQ.r.toFixed(1)}^2 + (${res.Z_EQ.i.toFixed(1)})^2) &approx; <strong>${correctVal.toFixed(1)} &Omega;</strong>.
+      `;
+    } else if (qType === 'I_T') {
+      const itVal = Comp.mag(res.I_T);
+      const usemA = itVal < 1.0;
+      questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the total circuit current magnitude ($I_T$).`;
+      correctVal = usemA ? itVal * 1000 : itVal;
+      unit = usemA ? 'mA' : 'A';
+      walkthrough = `
+        <strong>Step 1: Calculate reactive components and impedances:</strong><br>
+        ${res.initSteps.join('<br>')}<br><br>
+        <strong>Step 2: Simplify the network complex impedances:</strong><br>
+        ${res.simplificationSteps.join('<br>')}<br><br>
+        <strong>Step 3: Calculate total current:</strong><br>
+        |Z_{EQ}| = ${Comp.mag(res.Z_EQ).toFixed(1)} &Omega;.<br>
+        I_T = V_s / Z_{EQ} = ${Vs} V / ${Comp.mag(res.Z_EQ).toFixed(1)} &Omega; &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+      `;
+    } else if (qType === 'V_drop') {
+      questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the magnitude of the voltage drop across component ${targetComp.label}.`;
+      correctVal = Comp.mag(res.V_comp[targetIdx]);
+      unit = 'V';
+      walkthrough = `
+        <strong>Step 1: Calculate reactive components and impedances:</strong><br>
+        ${res.initSteps.join('<br>')}<br><br>
+        <strong>Step 2: Simplify the network complex impedances:</strong><br>
+        ${res.simplificationSteps.join('<br>')}<br><br>
+        <strong>Step 3: Calculate current and voltage drops:</strong><br>
+        Total impedance |Z_{EQ}| &approx; ${Comp.mag(res.Z_EQ).toFixed(1)} &Omega;.<br>
+        Total current |I_T| &approx; ${Comp.mag(res.I_T).toFixed(2)} A.<br>
+        For component ${targetComp.label}, the complex voltage drop is: V_{${targetComp.label}} = <strong>${formatComplex(res.V_comp[targetIdx])} V</strong>.<br>
+        Magnitude: |V_{${targetComp.label}}| &approx; <strong>${correctVal.toFixed(1)} V</strong>.
+      `;
+    } else {
+      const iVal = Comp.mag(res.I_comp[targetIdx]);
+      const usemA = iVal < 1.0;
+      questionText = `If the circuit is connected to a ${Vs} V, ${freq} Hz AC source, calculate the magnitude of the current flowing through component ${targetComp.label}.`;
+      correctVal = usemA ? iVal * 1000 : iVal;
+      unit = usemA ? 'mA' : 'A';
+      walkthrough = `
+        <strong>Step 1: Calculate reactive components and impedances:</strong><br>
+        ${res.initSteps.join('<br>')}<br><br>
+        <strong>Step 2: Simplify the network complex impedances:</strong><br>
+        ${res.simplificationSteps.join('<br>')}<br><br>
+        <strong>Step 3: Calculate branch currents:</strong><br>
+        Total impedance |Z_{EQ}| &approx; ${Comp.mag(res.Z_EQ).toFixed(1)} &Omega;.<br>
+        Total current |I_T| &approx; ${Comp.mag(res.I_T).toFixed(2)} A.<br>
+        For component ${targetComp.label}, the complex branch current is: I_{${targetComp.label}} = <strong>${formatComplex(res.I_comp[targetIdx])} A</strong>.<br>
+        Magnitude: |I_{${targetComp.label}}| &approx; <strong>${correctVal.toFixed(1)} ${unit}</strong>.
+      `;
+    }
+  }
 
-function genParallelRLCImpedanceHard() {
-  const R = 120, XL = 60, XC = 40, V_s = 120;
-  const IR = 1, IL = 2, IC = 3, IT = 1.414;
-  const Z = V_s / IT; // 84.85 Ω
-  
   return {
-    topic: 'AC RLC Circuits',
-    text: `Find the total equivalent AC impedance (Z) of a parallel R-L-C network with resistor R = ${R} Ω, inductive reactance X_L = ${XL} Ω, and capacitive reactance X_C = ${XC} Ω.`,
-    options: makeOptions(Z, 'Ω', v => v.toFixed(1)),
+    topic: getTopicName(category),
+    text: questionText,
+    options: makeOptions(correctVal, unit, v => v.toFixed(1)),
     circuitData: {
-      topology: 'parallel',
-      voltage: V_s,
-      frequency: 60,
-      types: ['R', 'L', 'C'],
-      labels: ['R1', 'X_L', 'X_C'],
-      valStrs: [`${R} Ω`, `${XL} Ω`, `${XC} Ω`]
+      topology: topology,
+      voltage: Vs,
+      frequency: freq,
+      types: types,
+      labels: labels,
+      valStrs: valStrs,
+      vals: vals,
+      compType: category === 'resistors' ? 'R' : (category === 'inductors' ? 'L' : 'C'),
+      unit: category === 'resistors' ? 'Ω' : (category === 'inductors' ? 'mH' : 'µF')
     },
-    walkthrough: `
-      1. Assume a convenient voltage source, e.g. V_s = 120 V AC.<br>
-      2. Compute branch currents:<br>
-         &nbsp;&nbsp; I_R = 120 / ${R} = 1.0 A.<br>
-         &nbsp;&nbsp; I_L = 120 / ${XL} = 2.0 A.<br>
-         &nbsp;&nbsp; I_C = 120 / ${XC} = 3.0 A.<br>
-      3. Calculate total current: I_T = sqrt(I_R^2 + (I_L - I_C)^2) = sqrt(1^2 + (2 - 3)^2) = sqrt(2) ≈ 1.414 A.<br>
-      4. Solve for total circuit impedance: Z = V_s / I_T = 120 V / 1.414 A ≈ <strong>${Z.toFixed(1)} Ω</strong>.
-    `
+    walkthrough: walkthrough,
+    isCalculation: true,
+    subject: 'V. Calculation Practice',
+    category: 'Circuit Calculations'
   };
 }
 
