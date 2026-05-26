@@ -370,6 +370,28 @@
             letter-spacing: 0.03em;
         }
 
+        .pdf-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent2);
+            background: rgba(20, 184, 166, 0.1);
+            border: 1px solid rgba(20, 184, 166, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .pdf-badge:hover {
+            background: rgba(20, 184, 166, 0.2);
+            border-color: var(--accent2);
+            transform: translateY(-1px);
+        }
+
         .q-text {
             font-size: 18px;
             font-weight: 500;
@@ -687,6 +709,21 @@
         }
         .modal input:focus, .modal select:focus { border-color: var(--accent); outline: none; }
 
+        /* Equations Guide Modal Custom Styles */
+        .eq-tab-btn {
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+        }
+        .eq-tab-panel {
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Shortcuts Map Help Dashboard */
         .kb-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 13px; align-items: center; }
         .kb-key {
@@ -895,7 +932,8 @@
                 <div class="q-card" id="qCard">
                     <div class="q-meta">
                         <span id="topicTag"></span>
-                        <div style="display:flex; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <a id="pdfRefBadge" class="pdf-badge" target="_blank" style="display:none; text-decoration:none;" title="Reference page in NCATT AET Study Guide PDF">📖 Page --</a>
                             <span class="q-tool-btn" id="flagBtn" onclick="toggleFlag()" title="Flag question for review" style="cursor:pointer;">[!]</span>
                             <span class="q-tool-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Bookmark question" style="cursor:pointer;">[*]</span>
                         </div>
@@ -921,7 +959,13 @@
                     <div class="fc-card" id="fcCard" onclick="flipCard()">
                         <div class="fc-inner">
                             <div class="fc-front"><div class="fc-meta" id="fcTopic"></div><div class="fc-q" id="fcQuestion"></div><div style="font-size:12px; color:var(--text2); margin-top:20px">Click card or press [F] to flip</div></div>
-                            <div class="fc-back"><div style="font-size:11px; color:var(--correct); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px">Correct Answer</div><div class="fc-a" id="fcAnswer"></div></div>
+                            <div class="fc-back">
+                                <div style="font-size:11px; color:var(--correct); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px">Correct Answer</div>
+                                <div class="fc-a" id="fcAnswer"></div>
+                                <div id="fcPdfRefContainer" style="margin-top:20px; display:none;">
+                                    <a id="fcPdfRefBadge" class="pdf-badge" target="_blank" style="text-decoration:none;" title="Reference page in NCATT AET Study Guide PDF">📖 Page --</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="fc-btns">
@@ -1003,6 +1047,10 @@
                         <button class="btn btn-p" onclick="generateNewPractice()" style="width:100%; margin-top:8px;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                             Generate New Circuit
+                        </button>
+                        <button class="btn btn-s" onclick="document.getElementById('equationsModal').classList.add('open')" style="width:100%; margin-top:8px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/></svg>
+                            Explain Equations
                         </button>
                     </div>
 
@@ -1164,6 +1212,228 @@
         <input type="file" id="importFile" accept=".json" onchange="importData(event)">
         <div style="margin-top:12px"><button class="btn btn-s" style="width:100%" onclick="closeModals()">Close</button></div>
     </div></div>
+
+    <!-- Equations Reference Modal -->
+    <div class="modal-overlay" id="equationsModal">
+        <div class="modal" style="max-width: 720px; width: 95%; height: auto; max-height: 85vh; display: flex; flex-direction: column; padding: 24px; overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px; height:20px; color: var(--accent2);"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/></svg>
+                    Circuit Equations Reference
+                </h3>
+                <button onclick="closeModals()" style="background: none; border: none; color: var(--text2); cursor: pointer; font-size: 24px; line-height: 1; padding: 0 4px;">&times;</button>
+            </div>
+            
+            <!-- Tab Navigation Bar -->
+            <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; overflow-x: auto; flex-shrink: 0;">
+                <button class="btn btn-p eq-tab-btn" onclick="switchEqTab('eq-dc', this)">DC Circuits</button>
+                <button class="btn btn-s eq-tab-btn" onclick="switchEqTab('eq-reactance', this)">AC Reactance</button>
+                <button class="btn btn-s eq-tab-btn" onclick="switchEqTab('eq-rlc', this)">AC Impedance (RLC)</button>
+                <button class="btn btn-s eq-tab-btn" onclick="switchEqTab('eq-units', this)">Units & Conversions</button>
+            </div>
+            
+            <!-- Scrollable Content Panels -->
+            <div style="flex: 1; overflow-y: auto; padding-right: 4px;" id="eqModalContent">
+                <!-- DC Circuits Panel -->
+                <div class="eq-tab-panel" id="eq-dc" style="display: block;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Ohm's Law & Power</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">The foundation of all DC circuit calculations. Use these to find Voltage (V), Current (I), Resistance (R), and Power (P).</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                        <!-- Ohm's Law Card -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--warning); display: block; margin-bottom: 6px; font-size: 13px;">Ohm's Law Formulas</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+                                <div>• V = I × R <span style="color: var(--text2); font-size: 11px;">(Voltage)</span></div>
+                                <div>• I = V / R <span style="color: var(--text2); font-size: 11px;">(Current)</span></div>
+                                <div>• R = V / I <span style="color: var(--text2); font-size: 11px;">(Resistance)</span></div>
+                            </div>
+                        </div>
+                        <!-- Power Card -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--warning); display: block; margin-bottom: 6px; font-size: 13px;">Electrical Power</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px;">
+                                <div>• P = V × I <span style="color: var(--text2); font-size: 11px;">(Watts)</span></div>
+                                <div>• P = I² × R <span style="color: var(--text2); font-size: 11px;">(Watts)</span></div>
+                                <div>• P = V² / R <span style="color: var(--text2); font-size: 11px;">(Watts)</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Series & Parallel Resistors</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">How components combine to determine total resistance (R<sub>T</sub>).</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <!-- Series Resistors Card -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--accent); display: block; margin-bottom: 6px; font-size: 13px;">Series Circuits</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• R<sub>T</sub> = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + ...</div>
+                                <div>• I<sub>T</sub> = I<sub>1</sub> = I<sub>2</sub> = I<sub>3</sub> = ...</div>
+                                <div>• V<sub>T</sub> = V<sub>1</sub> + V<sub>2</sub> + V<sub>3</sub> + ...</div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Total resistance is always larger than any individual resistor. Current remains identical along the single path.</div>
+                            </div>
+                        </div>
+                        <!-- Parallel Resistors Card -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--accent); display: block; margin-bottom: 6px; font-size: 13px;">Parallel Circuits</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• 1/R<sub>T</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> + 1/R<sub>3</sub> + ...</div>
+                                <div>• R<sub>T</sub> = (R<sub>1</sub> × R<sub>2</sub>) / (R<sub>1</sub> + R<sub>2</sub>) <span style="color: var(--text2); font-size: 10px; font-family: inherit;">(for 2)</span></div>
+                                <div>• V<sub>T</sub> = V<sub>1</sub> = V<sub>2</sub> = V<sub>3</sub> = ...</div>
+                                <div>• I<sub>T</sub> = I<sub>1</sub> + I<sub>2</sub> + I<sub>3</sub> + ...</div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Total resistance is always smaller than the smallest branch resistor. Voltage is equal across all branches.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AC Reactance Panel -->
+                <div class="eq-tab-panel" id="eq-reactance" style="display: none;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Inductive & Capacitive Opposition</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">Reactance (X) is the opposition to alternating current (AC) flow, measured in Ohms (Ω). Unlike DC resistance, reactance varies with frequency.</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                        <!-- Inductive Reactance -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--warning); display: block; margin-bottom: 6px; font-size: 13px;">Inductive Reactance (X<sub>L</sub>)</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• X<sub>L</sub> = 2 × π × f × L</div>
+                                <div style="margin-top: 6px; font-family: inherit; font-size: 12px;">
+                                    <strong>Parameters:</strong><br>
+                                    • <strong>f:</strong> Frequency in Hertz (Hz)<br>
+                                    • <strong>L:</strong> Inductance in Henries (H)<br>
+                                </div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Convert mH to H by dividing by 1,000. Opposition grows higher at higher frequencies.</div>
+                            </div>
+                        </div>
+                        <!-- Capacitive Reactance -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--warning); display: block; margin-bottom: 6px; font-size: 13px;">Capacitive Reactance (X<sub>C</sub>)</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• X<sub>C</sub> = 1 / (2 × π × f × C)</div>
+                                <div style="margin-top: 6px; font-family: inherit; font-size: 12px;">
+                                    <strong>Parameters:</strong><br>
+                                    • <strong>f:</strong> Frequency in Hertz (Hz)<br>
+                                    • <strong>C:</strong> Capacitance in Farads (F)<br>
+                                </div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Convert µF to F by dividing by 1,000,000. Opposition falls lower at higher frequencies.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Reactance Combinations</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">Inductors and capacitors combine reactances depending on how they are configured.</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <!-- Inductors Combination -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--accent); display: block; margin-bottom: 6px; font-size: 13px;">Inductor Combinations (L)</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• Series: L<sub>T</sub> = L<sub>1</sub> + L<sub>2</sub> + ...</div>
+                                <div>• Parallel: 1/L<sub>T</sub> = 1/L<sub>1</sub> + 1/L<sub>2</sub> + ...</div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Inductors combine exactly like resistors. Their reactances in series add directly: X<sub>L,T</sub> = X<sub>L1</sub> + X<sub>L2</sub> + ...</div>
+                            </div>
+                        </div>
+                        <!-- Capacitors Combination -->
+                        <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                            <strong style="color: var(--accent); display: block; margin-bottom: 6px; font-size: 13px;">Capacitor Combinations (C)</strong>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; display: flex; flex-direction: column; gap: 4px; line-height: 1.4;">
+                                <div>• Series: 1/C<sub>T</sub> = 1/C<sub>1</sub> + 1/C<sub>2</sub> + ...</div>
+                                <div>• Parallel: C<sub>T</sub> = C<sub>1</sub> + C<sub>2</sub> + ...</div>
+                                <div style="color: var(--text2); font-size: 11.5px; margin-top: 6px; font-family: inherit; line-height: 1.3;">💡 Capacitors combine opposite to resistors. Capacitive reactances in series add directly: X<sub>C,T</sub> = X<sub>C1</sub> + X<sub>C2</sub> + ...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AC Impedance Panel -->
+                <div class="eq-tab-panel" id="eq-rlc" style="display: none;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">RLC Series Impedance</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">In series RLC circuits, resistance and reactance are perpendicular vectors. Total opposition is Impedance (Z).</p>
+                    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 20px; line-height: 1.5;">
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; margin-bottom: 8px; color: var(--warning);">
+                            <strong>Z = √(R² + (X<sub>L</sub> - X<sub>C</sub>)²)</strong>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+                            <div>• <strong>Net Reactance (X<sub>net</sub>):</strong> X<sub>L</sub> - X<sub>C</sub> (Inductive if positive, capacitive if negative).</div>
+                            <div>• <strong>Phase Angle (θ):</strong> θ = arctan((X<sub>L</sub> - X<sub>C</sub>) / R)</div>
+                            <div>• <strong>Power Factor (PF):</strong> PF = cos(θ) = R / Z</div>
+                            <div>• <strong>Current (I<sub>T</sub>):</strong> I<sub>T</sub> = V<sub>S</sub> / Z</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">RLC Parallel Impedance</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">For parallel circuits, we use Admittance (Y) and Susceptance (B) to find total impedance Z.</p>
+                    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 20px; line-height: 1.5;">
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; margin-bottom: 8px; color: var(--warning);">
+                            <strong>Y = √(G² + (B<sub>C</sub> - B<sub>L</sub>)²) &nbsp;|&nbsp; Z = 1 / Y</strong>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+                            <div>• <strong>Conductance (G):</strong> G = 1 / R</div>
+                            <div>• <strong>Capacitive Susceptance (B<sub>C</sub>):</strong> B<sub>C</sub> = 1 / X<sub>C</sub></div>
+                            <div>• <strong>Inductive Susceptance (B<sub>L</sub>):</strong> B<sub>L</sub> = 1 / X<sub>L</sub></div>
+                            <div>• <strong>Total Current:</strong> I<sub>T</sub> = V<sub>S</sub> × Y = √(I<sub>R</sub>² + (I<sub>C</sub> - I<sub>L</sub>)²)</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Circuit Resonance</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">Resonance occurs when X<sub>L</sub> = X<sub>C</sub>, leaving the circuit behavior purely resistive.</p>
+                    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px; line-height: 1.4;">
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 4px;">
+                            • Resonant Frequency: f<sub>r</sub> = 1 / (2 × π × √(L × C))
+                        </div>
+                        <div style="font-size: 12px; color: var(--text2);">
+                            💡 In a series circuit, resonance minimizes impedance (Z = R) and maximizes current. In a parallel circuit, resonance maximizes impedance (Z = R) and minimizes source current.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Units & Conversions Panel -->
+                <div class="eq-tab-panel" id="eq-units" style="display: none;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Metric Prefix Conversions</h4>
+                    <p style="margin: 0 0 12px 0; color: var(--text2); font-size: 13px;">Always convert prefixed numbers to their base units before plug-in to equations.</p>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border); text-align: left;">
+                                <th style="padding: 8px; color: var(--warning);">Prefix</th>
+                                <th style="padding: 8px; color: var(--warning);">Multiplier</th>
+                                <th style="padding: 8px; color: var(--warning);">Example & Calculation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 8px;"><strong>kilo (k)</strong></td>
+                                <td style="padding: 8px;">1,000 (10³)</td>
+                                <td style="padding: 8px; font-family: 'JetBrains Mono', monospace;">5.6 kΩ = 5.6 × 1,000 = 5,600 Ω</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 8px;"><strong>milli (m)</strong></td>
+                                <td style="padding: 8px;">0.001 (10⁻³)</td>
+                                <td style="padding: 8px; font-family: 'JetBrains Mono', monospace;">15 mH = 15 / 1,000 = 0.015 H</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 8px;"><strong>micro (µ)</strong></td>
+                                <td style="padding: 8px;">0.000001 (10⁻⁶)</td>
+                                <td style="padding: 8px; font-family: 'JetBrains Mono', monospace;">47 µF = 47 / 1,000,000 = 0.000047 F</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 8px;"><strong>nano (n)</strong></td>
+                                <td style="padding: 8px;">10⁻⁹</td>
+                                <td style="padding: 8px; font-family: 'JetBrains Mono', monospace;">10 nF = 10 / 1,000,000,000 = 0.00000001 F</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 0 0 8px 0; color: var(--accent2); font-size: 15px; font-weight: 600;">Math Tips for Success</h4>
+                    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12.5px; line-height: 1.5; color: var(--text);">
+                        • <strong>Rounding:</strong> Keep 4-5 decimal digits during intermediate steps to prevent precision loss, and round the final answer to 2 decimal places.<br>
+                        • <strong>Vector Math:</strong> In AC, resistors and reactances cannot be added directly because they are out of phase. Always use the vector formula: Z = √(R² + X²).
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); text-align: right; flex-shrink: 0;">
+                <button class="btn btn-p" onclick="closeModals()" style="min-width: 120px;">Close Reference</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Script assets, event handlers, execution layer, and initialization blocks remain untouched past this vector injection point -->
     <script src="questions_v2.js"></script>
@@ -1438,6 +1708,16 @@
       answered = false; used5050 = false; qStartTime = Date.now();
       document.getElementById('qText').textContent = q.text;
       document.getElementById('topicTag').textContent = q.topic + ' — ' + q.category;
+      const pdfBadge = document.getElementById('pdfRefBadge');
+      if (pdfBadge) {
+        if (q.studyGuidePage) {
+          pdfBadge.style.display = 'inline-flex';
+          pdfBadge.href = `../../../study materials and question bank/NCATT AET Test Study Guide searchable.pdf#page=${q.studyGuidePage}`;
+          pdfBadge.textContent = `📖 Page ${q.studyGuidePage}`;
+        } else {
+          pdfBadge.style.display = 'none';
+        }
+      }
       document.getElementById('scoreText').textContent = 'Q. ' + (queueIdx+1) + '/' + quizQueue.length;
       document.getElementById('masteryBadge').className = 'mastery-badge ' + badge.cls;
       document.getElementById('masteryBadge').textContent = badge.text;
@@ -1630,6 +1910,18 @@
       document.getElementById('fcAnswer').textContent = ans;
       document.getElementById('fcTopic').textContent = q.category;
       document.getElementById('fcMeta').textContent = 'Card ' + (fcIdx+1) + ' / ' + fcQueue.length;
+      
+      const fcPdfBadge = document.getElementById('fcPdfRefBadge');
+      if (fcPdfBadge) {
+        if (q.studyGuidePage) {
+          document.getElementById('fcPdfRefContainer').style.display = 'block';
+          fcPdfBadge.href = `../../../study materials and question bank/NCATT AET Test Study Guide searchable.pdf#page=${q.studyGuidePage}`;
+          fcPdfBadge.textContent = `📖 Study Guide Page ${q.studyGuidePage}`;
+        } else {
+          document.getElementById('fcPdfRefContainer').style.display = 'none';
+        }
+      }
+      
       document.getElementById('fcCard').classList.remove('flipped');
     }
     function flipCard() { document.getElementById('fcCard').classList.toggle('flipped'); }
@@ -1946,7 +2238,10 @@
       let bf = document.getElementById('bookmarkFilter').value;
       let matches = allQuestions.filter(item => {
         const ans = item.options.find(o=>o.isCorrect).text;
-        const text = item.text.toLowerCase()+' '+ans.toLowerCase()+' '+item.topic.toLowerCase()+' '+item.category.toLowerCase()+' q'+(item.globalId+1);
+        let text = item.text.toLowerCase()+' '+ans.toLowerCase()+' '+item.topic.toLowerCase()+' '+item.category.toLowerCase()+' q'+(item.globalId+1);
+        if (item.studyGuidePage) {
+          text += ' page' + item.studyGuidePage;
+        }
         const tm = !q || text.includes(q);
         const lm = fl==='all' || (masteryData[item.globalId]||0).toString()===fl;
         
@@ -1971,7 +2266,11 @@
         const note = userNotes[item.globalId];
         const el = document.createElement('div'); el.className = 'bank-item';
         let icons = ''; if(starred) icons+=' [★]'; if(flagged) icons+=' [⚑]'; if(note) icons+=' [📝]';
-        el.innerHTML = '<div class="b-meta" style="font-size:11px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase;"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+icons+'</span></div><div class="b-q" style="font-size:15px; color:var(--text); margin-bottom:6px;"><span style="color:var(--accent2); font-weight:700; font-family:\'JetBrains Mono\', monospace;">Q.'+(item.globalId+1)+'</span> '+item.text+'</div><div class="b-ans" style="color:var(--correct); font-weight:600; font-size:14px;">✔ Correct Answer: '+ans+'</div>'+(note?'<div style="font-size:12px; color:var(--text2); margin-top:8px; padding-top:6px; border-top:1px dashed var(--border); font-style:italic;">📝 My Note: '+note+'</div>':'');
+        let pdfRefHtml = '';
+        if (item.studyGuidePage) {
+          pdfRefHtml = ` <a href="../../../study materials and question bank/NCATT AET Test Study Guide searchable.pdf#page=${item.studyGuidePage}" target="_blank" class="pdf-badge" style="margin-left:8px; text-decoration:none; font-size:10px; padding:2px 8px;">📖 Page ${item.studyGuidePage}</a>`;
+        }
+        el.innerHTML = '<div class="b-meta" style="font-size:11px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase;"><span>'+item.subject+' > '+item.category+' <span class="mastery-badge '+badge.cls+'">'+badge.text+'</span>'+pdfRefHtml+icons+'</span></div><div class="b-q" style="font-size:15px; color:var(--text); margin-bottom:6px;"><span style="color:var(--accent2); font-weight:700; font-family:\'JetBrains Mono\', monospace;">Q.'+(item.globalId+1)+'</span> '+item.text+'</div><div class="b-ans" style="color:var(--correct); font-weight:600; font-size:14px;">✔ Correct Answer: '+ans+'</div>'+(note?'<div style="font-size:12px; color:var(--text2); margin-top:8px; padding-top:6px; border-top:1px dashed var(--border); font-style:italic;">📝 My Note: '+note+'</div>':'');
         resultsEl.appendChild(el);
       });
     }
@@ -2028,6 +2327,19 @@
     function saveTimerSetting() { timerSetting = parseInt(document.getElementById('timerInput').value)||0; SS('timerSetting', timerSetting); }
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open')); }
+    function switchEqTab(tabId, btn) {
+      document.querySelectorAll('.eq-tab-panel').forEach(p => p.style.display = 'none');
+      const target = document.getElementById(tabId);
+      if (target) target.style.display = 'block';
+      document.querySelectorAll('.eq-tab-btn').forEach(b => {
+        b.classList.remove('btn-p');
+        b.classList.add('btn-s');
+      });
+      if (btn) {
+        btn.classList.remove('btn-s');
+        btn.classList.add('btn-p');
+      }
+    }
 
     // ======== CONFETTI ========
     function fireConfetti() {

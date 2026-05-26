@@ -21,7 +21,8 @@ const allQuestionsRaw = [
                 "text": "An active filter can only be used in DC circuits, not AC circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -45,7 +46,8 @@ const allQuestionsRaw = [
                 "text": "A crystal filter",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 101
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -69,7 +71,8 @@ const allQuestionsRaw = [
                 "text": "To protect the circuit from reverse polarity connections",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 113
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -93,7 +96,8 @@ const allQuestionsRaw = [
                 "text": "A transformer",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 113
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -117,7 +121,8 @@ const allQuestionsRaw = [
                 "text": "It does not require any semiconductor devices",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 161
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -141,7 +146,8 @@ const allQuestionsRaw = [
                 "text": "It increases the ripple frequency to improve efficiency",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -165,7 +171,8 @@ const allQuestionsRaw = [
                 "text": "It increases the ripple frequency to make filtering easier",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 114
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -189,7 +196,8 @@ const allQuestionsRaw = [
                 "text": "It protects the rectifier diodes from reverse voltage spikes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 115
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -213,7 +221,8 @@ const allQuestionsRaw = [
                 "text": "It increases the resistance in the circuit to limit current flow",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 115
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -237,7 +246,8 @@ const allQuestionsRaw = [
                 "text": "In parallel with the rectifier diodes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -261,7 +271,8 @@ const allQuestionsRaw = [
                 "text": "Integrated circuits, voltage regulators, and resistors",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 65
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -285,13 +296,14 @@ const allQuestionsRaw = [
                 "text": "Because full-wave rectifiers operate at lower voltages",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 402
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Power Supply Circuit-Filters",
         "topic": "Pi Filter",
-        "text": "A pi (π) filter in a power supply consists of which arrangement of components?",
+        "text": "A pi (\u03c0) filter in a power supply consists of which arrangement of components?",
         "options": [
             {
                 "text": "A capacitor, followed by an inductor (or resistor) in series, followed by another capacitor in parallel",
@@ -309,7 +321,8 @@ const allQuestionsRaw = [
                 "text": "Three resistors arranged in a delta configuration",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 68
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -333,7 +346,8 @@ const allQuestionsRaw = [
                 "text": "Current rectification",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 120
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -357,7 +371,8 @@ const allQuestionsRaw = [
                 "text": "The AC input frequency has changed",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 113
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -381,7 +396,8 @@ const allQuestionsRaw = [
                 "text": "Inductors only work with DC current because AC cannot create a magnetic field",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 80
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -405,7 +421,8 @@ const allQuestionsRaw = [
                 "text": "Frequency of operation, duty cycle, impedance, and capacitance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 81
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -414,11 +431,11 @@ const allQuestionsRaw = [
         "text": "A technician needs to calculate the inductive reactance (XL) of a coil. Which formula is correct?",
         "options": [
             {
-                "text": "XL = 2πfL, where f is frequency and L is inductance in henries",
+                "text": "XL = 2\u03c0fL, where f is frequency and L is inductance in henries",
                 "isCorrect": true
             },
             {
-                "text": "XL = 1/(2πfL), where f is frequency and L is inductance",
+                "text": "XL = 1/(2\u03c0fL), where f is frequency and L is inductance",
                 "isCorrect": false
             },
             {
@@ -426,10 +443,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "XL = R × L, where R is resistance and L is inductance",
+                "text": "XL = R \u00d7 L, where R is resistance and L is inductance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 85
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -438,7 +456,7 @@ const allQuestionsRaw = [
         "text": "In an AC circuit containing an inductor, what is the phase relationship between voltage and current?",
         "options": [
             {
-                "text": "Voltage leads current — remembered by the mnemonic ELI (E leads I in an inductor L)",
+                "text": "Voltage leads current \u2014 remembered by the mnemonic ELI (E leads I in an inductor L)",
                 "isCorrect": true
             },
             {
@@ -453,7 +471,8 @@ const allQuestionsRaw = [
                 "text": "Current leads voltage by 45 degrees",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 88
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -477,7 +496,8 @@ const allQuestionsRaw = [
                 "text": "The magnetic field reaches one tesla of flux density",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 36
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -501,7 +521,8 @@ const allQuestionsRaw = [
                 "text": "It eliminates all resistance in the circuit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 80
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -525,7 +546,8 @@ const allQuestionsRaw = [
                 "text": "As heat energy in the wire resistance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -538,18 +560,19 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Total inductance is the product divided by the sum: LT = (L1 × L2)/(L1 + L2)",
+                "text": "Total inductance is the product divided by the sum: LT = (L1 \u00d7 L2)/(L1 + L2)",
                 "isCorrect": false
             },
             {
-                "text": "Total inductance equals the difference: LT = L1 − L2",
+                "text": "Total inductance equals the difference: LT = L1 \u2212 L2",
                 "isCorrect": false
             },
             {
                 "text": "Total inductance is always equal to the smallest inductor value",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 86
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -573,7 +596,8 @@ const allQuestionsRaw = [
                 "text": "Neither component is affected by changes in frequency",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 84
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -597,7 +621,8 @@ const allQuestionsRaw = [
                 "text": "Iron cores have lower permeability, which forces more energy into the magnetic field",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 81
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -621,7 +646,8 @@ const allQuestionsRaw = [
                 "text": "Across the switch contacts with the switch in the open position",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -645,7 +671,8 @@ const allQuestionsRaw = [
                 "text": "Between the resistor and ground with the resistor removed from the circuit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -669,7 +696,8 @@ const allQuestionsRaw = [
                 "text": "Apply full rated voltage across the component being tested",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -693,7 +721,8 @@ const allQuestionsRaw = [
                 "text": "The wattmeter, which measures only power consumption",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -702,7 +731,7 @@ const allQuestionsRaw = [
         "text": "Some ammeters are designed to measure very small currents. What units do these specialized ammeters use?",
         "options": [
             {
-                "text": "Milliamps (mA) and microamps (μA)",
+                "text": "Milliamps (mA) and microamps (\u03bcA)",
                 "isCorrect": true
             },
             {
@@ -710,14 +739,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Kilohms (kΩ) and megohms (MΩ)",
+                "text": "Kilohms (k\u03a9) and megohms (M\u03a9)",
                 "isCorrect": false
             },
             {
                 "text": "Watts (W) and kilowatts (kW)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 181
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -741,7 +771,8 @@ const allQuestionsRaw = [
                 "text": "It measures the time delay between connecting the meter and getting a reading",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 47
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -750,22 +781,23 @@ const allQuestionsRaw = [
         "text": "A technician suspects a switch is faulty. Which meter and method provides an effective and quick way to test the condition of a switch?",
         "options": [
             {
-                "text": "An ohmmeter — check for continuity (near zero ohms) when closed and infinite resistance when open",
+                "text": "An ohmmeter \u2014 check for continuity (near zero ohms) when closed and infinite resistance when open",
                 "isCorrect": true
             },
             {
-                "text": "A voltmeter — measure voltage across the switch while it is disconnected from the circuit",
+                "text": "A voltmeter \u2014 measure voltage across the switch while it is disconnected from the circuit",
                 "isCorrect": false
             },
             {
-                "text": "An ammeter — connect it in parallel with the switch to measure leakage",
+                "text": "An ammeter \u2014 connect it in parallel with the switch to measure leakage",
                 "isCorrect": false
             },
             {
-                "text": "A wattmeter — measure the power consumed by the switch",
+                "text": "A wattmeter \u2014 measure the power consumed by the switch",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 353
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -789,7 +821,8 @@ const allQuestionsRaw = [
                 "text": "The average value, which equals 0.5 of the peak value",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 75
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -813,7 +846,8 @@ const allQuestionsRaw = [
                 "text": "The reading will be inaccurate but the meter will not be damaged",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -837,7 +871,8 @@ const allQuestionsRaw = [
                 "text": "Start with the middle range as a compromise between accuracy and safety",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 352
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -861,7 +896,8 @@ const allQuestionsRaw = [
                 "text": "Temperature coefficient, wattage rating, first digit, and second digit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 38
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -870,22 +906,23 @@ const allQuestionsRaw = [
         "text": "A resistor has the following color bands: Brown, Black, Red, Gold. What is its resistance value and tolerance?",
         "options": [
             {
-                "text": "1,000 ohms (1 kΩ) ±5%",
+                "text": "1,000 ohms (1 k\u03a9) \u00b15%",
                 "isCorrect": true
             },
             {
-                "text": "100 ohms ±10%",
+                "text": "100 ohms \u00b110%",
                 "isCorrect": false
             },
             {
-                "text": "10,000 ohms (10 kΩ) ±5%",
+                "text": "10,000 ohms (10 k\u03a9) \u00b15%",
                 "isCorrect": false
             },
             {
-                "text": "10 ohms ±20%",
+                "text": "10 ohms \u00b120%",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 39
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -894,22 +931,23 @@ const allQuestionsRaw = [
         "text": "On a four-band resistor, a gold tolerance band indicates what level of accuracy?",
         "options": [
             {
-                "text": "±5% tolerance",
+                "text": "\u00b15% tolerance",
                 "isCorrect": true
             },
             {
-                "text": "±10% tolerance",
+                "text": "\u00b110% tolerance",
                 "isCorrect": false
             },
             {
-                "text": "±1% tolerance",
+                "text": "\u00b11% tolerance",
                 "isCorrect": false
             },
             {
-                "text": "±20% tolerance",
+                "text": "\u00b120% tolerance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 38
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -918,22 +956,23 @@ const allQuestionsRaw = [
         "text": "If a resistor's fourth band is silver, what does this indicate about the resistor?",
         "options": [
             {
-                "text": "The resistor has a ±10% tolerance",
+                "text": "The resistor has a \u00b110% tolerance",
                 "isCorrect": true
             },
             {
-                "text": "The resistor has a ±5% tolerance",
+                "text": "The resistor has a \u00b15% tolerance",
                 "isCorrect": false
             },
             {
-                "text": "The resistor has a ±1% tolerance",
+                "text": "The resistor has a \u00b11% tolerance",
                 "isCorrect": false
             },
             {
                 "text": "The resistor is a precision wire-wound type",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 39
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -942,7 +981,7 @@ const allQuestionsRaw = [
         "text": "What does it mean if a resistor has no fourth band (tolerance band)?",
         "options": [
             {
-                "text": "The resistor has a ±20% tolerance",
+                "text": "The resistor has a \u00b120% tolerance",
                 "isCorrect": true
             },
             {
@@ -950,14 +989,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "The resistor has a ±0% (exact) tolerance",
+                "text": "The resistor has a \u00b10% (exact) tolerance",
                 "isCorrect": false
             },
             {
                 "text": "The tolerance is printed on the resistor body instead",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 39
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -981,7 +1021,8 @@ const allQuestionsRaw = [
                 "text": "Brown (0), Black (1), Red (2), Orange (3)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 39
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -990,22 +1031,23 @@ const allQuestionsRaw = [
         "text": "A resistor has bands of Red, Violet, Orange, Silver. What is its value?",
         "options": [
             {
-                "text": "27,000 ohms (27 kΩ) ±10%",
+                "text": "27,000 ohms (27 k\u03a9) \u00b110%",
                 "isCorrect": true
             },
             {
-                "text": "2,700 ohms (2.7 kΩ) ±5%",
+                "text": "2,700 ohms (2.7 k\u03a9) \u00b15%",
                 "isCorrect": false
             },
             {
-                "text": "270 ohms ±10%",
+                "text": "270 ohms \u00b110%",
                 "isCorrect": false
             },
             {
-                "text": "270,000 ohms (270 kΩ) ±5%",
+                "text": "270,000 ohms (270 k\u03a9) \u00b15%",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 39
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1029,7 +1071,8 @@ const allQuestionsRaw = [
                 "text": "Read the batch number or check the purchase order",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 38
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1038,22 +1081,23 @@ const allQuestionsRaw = [
         "text": "On a four-band resistor, the third band is the multiplier. If the third band is orange, what multiplier value does it represent?",
         "options": [
             {
-                "text": "1,000 (10³) — multiply the two-digit number by 1,000",
+                "text": "1,000 (10\u00b3) \u2014 multiply the two-digit number by 1,000",
                 "isCorrect": true
             },
             {
-                "text": "3 — multiply the two-digit number by 3",
+                "text": "3 \u2014 multiply the two-digit number by 3",
                 "isCorrect": false
             },
             {
-                "text": "100 (10²) — multiply the two-digit number by 100",
+                "text": "100 (10\u00b2) \u2014 multiply the two-digit number by 100",
                 "isCorrect": false
             },
             {
-                "text": "30 — multiply the two-digit number by 30",
+                "text": "30 \u2014 multiply the two-digit number by 30",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 38
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1062,7 +1106,7 @@ const allQuestionsRaw = [
         "text": "How are surface-mount resistors typically marked, unlike standard axial resistors?",
         "options": [
             {
-                "text": "With numerical markings rather than color bands — you must refer to a technical drawing for values",
+                "text": "With numerical markings rather than color bands \u2014 you must refer to a technical drawing for values",
                 "isCorrect": true
             },
             {
@@ -1077,7 +1121,8 @@ const allQuestionsRaw = [
                 "text": "With the same four-band color code system but on a smaller scale",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 38
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1101,7 +1146,8 @@ const allQuestionsRaw = [
                 "text": "The core laminations have become magnetized permanently",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 353
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1110,7 +1156,7 @@ const allQuestionsRaw = [
         "text": "A transformer's primary coil is energized, but the secondary output reads zero volts. An ohmmeter check of the secondary shows infinite resistance. What is the fault?",
         "options": [
             {
-                "text": "An open secondary coil — there is no coupling action (imperfect coupling) and no current path",
+                "text": "An open secondary coil \u2014 there is no coupling action (imperfect coupling) and no current path",
                 "isCorrect": true
             },
             {
@@ -1125,7 +1171,8 @@ const allQuestionsRaw = [
                 "text": "The load connected to the secondary is too large",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 353
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1149,7 +1196,8 @@ const allQuestionsRaw = [
                 "text": "The voltage gain between input and output terminals",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1173,7 +1221,8 @@ const allQuestionsRaw = [
                 "text": "The ohmmeter leads are connected incorrectly",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1197,7 +1246,8 @@ const allQuestionsRaw = [
                 "text": "Improper installation only affects appearance and has no effect on performance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 264
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1206,7 +1256,7 @@ const allQuestionsRaw = [
         "text": "A transformer transfers electrical energy from one circuit to another through what principle?",
         "options": [
             {
-                "text": "Electromagnetic induction — a changing magnetic field in the primary coil induces a voltage in the secondary coil",
+                "text": "Electromagnetic induction \u2014 a changing magnetic field in the primary coil induces a voltage in the secondary coil",
                 "isCorrect": true
             },
             {
@@ -1221,7 +1271,8 @@ const allQuestionsRaw = [
                 "text": "Resistance heating of the core that radiates energy to the secondary",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1245,7 +1296,8 @@ const allQuestionsRaw = [
                 "text": "More turns on the secondary coil, which increases both voltage and current equally",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 103
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1269,7 +1321,8 @@ const allQuestionsRaw = [
                 "text": "A current transformer connected in parallel with the bus",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 103
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1278,22 +1331,23 @@ const allQuestionsRaw = [
         "text": "A transformer has 100 turns on the primary and 500 turns on the secondary. If 24V AC is applied to the primary, what is the secondary voltage?",
         "options": [
             {
-                "text": "120V AC — the turns ratio is 1:5, so voltage is multiplied by 5",
+                "text": "120V AC \u2014 the turns ratio is 1:5, so voltage is multiplied by 5",
                 "isCorrect": true
             },
             {
-                "text": "4.8V AC — voltage is divided by the turns ratio",
+                "text": "4.8V AC \u2014 voltage is divided by the turns ratio",
                 "isCorrect": false
             },
             {
-                "text": "24V AC — transformers do not change voltage, only current",
+                "text": "24V AC \u2014 transformers do not change voltage, only current",
                 "isCorrect": false
             },
             {
-                "text": "600V AC — primary turns are added to the secondary voltage",
+                "text": "600V AC \u2014 primary turns are added to the secondary voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 103
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1317,7 +1371,8 @@ const allQuestionsRaw = [
                 "text": "DC creates a stronger magnetic field that saturates the core instantly",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1341,7 +1396,8 @@ const allQuestionsRaw = [
                 "text": "Energy transfers only when both coils carry current simultaneously",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 84
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1365,7 +1421,8 @@ const allQuestionsRaw = [
                 "text": "Thermal losses and gravitational losses",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 104
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1389,7 +1446,8 @@ const allQuestionsRaw = [
                 "text": "To reduce the frequency of the AC signal by half",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 88
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1398,7 +1456,7 @@ const allQuestionsRaw = [
         "text": "In an ideal transformer, if the voltage is stepped up by a factor of 10, what happens to the available current?",
         "options": [
             {
-                "text": "Current is reduced by a factor of 10 — power (V × I) remains approximately constant",
+                "text": "Current is reduced by a factor of 10 \u2014 power (V \u00d7 I) remains approximately constant",
                 "isCorrect": true
             },
             {
@@ -1413,7 +1471,8 @@ const allQuestionsRaw = [
                 "text": "Current drops to zero because the impedance becomes infinite",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 146
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1437,7 +1496,8 @@ const allQuestionsRaw = [
                 "text": "To allow the core to flex during thermal expansion without cracking",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 102
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1461,7 +1521,8 @@ const allQuestionsRaw = [
                 "text": "It changes the frequency of the AC input signal",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1485,7 +1546,8 @@ const allQuestionsRaw = [
                 "text": "Approximately 70.7% (RMS) of the input AC voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1506,10 +1568,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "There is no practical difference — both produce identical outputs",
+                "text": "There is no practical difference \u2014 both produce identical outputs",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1533,7 +1596,8 @@ const allQuestionsRaw = [
                 "text": "Any voltage above 0.0 VDC will cause immediate conduction",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 116
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1557,7 +1621,8 @@ const allQuestionsRaw = [
                 "text": "The diode converts the DC back into AC automatically",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 108
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1581,7 +1646,8 @@ const allQuestionsRaw = [
                 "text": "It can convert DC to AC as well as AC to DC",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1605,7 +1671,8 @@ const allQuestionsRaw = [
                 "text": "The physical vibration of the transformer core during operation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1614,22 +1681,23 @@ const allQuestionsRaw = [
         "text": "What are the two principal semiconductor materials used in rectifier diodes?",
         "options": [
             {
-                "text": "Germanium and silicon — in their pure state they are insulators, but adding dopants makes them semiconductors",
+                "text": "Germanium and silicon \u2014 in their pure state they are insulators, but adding dopants makes them semiconductors",
                 "isCorrect": true
             },
             {
-                "text": "Copper and aluminum — standard conductor materials used in all diodes",
+                "text": "Copper and aluminum \u2014 standard conductor materials used in all diodes",
                 "isCorrect": false
             },
             {
-                "text": "Iron and nickel — ferromagnetic materials essential for diode operation",
+                "text": "Iron and nickel \u2014 ferromagnetic materials essential for diode operation",
                 "isCorrect": false
             },
             {
-                "text": "Carbon and tungsten — high-temperature materials for aerospace diodes",
+                "text": "Carbon and tungsten \u2014 high-temperature materials for aerospace diodes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 107
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1653,7 +1721,8 @@ const allQuestionsRaw = [
                 "text": "To filter unwanted noise from communication signals",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 161
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1662,7 +1731,7 @@ const allQuestionsRaw = [
         "text": "An oscillator is described as an electronic circuit that converts DC into AC at predetermined frequencies and amplitudes. What prevents the oscillation from dying out?",
         "options": [
             {
-                "text": "An amplifier within the circuit — without it, oscillation would be quickly dampened by wiring resistance",
+                "text": "An amplifier within the circuit \u2014 without it, oscillation would be quickly dampened by wiring resistance",
                 "isCorrect": true
             },
             {
@@ -1677,7 +1746,8 @@ const allQuestionsRaw = [
                 "text": "Permanent magnets inside the oscillator sustain the waveform magnetically",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 62
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1701,7 +1771,8 @@ const allQuestionsRaw = [
                 "text": "The physical size of the circuit board",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 168
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1725,7 +1796,8 @@ const allQuestionsRaw = [
                 "text": "It can only produce square wave outputs, not sine waves",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 81
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1734,7 +1806,7 @@ const allQuestionsRaw = [
         "text": "What is the role of a regenerative (positive) feedback path in an oscillator?",
         "options": [
             {
-                "text": "It feeds a portion of the output signal back to the input in phase, sustaining oscillation — it makes any amplifier an oscillator",
+                "text": "It feeds a portion of the output signal back to the input in phase, sustaining oscillation \u2014 it makes any amplifier an oscillator",
                 "isCorrect": true
             },
             {
@@ -1749,7 +1821,8 @@ const allQuestionsRaw = [
                 "text": "It removes unwanted harmonics from the output signal",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 174
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1773,7 +1846,8 @@ const allQuestionsRaw = [
                 "text": "Energy is stored in the wiring insulation as static charge",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 97
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1782,22 +1856,23 @@ const allQuestionsRaw = [
         "text": "A harmonic oscillator produces useful power at two or three times the frequency of its fundamental pulse rate. What are these higher frequencies called?",
         "options": [
             {
-                "text": "Harmonics — they are integer multiples of the fundamental frequency",
+                "text": "Harmonics \u2014 they are integer multiples of the fundamental frequency",
                 "isCorrect": true
             },
             {
-                "text": "Subharmonics — they are fractions of the fundamental frequency",
+                "text": "Subharmonics \u2014 they are fractions of the fundamental frequency",
                 "isCorrect": false
             },
             {
-                "text": "Sidebands — they are created by amplitude modulation",
+                "text": "Sidebands \u2014 they are created by amplitude modulation",
                 "isCorrect": false
             },
             {
-                "text": "Overtones — they only exist in mechanical vibration, not electronic circuits",
+                "text": "Overtones \u2014 they only exist in mechanical vibration, not electronic circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 64
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1806,11 +1881,11 @@ const allQuestionsRaw = [
         "text": "What is the RC time constant of a capacitor circuit, and what does it represent?",
         "options": [
             {
-                "text": "The time (in seconds) for the voltage across a capacitor to reach 63.2% of the applied voltage, calculated as T = R × C",
+                "text": "The time (in seconds) for the voltage across a capacitor to reach 63.2% of the applied voltage, calculated as T = R \u00d7 C",
                 "isCorrect": true
             },
             {
-                "text": "The time for a capacitor to fully discharge to zero volts, calculated as T = V × I",
+                "text": "The time for a capacitor to fully discharge to zero volts, calculated as T = V \u00d7 I",
                 "isCorrect": false
             },
             {
@@ -1821,7 +1896,8 @@ const allQuestionsRaw = [
                 "text": "The maximum time a capacitor can hold its charge before leaking, measured in hours",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 68
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1845,7 +1921,8 @@ const allQuestionsRaw = [
                 "text": "The ambient temperature alone controls how much charge is stored",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 28
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1854,22 +1931,23 @@ const allQuestionsRaw = [
         "text": "How does a variable capacitor change its capacitance value, and what is its typical dielectric?",
         "options": [
             {
-                "text": "By changing the overlapping area of its plates — the dielectric is normally air",
+                "text": "By changing the overlapping area of its plates \u2014 the dielectric is normally air",
                 "isCorrect": true
             },
             {
-                "text": "By heating the plates to expand them — the dielectric is ceramic",
+                "text": "By heating the plates to expand them \u2014 the dielectric is ceramic",
                 "isCorrect": false
             },
             {
-                "text": "By adding or removing electrolyte fluid — the dielectric is oil",
+                "text": "By adding or removing electrolyte fluid \u2014 the dielectric is oil",
                 "isCorrect": false
             },
             {
-                "text": "By stretching the dielectric material — the plates remain fixed",
+                "text": "By stretching the dielectric material \u2014 the plates remain fixed",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 81
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1878,7 +1956,7 @@ const allQuestionsRaw = [
         "text": "What is the phase relationship between voltage and current in a purely capacitive AC circuit?",
         "options": [
             {
-                "text": "Current leads voltage by 90 degrees — remembered by ICE (I leads E in a capacitor C)",
+                "text": "Current leads voltage by 90 degrees \u2014 remembered by ICE (I leads E in a capacitor C)",
                 "isCorrect": true
             },
             {
@@ -1893,7 +1971,8 @@ const allQuestionsRaw = [
                 "text": "Current lags voltage by 45 degrees",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 91
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1902,11 +1981,11 @@ const allQuestionsRaw = [
         "text": "When capacitors are connected in series, what happens to the total capacitance?",
         "options": [
             {
-                "text": "Total capacitance decreases — it is calculated like resistors in parallel: 1/CT = 1/C1 + 1/C2",
+                "text": "Total capacitance decreases \u2014 it is calculated like resistors in parallel: 1/CT = 1/C1 + 1/C2",
                 "isCorrect": true
             },
             {
-                "text": "Total capacitance increases — values are simply added together",
+                "text": "Total capacitance increases \u2014 values are simply added together",
                 "isCorrect": false
             },
             {
@@ -1917,7 +1996,8 @@ const allQuestionsRaw = [
                 "text": "Total capacitance doubles with each additional capacitor added",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 90
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1941,7 +2021,8 @@ const allQuestionsRaw = [
                 "text": "Electrolytic capacitors work in both directions but are less efficient when reversed",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 184
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -1965,7 +2046,8 @@ const allQuestionsRaw = [
                 "text": "The AC frequency at which the capacitor operates most efficiently",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 116
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -1989,7 +2071,8 @@ const allQuestionsRaw = [
                 "text": "To measure the static charge on components before installation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 272
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2013,7 +2096,8 @@ const allQuestionsRaw = [
                 "text": "A fan to blow away static charge from the work area",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 272
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2037,7 +2121,8 @@ const allQuestionsRaw = [
                 "text": "It is useful but too expensive to harness for practical applications",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 107
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2046,7 +2131,7 @@ const allQuestionsRaw = [
         "text": "What is a critical rule when handling an ESD-sensitive circuit board or component?",
         "options": [
             {
-                "text": "Handle the device safely and properly — hold boards by their edges and avoid touching pins or traces",
+                "text": "Handle the device safely and properly \u2014 hold boards by their edges and avoid touching pins or traces",
                 "isCorrect": true
             },
             {
@@ -2061,7 +2146,8 @@ const allQuestionsRaw = [
                 "text": "Place the component on a plastic bag to insulate it from the workbench",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2085,7 +2171,8 @@ const allQuestionsRaw = [
                 "text": "Wooden crates lined with newspaper for cushioning",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 272
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2094,7 +2181,7 @@ const allQuestionsRaw = [
         "text": "How can ESD damage a semiconductor device even if it still appears to function after the event?",
         "options": [
             {
-                "text": "ESD can cause latent damage — weakening internal junctions so the device degrades over time and fails later in service",
+                "text": "ESD can cause latent damage \u2014 weakening internal junctions so the device degrades over time and fails later in service",
                 "isCorrect": true
             },
             {
@@ -2109,7 +2196,8 @@ const allQuestionsRaw = [
                 "text": "ESD always resets the device to factory settings without causing harm",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 271
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2133,7 +2221,8 @@ const allQuestionsRaw = [
                 "text": "It converts low-frequency AC into DC voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 411
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2157,7 +2246,8 @@ const allQuestionsRaw = [
                 "text": "Inside the signal generator to pre-filter the output",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 171
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2181,7 +2271,8 @@ const allQuestionsRaw = [
                 "text": "It converts a band of AC frequencies into DC voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 170
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2202,10 +2293,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "There is no difference — they are two names for the same circuit",
+                "text": "There is no difference \u2014 they are two names for the same circuit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 171
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2214,7 +2306,7 @@ const allQuestionsRaw = [
         "text": "What is the cutoff frequency of a filter?",
         "options": [
             {
-                "text": "The frequency at which attenuation starts to increase rapidly — the boundary between passed and blocked frequencies",
+                "text": "The frequency at which attenuation starts to increase rapidly \u2014 the boundary between passed and blocked frequencies",
                 "isCorrect": true
             },
             {
@@ -2229,7 +2321,8 @@ const allQuestionsRaw = [
                 "text": "The input frequency required to turn the filter circuit on",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 170
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2253,7 +2346,8 @@ const allQuestionsRaw = [
                 "text": "Crystals amplify all frequencies equally to improve signal strength",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 168
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2277,7 +2371,8 @@ const allQuestionsRaw = [
                 "text": "Discoloration of paint caused by UV exposure from sunlight",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2301,7 +2396,8 @@ const allQuestionsRaw = [
                 "text": "Only in aluminum alloys that have been anodized",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2325,7 +2421,8 @@ const allQuestionsRaw = [
                 "text": "Applying a thin coat of motor oil to all structural components weekly",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 322
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2349,7 +2446,8 @@ const allQuestionsRaw = [
                 "text": "Moisture dissolves both metals equally regardless of their composition",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 320
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2358,22 +2456,23 @@ const allQuestionsRaw = [
         "text": "A technician notices a white powdery substance on an aluminum aircraft skin panel. What type of corrosion is this likely?",
         "options": [
             {
-                "text": "Surface corrosion — aluminum oxide forms as a white or gray powder when aluminum reacts with its environment",
+                "text": "Surface corrosion \u2014 aluminum oxide forms as a white or gray powder when aluminum reacts with its environment",
                 "isCorrect": true
             },
             {
-                "text": "Stress corrosion cracking — the powder indicates internal fractures",
+                "text": "Stress corrosion cracking \u2014 the powder indicates internal fractures",
                 "isCorrect": false
             },
             {
-                "text": "Fretting corrosion — caused by two surfaces vibrating against each other",
+                "text": "Fretting corrosion \u2014 caused by two surfaces vibrating against each other",
                 "isCorrect": false
             },
             {
-                "text": "Filiform corrosion — caused by improper paint adhesion",
+                "text": "Filiform corrosion \u2014 caused by improper paint adhesion",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2397,7 +2496,8 @@ const allQuestionsRaw = [
                 "text": "Heat the surface with a torch to reveal hidden corrosion underneath",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 188
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -2421,7 +2521,8 @@ const allQuestionsRaw = [
                 "text": "Apply salt water to test if the corrosion removal was complete",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 323
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2445,7 +2546,8 @@ const allQuestionsRaw = [
                 "text": "Current reverses direction and flows backward through the circuit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2469,7 +2571,8 @@ const allQuestionsRaw = [
                 "text": "Total resistance is the average of all individual resistor values",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 43
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2478,22 +2581,23 @@ const allQuestionsRaw = [
         "text": "In a series circuit with a 24V source and three resistors, voltage drops of 8V and 10V are measured across the first two resistors. What is the voltage drop across the third resistor?",
         "options": [
             {
-                "text": "6V — the sum of all voltage drops must equal the source voltage (24 - 8 - 10 = 6)",
+                "text": "6V \u2014 the sum of all voltage drops must equal the source voltage (24 - 8 - 10 = 6)",
                 "isCorrect": true
             },
             {
-                "text": "24V — each resistor sees the full source voltage in a series circuit",
+                "text": "24V \u2014 each resistor sees the full source voltage in a series circuit",
                 "isCorrect": false
             },
             {
-                "text": "18V — the remaining voltage is split equally between the last two resistors",
+                "text": "18V \u2014 the remaining voltage is split equally between the last two resistors",
                 "isCorrect": false
             },
             {
-                "text": "0V — the voltage is used up by the first two resistors",
+                "text": "0V \u2014 the voltage is used up by the first two resistors",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2502,7 +2606,7 @@ const allQuestionsRaw = [
         "text": "In a parallel circuit, what determines how much current flows through each branch?",
         "options": [
             {
-                "text": "The resistance of each branch — lower resistance branches carry more current (I = V/R)",
+                "text": "The resistance of each branch \u2014 lower resistance branches carry more current (I = V/R)",
                 "isCorrect": true
             },
             {
@@ -2517,7 +2621,8 @@ const allQuestionsRaw = [
                 "text": "The total circuit current determines individual branch current, not resistance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 47
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2541,7 +2646,8 @@ const allQuestionsRaw = [
                 "text": "The circuit continues operating normally but at higher efficiency",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 120
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2550,22 +2656,23 @@ const allQuestionsRaw = [
         "text": "A 100-ohm resistor has 0.5 amps flowing through it. How much power is it dissipating?",
         "options": [
             {
-                "text": "25 watts — using the formula P = I² × R = (0.5)² × 100 = 25W",
+                "text": "25 watts \u2014 using the formula P = I\u00b2 \u00d7 R = (0.5)\u00b2 \u00d7 100 = 25W",
                 "isCorrect": true
             },
             {
-                "text": "50 watts — using P = I × R",
+                "text": "50 watts \u2014 using P = I \u00d7 R",
                 "isCorrect": false
             },
             {
-                "text": "200 watts — using P = V × R",
+                "text": "200 watts \u2014 using P = V \u00d7 R",
                 "isCorrect": false
             },
             {
-                "text": "0.5 watts — using P = I / R",
+                "text": "0.5 watts \u2014 using P = I / R",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 41
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2574,46 +2681,48 @@ const allQuestionsRaw = [
         "text": "An aircraft circuit has a 28V DC bus powering a lamp with 4 ohms of resistance. What current flows through the lamp?",
         "options": [
             {
-                "text": "7 amps — using Ohm's Law: I = E/R = 28/4 = 7A",
+                "text": "7 amps \u2014 using Ohm's Law: I = E/R = 28/4 = 7A",
                 "isCorrect": true
             },
             {
-                "text": "112 amps — using I = E × R",
+                "text": "112 amps \u2014 using I = E \u00d7 R",
                 "isCorrect": false
             },
             {
-                "text": "0.14 amps — using I = R/E",
+                "text": "0.14 amps \u2014 using I = R/E",
                 "isCorrect": false
             },
             {
-                "text": "32 amps — using I = E + R",
+                "text": "32 amps \u2014 using I = E + R",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 57
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Total Resistance Series",
-        "text": "Three resistors of 10Ω, 20Ω, and 30Ω are connected in series. What is the total resistance?",
+        "text": "Three resistors of 10\u03a9, 20\u03a9, and 30\u03a9 are connected in series. What is the total resistance?",
         "options": [
             {
-                "text": "60Ω — in series, resistances are added: RT = R1 + R2 + R3",
+                "text": "60\u03a9 \u2014 in series, resistances are added: RT = R1 + R2 + R3",
                 "isCorrect": true
             },
             {
-                "text": "5.45Ω — calculated using the parallel formula",
+                "text": "5.45\u03a9 \u2014 calculated using the parallel formula",
                 "isCorrect": false
             },
             {
-                "text": "20Ω — the average of the three values",
+                "text": "20\u03a9 \u2014 the average of the three values",
                 "isCorrect": false
             },
             {
-                "text": "6,000Ω — the product of all three values",
+                "text": "6,000\u03a9 \u2014 the product of all three values",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 55
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2622,22 +2731,23 @@ const allQuestionsRaw = [
         "text": "An aircraft system draws 5 amps from a 28V DC bus. How much power does it consume?",
         "options": [
             {
-                "text": "140 watts — using P = E × I = 28 × 5 = 140W",
+                "text": "140 watts \u2014 using P = E \u00d7 I = 28 \u00d7 5 = 140W",
                 "isCorrect": true
             },
             {
-                "text": "5.6 watts — using P = E / I",
+                "text": "5.6 watts \u2014 using P = E / I",
                 "isCorrect": false
             },
             {
-                "text": "33 watts — using P = E + I",
+                "text": "33 watts \u2014 using P = E + I",
                 "isCorrect": false
             },
             {
-                "text": "700 watts — using P = E × I²",
+                "text": "700 watts \u2014 using P = E \u00d7 I\u00b2",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 129
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2661,7 +2771,8 @@ const allQuestionsRaw = [
                 "text": "Conductance, admittance, and susceptance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 62
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -2685,31 +2796,33 @@ const allQuestionsRaw = [
                 "text": "Peak current over RMS current",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 65
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Voltage Divider",
-        "text": "Two equal resistors of 100Ω each are connected in series across a 28V source. What voltage appears across each resistor?",
+        "text": "Two equal resistors of 100\u03a9 each are connected in series across a 28V source. What voltage appears across each resistor?",
         "options": [
             {
-                "text": "14V — voltage divides proportionally to resistance, and equal resistors split voltage equally",
+                "text": "14V \u2014 voltage divides proportionally to resistance, and equal resistors split voltage equally",
                 "isCorrect": true
             },
             {
-                "text": "28V — each resistor sees the full source voltage",
+                "text": "28V \u2014 each resistor sees the full source voltage",
                 "isCorrect": false
             },
             {
-                "text": "56V — voltage doubles in a series circuit",
+                "text": "56V \u2014 voltage doubles in a series circuit",
                 "isCorrect": false
             },
             {
-                "text": "0V — the resistors cancel each other out",
+                "text": "0V \u2014 the resistors cancel each other out",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2718,11 +2831,11 @@ const allQuestionsRaw = [
         "text": "As wire gauge numbers become larger (e.g., from 10 AWG to 22 AWG), what happens to the wire diameter?",
         "options": [
             {
-                "text": "The wire diameter gets smaller — higher gauge numbers mean thinner wire",
+                "text": "The wire diameter gets smaller \u2014 higher gauge numbers mean thinner wire",
                 "isCorrect": true
             },
             {
-                "text": "The wire diameter gets larger — higher numbers mean thicker wire",
+                "text": "The wire diameter gets larger \u2014 higher numbers mean thicker wire",
                 "isCorrect": false
             },
             {
@@ -2733,7 +2846,8 @@ const allQuestionsRaw = [
                 "text": "The gauge number only indicates insulation thickness, not wire size",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2757,7 +2871,8 @@ const allQuestionsRaw = [
                 "text": "Twisted pairs are required by regulation for all aircraft circuits regardless of application",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 193
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2781,7 +2896,8 @@ const allQuestionsRaw = [
                 "text": "Wires that have changed color from their original factory color",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 364
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2794,18 +2910,19 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Removing too little insulation — all stripping should expose at least 2 inches of conductor",
+                "text": "Removing too little insulation \u2014 all stripping should expose at least 2 inches of conductor",
                 "isCorrect": false
             },
             {
-                "text": "Using wire strippers — a knife is the preferred tool for aircraft wire",
+                "text": "Using wire strippers \u2014 a knife is the preferred tool for aircraft wire",
                 "isCorrect": false
             },
             {
-                "text": "Touching the bare conductor — skin oils improve the connection quality",
+                "text": "Touching the bare conductor \u2014 skin oils improve the connection quality",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2829,7 +2946,8 @@ const allQuestionsRaw = [
                 "text": "Tight bends increase the current-carrying capacity of the wire",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2838,7 +2956,7 @@ const allQuestionsRaw = [
         "text": "What is the general rule regarding wire splices in aircraft wiring?",
         "options": [
             {
-                "text": "Splices should be kept to a minimum and are not permitted in certain critical areas — always follow the manufacturer's maintenance manual",
+                "text": "Splices should be kept to a minimum and are not permitted in certain critical areas \u2014 always follow the manufacturer's maintenance manual",
                 "isCorrect": true
             },
             {
@@ -2853,7 +2971,8 @@ const allQuestionsRaw = [
                 "text": "Splices must be soldered and then wrapped with standard electrical tape",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 333
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2870,14 +2989,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "By the physical location of the wire — no markings are used in aircraft",
+                "text": "By the physical location of the wire \u2014 no markings are used in aircraft",
                 "isCorrect": false
             },
             {
                 "text": "By the weight of the wire per foot, measured during installation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 425
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2901,7 +3021,8 @@ const allQuestionsRaw = [
                 "text": "Nickel and zinc",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 233
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2925,7 +3046,8 @@ const allQuestionsRaw = [
                 "text": "Wire routing near heat sources is permitted if the wire is aluminum",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 259
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2949,7 +3071,8 @@ const allQuestionsRaw = [
                 "text": "Clamps are only decorative and have no functional purpose",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2973,7 +3096,8 @@ const allQuestionsRaw = [
                 "text": "To reduce the wire gauge at the junction for current limiting",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 359
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -2997,7 +3121,8 @@ const allQuestionsRaw = [
                 "text": "Grounding increases circuit resistance to limit current in all systems",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 427
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -3021,7 +3146,8 @@ const allQuestionsRaw = [
                 "text": "Only the cost of the wire determines which type to use",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -3042,10 +3168,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Only a visual check is needed — pull testing is not required for crimped terminals",
+                "text": "Only a visual check is needed \u2014 pull testing is not required for crimped terminals",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 362
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -3069,7 +3196,8 @@ const allQuestionsRaw = [
                 "text": "The shield acts as a backup conductor if the main wire breaks",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -3093,7 +3221,8 @@ const allQuestionsRaw = [
                 "text": "It shows the manufacturing process for building wire harnesses",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 425
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3117,7 +3246,8 @@ const allQuestionsRaw = [
                 "text": "Speed, distance, and time",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3141,7 +3271,8 @@ const allQuestionsRaw = [
                 "text": "The physical location of a wire fault inside a cable bundle",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 344
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3165,7 +3296,8 @@ const allQuestionsRaw = [
                 "text": "To generate high voltage for powering test circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3174,7 +3306,7 @@ const allQuestionsRaw = [
         "text": "When soldering electronic connections on aircraft equipment, what type of solder is typically required?",
         "options": [
             {
-                "text": "Rosin-core solder — acid-core solder must never be used on electronic connections because it causes corrosion",
+                "text": "Rosin-core solder \u2014 acid-core solder must never be used on electronic connections because it causes corrosion",
                 "isCorrect": true
             },
             {
@@ -3189,7 +3321,8 @@ const allQuestionsRaw = [
                 "text": "Any household plumbing solder is acceptable for aircraft use",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 189
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3198,7 +3331,7 @@ const allQuestionsRaw = [
         "text": "Why must calibrated crimping tools be used when installing terminal lugs on aircraft wire?",
         "options": [
             {
-                "text": "To ensure consistent, reliable crimps that meet specifications — improper crimps can cause high-resistance connections or wire pullout",
+                "text": "To ensure consistent, reliable crimps that meet specifications \u2014 improper crimps can cause high-resistance connections or wire pullout",
                 "isCorrect": true
             },
             {
@@ -3213,7 +3346,8 @@ const allQuestionsRaw = [
                 "text": "The calibration only affects the appearance, not the strength of the crimp",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 361
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3222,7 +3356,7 @@ const allQuestionsRaw = [
         "text": "What advantage does a clamp-on ammeter provide over a standard inline ammeter?",
         "options": [
             {
-                "text": "It can measure current without breaking the circuit — the clamp senses the magnetic field around the wire",
+                "text": "It can measure current without breaking the circuit \u2014 the clamp senses the magnetic field around the wire",
                 "isCorrect": true
             },
             {
@@ -3237,7 +3371,8 @@ const allQuestionsRaw = [
                 "text": "It must be permanently installed and cannot be removed",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3261,7 +3396,8 @@ const allQuestionsRaw = [
                 "text": "To inject test signals into radio frequency circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 181
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3285,7 +3421,8 @@ const allQuestionsRaw = [
                 "text": "To crimp terminal lugs onto wire ends",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 261
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3309,7 +3446,8 @@ const allQuestionsRaw = [
                 "text": "The temperature of bonded joints during heat curing",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 65
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -3318,7 +3456,7 @@ const allQuestionsRaw = [
         "text": "A technician uses a continuity tester on a wire run and hears no tone. What does this indicate?",
         "options": [
             {
-                "text": "The wire has an open circuit — there is no continuous path for current between the test points",
+                "text": "The wire has an open circuit \u2014 there is no continuous path for current between the test points",
                 "isCorrect": true
             },
             {
@@ -3333,7 +3471,8 @@ const allQuestionsRaw = [
                 "text": "The wire has a short circuit to ground",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3357,7 +3496,8 @@ const allQuestionsRaw = [
                 "text": "A Zener diode has no specific breakdown voltage and conducts randomly",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 117
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3381,7 +3521,8 @@ const allQuestionsRaw = [
                 "text": "It increases the frequency of the signal while maintaining amplitude",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 123
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3405,7 +3546,8 @@ const allQuestionsRaw = [
                 "text": "It doubles the frequency of the input signal",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 345
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3429,7 +3571,8 @@ const allQuestionsRaw = [
                 "text": "The diode converts the excess voltage into light energy",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3453,7 +3596,8 @@ const allQuestionsRaw = [
                 "text": "They prevent the aircraft battery from charging too quickly",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 264
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3466,7 +3610,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "72 amps (I = E × R)",
+                "text": "72 amps (I = E \u00d7 R)",
                 "isCorrect": false
             },
             {
@@ -3477,7 +3621,8 @@ const allQuestionsRaw = [
                 "text": "18 amps (I = E + R)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 46
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3486,7 +3631,7 @@ const allQuestionsRaw = [
         "text": "A circuit draws 3 amps through a 47-ohm resistor. What is the voltage drop across that resistor?",
         "options": [
             {
-                "text": "141 volts (E = I × R = 3 × 47 = 141V)",
+                "text": "141 volts (E = I \u00d7 R = 3 \u00d7 47 = 141V)",
                 "isCorrect": true
             },
             {
@@ -3498,10 +3643,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "44 volts (E = R − I)",
+                "text": "44 volts (E = R \u2212 I)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3510,11 +3656,11 @@ const allQuestionsRaw = [
         "text": "An aircraft landing light operates at 28V and draws 4 amps. What is the resistance of the light?",
         "options": [
             {
-                "text": "7 ohms (R = E/I = 28/4 = 7Ω)",
+                "text": "7 ohms (R = E/I = 28/4 = 7\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "112 ohms (R = E × I)",
+                "text": "112 ohms (R = E \u00d7 I)",
                 "isCorrect": false
             },
             {
@@ -3522,10 +3668,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "24 ohms (R = E − I)",
+                "text": "24 ohms (R = E \u2212 I)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 200
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3538,7 +3685,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "392 amps (I = E × R)",
+                "text": "392 amps (I = E \u00d7 R)",
                 "isCorrect": false
             },
             {
@@ -3549,7 +3696,8 @@ const allQuestionsRaw = [
                 "text": "42 amps (I = E + R)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 41
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3558,7 +3706,7 @@ const allQuestionsRaw = [
         "text": "A heater element has a resistance of 8 ohms and draws 3.5 amps. What voltage is applied to it?",
         "options": [
             {
-                "text": "28 volts (E = I × R = 3.5 × 8 = 28V)",
+                "text": "28 volts (E = I \u00d7 R = 3.5 \u00d7 8 = 28V)",
                 "isCorrect": true
             },
             {
@@ -3570,23 +3718,24 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "4.5 volts (E = R − I)",
+                "text": "4.5 volts (E = R \u2212 I)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 84
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Ohm's Law - Small Current",
-        "text": "A sensor circuit applies 5V across a 10,000-ohm (10 kΩ) resistor. What current flows?",
+        "text": "A sensor circuit applies 5V across a 10,000-ohm (10 k\u03a9) resistor. What current flows?",
         "options": [
             {
                 "text": "0.5 milliamps (I = E/R = 5/10,000 = 0.0005A = 0.5 mA)",
                 "isCorrect": true
             },
             {
-                "text": "50,000 amps (I = E × R)",
+                "text": "50,000 amps (I = E \u00d7 R)",
                 "isCorrect": false
             },
             {
@@ -3594,10 +3743,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "5 amps (I = E/R with R = 1Ω)",
+                "text": "5 amps (I = E/R with R = 1\u03a9)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 121
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3606,7 +3756,7 @@ const allQuestionsRaw = [
         "text": "An aircraft instrument draws 2 amps from the 28V bus. How much power does it consume?",
         "options": [
             {
-                "text": "56 watts (P = E × I = 28 × 2 = 56W)",
+                "text": "56 watts (P = E \u00d7 I = 28 \u00d7 2 = 56W)",
                 "isCorrect": true
             },
             {
@@ -3618,47 +3768,49 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "784 watts (P = E² × I)",
+                "text": "784 watts (P = E\u00b2 \u00d7 I)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 200
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
-        "topic": "Power - P=I²R",
+        "topic": "Power - P=I\u00b2R",
         "text": "A 50-ohm resistor carries 0.4 amps of current. How much power is it dissipating?",
         "options": [
             {
-                "text": "8 watts (P = I² × R = 0.16 × 50 = 8W)",
+                "text": "8 watts (P = I\u00b2 \u00d7 R = 0.16 \u00d7 50 = 8W)",
                 "isCorrect": true
             },
             {
-                "text": "20 watts (P = I × R)",
+                "text": "20 watts (P = I \u00d7 R)",
                 "isCorrect": false
             },
             {
-                "text": "125 watts (P = R/I²)",
+                "text": "125 watts (P = R/I\u00b2)",
                 "isCorrect": false
             },
             {
                 "text": "50.4 watts (P = R + I)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 84
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
-        "topic": "Power - P=E²/R",
+        "topic": "Power - P=E\u00b2/R",
         "text": "A 28V source is connected across a 196-ohm resistor. What power is dissipated?",
         "options": [
             {
-                "text": "4 watts (P = E²/R = 784/196 = 4W)",
+                "text": "4 watts (P = E\u00b2/R = 784/196 = 4W)",
                 "isCorrect": true
             },
             {
-                "text": "5,488 watts (P = E² × R)",
+                "text": "5,488 watts (P = E\u00b2 \u00d7 R)",
                 "isCorrect": false
             },
             {
@@ -3669,7 +3821,8 @@ const allQuestionsRaw = [
                 "text": "224 watts (P = E + R)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3678,7 +3831,7 @@ const allQuestionsRaw = [
         "text": "A 28V aircraft circuit is protected by a 5-amp fuse. What is the maximum power the circuit can deliver before the fuse blows?",
         "options": [
             {
-                "text": "140 watts (P = E × I = 28 × 5 = 140W)",
+                "text": "140 watts (P = E \u00d7 I = 28 \u00d7 5 = 140W)",
                 "isCorrect": true
             },
             {
@@ -3690,10 +3843,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "560 watts (P = E × I × 4)",
+                "text": "560 watts (P = E \u00d7 I \u00d7 4)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 41
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3702,7 +3856,7 @@ const allQuestionsRaw = [
         "text": "An aircraft generator produces 28V and is rated at 60 amps. What is the maximum power output?",
         "options": [
             {
-                "text": "1,680 watts (P = E × I = 28 × 60 = 1,680W)",
+                "text": "1,680 watts (P = E \u00d7 I = 28 \u00d7 60 = 1,680W)",
                 "isCorrect": true
             },
             {
@@ -3714,115 +3868,120 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "168 watts (P = E × I / 10)",
+                "text": "168 watts (P = E \u00d7 I / 10)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 186
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Series Resistance",
-        "text": "Four resistors of 10Ω, 22Ω, 33Ω, and 47Ω are connected in series. What is the total resistance?",
+        "text": "Four resistors of 10\u03a9, 22\u03a9, 33\u03a9, and 47\u03a9 are connected in series. What is the total resistance?",
         "options": [
             {
-                "text": "112Ω (RT = 10 + 22 + 33 + 47 = 112Ω)",
+                "text": "112\u03a9 (RT = 10 + 22 + 33 + 47 = 112\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "28Ω (average of all four values)",
+                "text": "28\u03a9 (average of all four values)",
                 "isCorrect": false
             },
             {
-                "text": "5.15Ω (parallel formula result)",
+                "text": "5.15\u03a9 (parallel formula result)",
                 "isCorrect": false
             },
             {
-                "text": "47Ω (largest value dominates)",
+                "text": "47\u03a9 (largest value dominates)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 55
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Parallel Resistance - Equal",
-        "text": "Three 30Ω resistors are connected in parallel. What is the total resistance?",
+        "text": "Three 30\u03a9 resistors are connected in parallel. What is the total resistance?",
         "options": [
             {
-                "text": "10Ω (for equal resistors in parallel: RT = R/N = 30/3 = 10Ω)",
+                "text": "10\u03a9 (for equal resistors in parallel: RT = R/N = 30/3 = 10\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "90Ω (RT = R × N)",
+                "text": "90\u03a9 (RT = R \u00d7 N)",
                 "isCorrect": false
             },
             {
-                "text": "30Ω (parallel doesn't change resistance)",
+                "text": "30\u03a9 (parallel doesn't change resistance)",
                 "isCorrect": false
             },
             {
-                "text": "0.1Ω (RT = N/R)",
+                "text": "0.1\u03a9 (RT = N/R)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 57
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Parallel Resistance - Two",
-        "text": "A 20Ω resistor and a 30Ω resistor are connected in parallel. What is the total resistance?",
+        "text": "A 20\u03a9 resistor and a 30\u03a9 resistor are connected in parallel. What is the total resistance?",
         "options": [
             {
-                "text": "12Ω (RT = (R1×R2)/(R1+R2) = 600/50 = 12Ω)",
+                "text": "12\u03a9 (RT = (R1\u00d7R2)/(R1+R2) = 600/50 = 12\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "50Ω (RT = R1 + R2)",
+                "text": "50\u03a9 (RT = R1 + R2)",
                 "isCorrect": false
             },
             {
-                "text": "25Ω (average of the two)",
+                "text": "25\u03a9 (average of the two)",
                 "isCorrect": false
             },
             {
-                "text": "600Ω (RT = R1 × R2)",
+                "text": "600\u03a9 (RT = R1 \u00d7 R2)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 55
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Series-Parallel Circuit",
-        "text": "A 10Ω resistor is in series with two 20Ω resistors that are in parallel with each other. What is the total circuit resistance?",
+        "text": "A 10\u03a9 resistor is in series with two 20\u03a9 resistors that are in parallel with each other. What is the total circuit resistance?",
         "options": [
             {
-                "text": "20Ω (parallel pair = 10Ω, plus series 10Ω = 20Ω total)",
+                "text": "20\u03a9 (parallel pair = 10\u03a9, plus series 10\u03a9 = 20\u03a9 total)",
                 "isCorrect": true
             },
             {
-                "text": "50Ω (all three added together)",
+                "text": "50\u03a9 (all three added together)",
                 "isCorrect": false
             },
             {
-                "text": "30Ω (10 + 20 = 30)",
+                "text": "30\u03a9 (10 + 20 = 30)",
                 "isCorrect": false
             },
             {
-                "text": "6.67Ω (all three in parallel)",
+                "text": "6.67\u03a9 (all three in parallel)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 56
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Series Circuit - Total Current",
-        "text": "A 28V source powers a series circuit with resistors of 4Ω, 6Ω, and 4Ω. What current flows through the circuit?",
+        "text": "A 28V source powers a series circuit with resistors of 4\u03a9, 6\u03a9, and 4\u03a9. What current flows through the circuit?",
         "options": [
             {
-                "text": "2 amps (RT = 4+6+4 = 14Ω, then I = E/R = 28/14 = 2A)",
+                "text": "2 amps (RT = 4+6+4 = 14\u03a9, then I = E/R = 28/14 = 2A)",
                 "isCorrect": true
             },
             {
@@ -3830,86 +3989,90 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "7 amps (I = E/R using only one 4Ω resistor)",
+                "text": "7 amps (I = E/R using only one 4\u03a9 resistor)",
                 "isCorrect": false
             },
             {
-                "text": "392 amps (I = E × R)",
+                "text": "392 amps (I = E \u00d7 R)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 44
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Inductive Reactance Calc",
-        "text": "Calculate the inductive reactance of a 0.5 henry inductor at 60 Hz. (XL = 2πfL)",
+        "text": "Calculate the inductive reactance of a 0.5 henry inductor at 60 Hz. (XL = 2\u03c0fL)",
         "options": [
             {
-                "text": "188.5Ω (XL = 2 × 3.14 × 60 × 0.5 = 188.5Ω)",
+                "text": "188.5\u03a9 (XL = 2 \u00d7 3.14 \u00d7 60 \u00d7 0.5 = 188.5\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "30Ω (XL = f × L)",
+                "text": "30\u03a9 (XL = f \u00d7 L)",
                 "isCorrect": false
             },
             {
-                "text": "5.31Ω (XL = 1/(2πfL))",
+                "text": "5.31\u03a9 (XL = 1/(2\u03c0fL))",
                 "isCorrect": false
             },
             {
-                "text": "60.5Ω (XL = f + L)",
+                "text": "60.5\u03a9 (XL = f + L)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 394
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Capacitive Reactance Calc",
-        "text": "Calculate the capacitive reactance of a 10 microfarad (10 × 10⁻⁶ F) capacitor at 60 Hz. (XC = 1/(2πfC))",
+        "text": "Calculate the capacitive reactance of a 10 microfarad (10 \u00d7 10\u207b\u2076 F) capacitor at 60 Hz. (XC = 1/(2\u03c0fC))",
         "options": [
             {
-                "text": "Approximately 265Ω (XC = 1/(2 × 3.14 × 60 × 0.00001) ≈ 265Ω)",
+                "text": "Approximately 265\u03a9 (XC = 1/(2 \u00d7 3.14 \u00d7 60 \u00d7 0.00001) \u2248 265\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "0.00377Ω (XC = 2πfC)",
+                "text": "0.00377\u03a9 (XC = 2\u03c0fC)",
                 "isCorrect": false
             },
             {
-                "text": "600Ω (XC = f × C)",
+                "text": "600\u03a9 (XC = f \u00d7 C)",
                 "isCorrect": false
             },
             {
-                "text": "3,770Ω (XC = 2πf/C)",
+                "text": "3,770\u03a9 (XC = 2\u03c0f/C)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 89
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Basic circuit Calculations",
         "topic": "Impedance Calc",
-        "text": "A series RL circuit has R = 30Ω and XL = 40Ω. What is the total impedance (Z)?",
+        "text": "A series RL circuit has R = 30\u03a9 and XL = 40\u03a9. What is the total impedance (Z)?",
         "options": [
             {
-                "text": "50Ω (Z = √(R² + XL²) = √(900 + 1600) = √2500 = 50Ω)",
+                "text": "50\u03a9 (Z = \u221a(R\u00b2 + XL\u00b2) = \u221a(900 + 1600) = \u221a2500 = 50\u03a9)",
                 "isCorrect": true
             },
             {
-                "text": "70Ω (Z = R + XL)",
+                "text": "70\u03a9 (Z = R + XL)",
                 "isCorrect": false
             },
             {
-                "text": "10Ω (Z = XL − R)",
+                "text": "10\u03a9 (Z = XL \u2212 R)",
                 "isCorrect": false
             },
             {
-                "text": "1,200Ω (Z = R × XL)",
+                "text": "1,200\u03a9 (Z = R \u00d7 XL)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 57
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3933,7 +4096,8 @@ const allQuestionsRaw = [
                 "text": "Both XL and XC become infinite at resonance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 62
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3946,7 +4110,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "480V AC (Vs = Vp × turns ratio)",
+                "text": "480V AC (Vs = Vp \u00d7 turns ratio)",
                 "isCorrect": false
             },
             {
@@ -3954,10 +4118,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "116V AC (Vs = Vp − turns ratio)",
+                "text": "116V AC (Vs = Vp \u2212 turns ratio)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 105
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3966,7 +4131,7 @@ const allQuestionsRaw = [
         "text": "A step-down transformer with a 5:1 ratio has 2 amps flowing in the primary. What current is available at the secondary?",
         "options": [
             {
-                "text": "10 amps (Is = Ip × turns ratio = 2 × 5 = 10A — current steps up when voltage steps down)",
+                "text": "10 amps (Is = Ip \u00d7 turns ratio = 2 \u00d7 5 = 10A \u2014 current steps up when voltage steps down)",
                 "isCorrect": true
             },
             {
@@ -3981,7 +4146,8 @@ const allQuestionsRaw = [
                 "text": "7 amps (Is = Ip + turns ratio)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 103
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -3990,11 +4156,11 @@ const allQuestionsRaw = [
         "text": "A transformer must step 115V AC down to 28V AC. If the primary has 460 turns, how many turns must the secondary have?",
         "options": [
             {
-                "text": "112 turns (Ns = Np × Vs/Vp = 460 × 28/115 = 112 turns)",
+                "text": "112 turns (Ns = Np \u00d7 Vs/Vp = 460 \u00d7 28/115 = 112 turns)",
                 "isCorrect": true
             },
             {
-                "text": "1,893 turns (Ns = Np × Vp/Vs)",
+                "text": "1,893 turns (Ns = Np \u00d7 Vp/Vs)",
                 "isCorrect": false
             },
             {
@@ -4005,7 +4171,8 @@ const allQuestionsRaw = [
                 "text": "28 turns (same as output voltage)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 103
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4014,7 +4181,7 @@ const allQuestionsRaw = [
         "text": "An ideal transformer has 120V at 5A on the primary. If the secondary voltage is 24V, what is the maximum secondary current?",
         "options": [
             {
-                "text": "25 amps (Power in = Power out: 120×5 = 600W, so Is = 600/24 = 25A)",
+                "text": "25 amps (Power in = Power out: 120\u00d75 = 600W, so Is = 600/24 = 25A)",
                 "isCorrect": true
             },
             {
@@ -4029,7 +4196,8 @@ const allQuestionsRaw = [
                 "text": "600 amps (Is = Pin/1)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 186
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4050,10 +4218,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "There is no functional difference — the labels are interchangeable",
+                "text": "There is no functional difference \u2014 the labels are interchangeable",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 131
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4062,22 +4231,23 @@ const allQuestionsRaw = [
         "text": "A bipolar junction transistor (BJT) has three terminals. What are they, and which controls the current flow?",
         "options": [
             {
-                "text": "Base, collector, and emitter — a small current at the base controls a larger current between collector and emitter",
+                "text": "Base, collector, and emitter \u2014 a small current at the base controls a larger current between collector and emitter",
                 "isCorrect": true
             },
             {
-                "text": "Anode, cathode, and gate — the gate controls current like a valve",
+                "text": "Anode, cathode, and gate \u2014 the gate controls current like a valve",
                 "isCorrect": false
             },
             {
-                "text": "Source, drain, and ground — the ground terminal controls current flow",
+                "text": "Source, drain, and ground \u2014 the ground terminal controls current flow",
                 "isCorrect": false
             },
             {
-                "text": "Input, output, and reference — the reference terminal sets the gain",
+                "text": "Input, output, and reference \u2014 the reference terminal sets the gain",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 129
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4086,22 +4256,23 @@ const allQuestionsRaw = [
         "text": "Which transistor amplifier configuration provides both voltage gain and current gain, and is the most commonly used?",
         "options": [
             {
-                "text": "Common emitter — it provides both voltage and current amplification with a 180° phase inversion",
+                "text": "Common emitter \u2014 it provides both voltage and current amplification with a 180\u00b0 phase inversion",
                 "isCorrect": true
             },
             {
-                "text": "Common base — it provides the highest voltage gain with no current gain",
+                "text": "Common base \u2014 it provides the highest voltage gain with no current gain",
                 "isCorrect": false
             },
             {
-                "text": "Common collector — it provides the highest power gain with no voltage gain",
+                "text": "Common collector \u2014 it provides the highest power gain with no voltage gain",
                 "isCorrect": false
             },
             {
-                "text": "Common ground — it provides unity gain in all configurations",
+                "text": "Common ground \u2014 it provides unity gain in all configurations",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 407
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4110,7 +4281,7 @@ const allQuestionsRaw = [
         "text": "A Class A amplifier conducts during what portion of the input signal cycle?",
         "options": [
             {
-                "text": "The full 360 degrees of the input cycle — it conducts continuously with low distortion but lower efficiency",
+                "text": "The full 360 degrees of the input cycle \u2014 it conducts continuously with low distortion but lower efficiency",
                 "isCorrect": true
             },
             {
@@ -4125,7 +4296,8 @@ const allQuestionsRaw = [
                 "text": "Only during signal peaks above a threshold voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 408
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4134,7 +4306,7 @@ const allQuestionsRaw = [
         "text": "A push-pull amplifier uses two transistors in a Class B configuration. Why are two transistors needed?",
         "options": [
             {
-                "text": "Each transistor amplifies one half of the AC cycle (180°), and together they reproduce the full waveform",
+                "text": "Each transistor amplifies one half of the AC cycle (180\u00b0), and together they reproduce the full waveform",
                 "isCorrect": true
             },
             {
@@ -4149,7 +4321,8 @@ const allQuestionsRaw = [
                 "text": "One transistor handles voltage gain while the other handles current gain",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 137
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4173,7 +4346,8 @@ const allQuestionsRaw = [
                 "text": "To reduce the transistor's gain to zero for testing purposes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 133
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4186,18 +4360,19 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "4.9 (Gain = Vout − Vin)",
+                "text": "4.9 (Gain = Vout \u2212 Vin)",
                 "isCorrect": false
             },
             {
-                "text": "0.5 (Gain = Vout × Vin)",
+                "text": "0.5 (Gain = Vout \u00d7 Vin)",
                 "isCorrect": false
             },
             {
                 "text": "0.02 (Gain = Vin/Vout)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 146
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4221,7 +4396,8 @@ const allQuestionsRaw = [
                 "text": "FETs are analog devices while BJTs are digital devices",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 134
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4230,11 +4406,11 @@ const allQuestionsRaw = [
         "text": "A two-input AND gate has input A = 1 and input B = 0. What is the output?",
         "options": [
             {
-                "text": "0 — an AND gate outputs 1 only when ALL inputs are 1",
+                "text": "0 \u2014 an AND gate outputs 1 only when ALL inputs are 1",
                 "isCorrect": true
             },
             {
-                "text": "1 — an AND gate outputs 1 when ANY input is 1",
+                "text": "1 \u2014 an AND gate outputs 1 when ANY input is 1",
                 "isCorrect": false
             },
             {
@@ -4245,7 +4421,8 @@ const allQuestionsRaw = [
                 "text": "The output is undefined when inputs differ",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 217
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4254,22 +4431,23 @@ const allQuestionsRaw = [
         "text": "A two-input OR gate has input A = 0 and input B = 1. What is the output?",
         "options": [
             {
-                "text": "1 — an OR gate outputs 1 when ANY input is 1",
+                "text": "1 \u2014 an OR gate outputs 1 when ANY input is 1",
                 "isCorrect": true
             },
             {
-                "text": "0 — an OR gate outputs 1 only when ALL inputs are 1",
+                "text": "0 \u2014 an OR gate outputs 1 only when ALL inputs are 1",
                 "isCorrect": false
             },
             {
-                "text": "0 — an OR gate outputs 1 only when all inputs are 0",
+                "text": "0 \u2014 an OR gate outputs 1 only when all inputs are 0",
                 "isCorrect": false
             },
             {
                 "text": "The output depends on which input was activated first",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 217
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4278,7 +4456,7 @@ const allQuestionsRaw = [
         "text": "What does a NOT gate (inverter) do to its input?",
         "options": [
             {
-                "text": "It reverses the logic state — a 1 input produces a 0 output, and a 0 input produces a 1 output",
+                "text": "It reverses the logic state \u2014 a 1 input produces a 0 output, and a 0 input produces a 1 output",
                 "isCorrect": true
             },
             {
@@ -4293,7 +4471,8 @@ const allQuestionsRaw = [
                 "text": "It converts a digital signal to an analog signal",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 220
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4302,7 +4481,7 @@ const allQuestionsRaw = [
         "text": "A NAND gate is equivalent to which combination of basic gates?",
         "options": [
             {
-                "text": "An AND gate followed by a NOT gate — it outputs 0 only when ALL inputs are 1",
+                "text": "An AND gate followed by a NOT gate \u2014 it outputs 0 only when ALL inputs are 1",
                 "isCorrect": true
             },
             {
@@ -4317,7 +4496,8 @@ const allQuestionsRaw = [
                 "text": "A NOT gate followed by an AND gate",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 218
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4341,7 +4521,8 @@ const allQuestionsRaw = [
                 "text": "Approximately 10V to 15V",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 151
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4350,7 +4531,7 @@ const allQuestionsRaw = [
         "text": "What is the basic function of a flip-flop in a digital circuit?",
         "options": [
             {
-                "text": "It stores one bit of data — it can be set to either a 0 or 1 and holds that state until changed",
+                "text": "It stores one bit of data \u2014 it can be set to either a 0 or 1 and holds that state until changed",
                 "isCorrect": true
             },
             {
@@ -4365,31 +4546,33 @@ const allQuestionsRaw = [
                 "text": "It generates a clock signal for timing other circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 217
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Digital Logic / Theory of Operation",
         "topic": "Truth Table",
-        "text": "A truth table shows: inputs 0,0→0; 0,1→1; 1,0→1; 1,1→0. Which gate does this represent?",
+        "text": "A truth table shows: inputs 0,0\u21920; 0,1\u21921; 1,0\u21921; 1,1\u21920. Which gate does this represent?",
         "options": [
             {
-                "text": "An XOR (exclusive OR) gate — it outputs 1 only when the inputs are different",
+                "text": "An XOR (exclusive OR) gate \u2014 it outputs 1 only when the inputs are different",
                 "isCorrect": true
             },
             {
-                "text": "An AND gate — it outputs 1 only when both inputs are 1",
+                "text": "An AND gate \u2014 it outputs 1 only when both inputs are 1",
                 "isCorrect": false
             },
             {
-                "text": "A NOR gate — it outputs 1 only when both inputs are 0",
+                "text": "A NOR gate \u2014 it outputs 1 only when both inputs are 0",
                 "isCorrect": false
             },
             {
-                "text": "An OR gate — it outputs 1 when any input is 1",
+                "text": "An OR gate \u2014 it outputs 1 when any input is 1",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 217
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -4413,7 +4596,8 @@ const allQuestionsRaw = [
                 "text": "Whether the pins are magnetic, which indicates a defective connector",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 330
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -4437,7 +4621,8 @@ const allQuestionsRaw = [
                 "text": "Moisture only affects connectors made of aluminum, not other materials",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -4446,7 +4631,7 @@ const allQuestionsRaw = [
         "text": "Why must specific insertion and removal tools be used when working with connector pins?",
         "options": [
             {
-                "text": "To prevent damage to the pin, socket, or connector body — using incorrect tools can bend pins or crack the insert",
+                "text": "To prevent damage to the pin, socket, or connector body \u2014 using incorrect tools can bend pins or crack the insert",
                 "isCorrect": true
             },
             {
@@ -4461,7 +4646,8 @@ const allQuestionsRaw = [
                 "text": "Insertion tools are optional and only used to speed up the process",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 361
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -4485,7 +4671,8 @@ const allQuestionsRaw = [
                 "text": "It changes the color of the connector for identification purposes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -4509,7 +4696,8 @@ const allQuestionsRaw = [
                 "text": "Leave the coupling ring loose to allow for thermal expansion",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 272
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4518,22 +4706,23 @@ const allQuestionsRaw = [
         "text": "What does SPST stand for in switch terminology, and how does it function?",
         "options": [
             {
-                "text": "Single Pole Single Throw — it has one input and one output, functioning as a simple on/off switch",
+                "text": "Single Pole Single Throw \u2014 it has one input and one output, functioning as a simple on/off switch",
                 "isCorrect": true
             },
             {
-                "text": "Single Phase Single Terminal — it operates on single-phase AC power only",
+                "text": "Single Phase Single Terminal \u2014 it operates on single-phase AC power only",
                 "isCorrect": false
             },
             {
-                "text": "Standard Power Safety Toggle — it is a safety-rated toggle switch",
+                "text": "Standard Power Safety Toggle \u2014 it is a safety-rated toggle switch",
                 "isCorrect": false
             },
             {
-                "text": "Solid-state Power Switching Transistor — it is an electronic switch",
+                "text": "Solid-state Power Switching Transistor \u2014 it is an electronic switch",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 190
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4557,7 +4746,8 @@ const allQuestionsRaw = [
                 "text": "Control only one circuit with a momentary contact action",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 193
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4581,7 +4771,8 @@ const allQuestionsRaw = [
                 "text": "A relay amplifies the input voltage by a fixed ratio like a transformer",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 415
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4605,7 +4796,8 @@ const allQuestionsRaw = [
                 "text": "A type of circuit breaker that limits current to a preset value",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4629,7 +4821,8 @@ const allQuestionsRaw = [
                 "text": "Fuses provide better protection because they are more sensitive",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4653,7 +4846,8 @@ const allQuestionsRaw = [
                 "text": "The total energy consumed by a load, measured in watts",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 29
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4677,7 +4871,8 @@ const allQuestionsRaw = [
                 "text": "Current flow direction changes 60 times per second in DC circuits",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4701,7 +4896,8 @@ const allQuestionsRaw = [
                 "text": "Rubber conducts DC but not AC, while copper conducts both equally",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 26
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4710,7 +4906,7 @@ const allQuestionsRaw = [
         "text": "If one lamp burns out in a series circuit of four lamps, what happens to the remaining lamps?",
         "options": [
             {
-                "text": "All remaining lamps go out because the circuit is broken — series circuits have only one path for current",
+                "text": "All remaining lamps go out because the circuit is broken \u2014 series circuits have only one path for current",
                 "isCorrect": true
             },
             {
@@ -4722,10 +4918,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Nothing changes — each lamp operates independently in a series circuit",
+                "text": "Nothing changes \u2014 each lamp operates independently in a series circuit",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 42
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4734,7 +4931,7 @@ const allQuestionsRaw = [
         "text": "What is a coulomb in electrical terms?",
         "options": [
             {
-                "text": "A unit of electrical charge equal to approximately 6.24 × 10¹⁸ electrons — one amp equals one coulomb per second",
+                "text": "A unit of electrical charge equal to approximately 6.24 \u00d7 10\u00b9\u2078 electrons \u2014 one amp equals one coulomb per second",
                 "isCorrect": true
             },
             {
@@ -4749,7 +4946,8 @@ const allQuestionsRaw = [
                 "text": "A unit of voltage equal to one joule per electron",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 28
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4773,7 +4971,8 @@ const allQuestionsRaw = [
                 "text": "DC alternates at 60 Hz while AC maintains a steady voltage",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 61
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4782,22 +4981,23 @@ const allQuestionsRaw = [
         "text": "Standard aircraft AC power systems in the United States operate at what frequency?",
         "options": [
             {
-                "text": "400 Hz — aircraft use higher frequency than commercial power (60 Hz) to allow lighter, smaller transformers and motors",
+                "text": "400 Hz \u2014 aircraft use higher frequency than commercial power (60 Hz) to allow lighter, smaller transformers and motors",
                 "isCorrect": true
             },
             {
-                "text": "60 Hz — the same as standard household power",
+                "text": "60 Hz \u2014 the same as standard household power",
                 "isCorrect": false
             },
             {
-                "text": "50 Hz — the international aviation standard",
+                "text": "50 Hz \u2014 the international aviation standard",
                 "isCorrect": false
             },
             {
-                "text": "1,000 Hz — to minimize electrical noise in avionics",
+                "text": "1,000 Hz \u2014 to minimize electrical noise in avionics",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 71
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4806,7 +5006,7 @@ const allQuestionsRaw = [
         "text": "What does RMS (Root Mean Square) mean when measuring AC voltage?",
         "options": [
             {
-                "text": "The effective value of AC voltage that produces the same heating effect as an equivalent DC voltage — it equals 0.707 × peak voltage",
+                "text": "The effective value of AC voltage that produces the same heating effect as an equivalent DC voltage \u2014 it equals 0.707 \u00d7 peak voltage",
                 "isCorrect": true
             },
             {
@@ -4821,7 +5021,8 @@ const allQuestionsRaw = [
                 "text": "The voltage measured only during the positive half of the AC cycle",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 75
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4845,7 +5046,8 @@ const allQuestionsRaw = [
                 "text": "Each phase is separated by 180 degrees, creating opposing currents",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 66
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4869,16 +5071,17 @@ const allQuestionsRaw = [
                 "text": "25 milliseconds (Period = 10/frequency)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 71
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Resistor / Fault Isolation",
         "topic": "Open Resistor",
-        "text": "A technician measures infinite resistance across a resistor that should read 1 kΩ. What does this indicate?",
+        "text": "A technician measures infinite resistance across a resistor that should read 1 k\u03a9. What does this indicate?",
         "options": [
             {
-                "text": "The resistor has an open fault — the internal element has broken and no current can flow through it",
+                "text": "The resistor has an open fault \u2014 the internal element has broken and no current can flow through it",
                 "isCorrect": true
             },
             {
@@ -4893,16 +5096,17 @@ const allQuestionsRaw = [
                 "text": "The multimeter is set to the wrong range and needs recalibration",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Resistor / Fault Isolation",
         "topic": "Shorted Resistor",
-        "text": "A 470Ω resistor measures 0 ohms (or near zero) on an ohmmeter. What fault has occurred?",
+        "text": "A 470\u03a9 resistor measures 0 ohms (or near zero) on an ohmmeter. What fault has occurred?",
         "options": [
             {
-                "text": "The resistor is shorted — it has a low-resistance path that bypasses the resistive element, allowing excessive current flow",
+                "text": "The resistor is shorted \u2014 it has a low-resistance path that bypasses the resistive element, allowing excessive current flow",
                 "isCorrect": true
             },
             {
@@ -4914,34 +5118,36 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "This is a normal reading for a 470Ω resistor under load",
+                "text": "This is a normal reading for a 470\u03a9 resistor under load",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 352
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Resistor / Fault Isolation",
         "topic": "Drift",
-        "text": "A 100Ω resistor measures 118Ω. What is the most likely cause?",
+        "text": "A 100\u03a9 resistor measures 118\u03a9. What is the most likely cause?",
         "options": [
             {
                 "text": "The resistor has drifted out of tolerance, likely due to overheating, aging, or exceeding its power rating over time",
                 "isCorrect": true
             },
             {
-                "text": "The resistor is shorted and should read 0Ω",
+                "text": "The resistor is shorted and should read 0\u03a9",
                 "isCorrect": false
             },
             {
-                "text": "The measurement is normal — all resistors read 18% higher than their rated value",
+                "text": "The measurement is normal \u2014 all resistors read 18% higher than their rated value",
                 "isCorrect": false
             },
             {
                 "text": "The ohmmeter battery is dead and producing false readings",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4962,10 +5168,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "It is acceptable to measure resistance with the circuit powered — isolation is optional",
+                "text": "It is acceptable to measure resistance with the circuit powered \u2014 isolation is optional",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -4989,7 +5196,8 @@ const allQuestionsRaw = [
                 "text": "The discoloration means the resistor has shifted to a lower resistance value but is still safe to use",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 264
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5013,7 +5221,8 @@ const allQuestionsRaw = [
                 "text": "An open capacitor has no effect on circuit operation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5037,7 +5246,8 @@ const allQuestionsRaw = [
                 "text": "The capacitor simply stops storing charge but the circuit operates normally",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 341
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5061,7 +5271,8 @@ const allQuestionsRaw = [
                 "text": "A capacitor that only works at frequencies above 1 MHz",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 82
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5082,10 +5293,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Nothing happens — electrolytic capacitors are not polarity-sensitive",
+                "text": "Nothing happens \u2014 electrolytic capacitors are not polarity-sensitive",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 184
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5094,7 +5306,7 @@ const allQuestionsRaw = [
         "text": "Before testing or handling a large capacitor that has been removed from a circuit, what must a technician do first?",
         "options": [
             {
-                "text": "Safely discharge the capacitor through an appropriate resistor — capacitors can store a lethal charge long after power is removed",
+                "text": "Safely discharge the capacitor through an appropriate resistor \u2014 capacitors can store a lethal charge long after power is removed",
                 "isCorrect": true
             },
             {
@@ -5102,14 +5314,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "No precautions are needed — capacitors discharge instantly when power is removed",
+                "text": "No precautions are needed \u2014 capacitors discharge instantly when power is removed",
                 "isCorrect": false
             },
             {
                 "text": "Submerge the capacitor in water to safely neutralize the stored charge",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 181
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5133,7 +5346,8 @@ const allQuestionsRaw = [
                 "text": "10011 (that equals 19 in decimal)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 205
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5157,7 +5371,8 @@ const allQuestionsRaw = [
                 "text": "18 (omitting the 4's place value)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 205
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5166,22 +5381,23 @@ const allQuestionsRaw = [
         "text": "In hexadecimal (base-16), what decimal value does the letter 'A' represent?",
         "options": [
             {
-                "text": "10 — hex uses A=10, B=11, C=12, D=13, E=14, F=15 for values above 9",
+                "text": "10 \u2014 hex uses A=10, B=11, C=12, D=13, E=14, F=15 for values above 9",
                 "isCorrect": true
             },
             {
-                "text": "1 — A is the first letter so it equals 1",
+                "text": "1 \u2014 A is the first letter so it equals 1",
                 "isCorrect": false
             },
             {
-                "text": "16 — A represents the base value of hexadecimal",
+                "text": "16 \u2014 A represents the base value of hexadecimal",
                 "isCorrect": false
             },
             {
-                "text": "65 — A equals its ASCII code value",
+                "text": "65 \u2014 A equals its ASCII code value",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 210
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5190,7 +5406,7 @@ const allQuestionsRaw = [
         "text": "What is the decimal equivalent of the octal (base-8) number 17?",
         "options": [
             {
-                "text": "15 (1×8 + 7×1 = 8+7 = 15)",
+                "text": "15 (1\u00d78 + 7\u00d71 = 8+7 = 15)",
                 "isCorrect": true
             },
             {
@@ -5198,14 +5414,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "78 (1×7 + 8 = 78)",
+                "text": "78 (1\u00d77 + 8 = 78)",
                 "isCorrect": false
             },
             {
-                "text": "23 (1×16 + 7 = 23)",
+                "text": "23 (1\u00d716 + 7 = 23)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 209
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -5214,7 +5431,7 @@ const allQuestionsRaw = [
         "text": "Why do digital electronic systems use the binary numbering system?",
         "options": [
             {
-                "text": "Electronic circuits can reliably represent two states — ON (1) and OFF (0) — using voltage levels, making binary the natural choice",
+                "text": "Electronic circuits can reliably represent two states \u2014 ON (1) and OFF (0) \u2014 using voltage levels, making binary the natural choice",
                 "isCorrect": true
             },
             {
@@ -5226,10 +5443,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Binary is only used in older systems — modern digital circuits use decimal",
+                "text": "Binary is only used in older systems \u2014 modern digital circuits use decimal",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 217
     },
     {
         "subject": "II. General Safety Practices",
@@ -5238,7 +5456,7 @@ const allQuestionsRaw = [
         "text": "What is the most dangerous path for electrical current to travel through the human body?",
         "options": [
             {
-                "text": "From one hand to the other, passing through the heart — even small currents (as low as 100 mA) across the chest can be fatal",
+                "text": "From one hand to the other, passing through the heart \u2014 even small currents (as low as 100 mA) across the chest can be fatal",
                 "isCorrect": true
             },
             {
@@ -5253,7 +5471,8 @@ const allQuestionsRaw = [
                 "text": "Electrical shock is only dangerous above 1,000 volts regardless of the path",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 259
     },
     {
         "subject": "II. General Safety Practices",
@@ -5277,7 +5496,8 @@ const allQuestionsRaw = [
                 "text": "To reserve equipment for a specific maintenance task on a future date",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 267
     },
     {
         "subject": "II. General Safety Practices",
@@ -5286,22 +5506,23 @@ const allQuestionsRaw = [
         "text": "Which class of fire extinguisher should be used on an electrical fire?",
         "options": [
             {
-                "text": "Class C — designed for energized electrical equipment; CO₂ and dry chemical types are common choices",
+                "text": "Class C \u2014 designed for energized electrical equipment; CO\u2082 and dry chemical types are common choices",
                 "isCorrect": true
             },
             {
-                "text": "Class A — designed for ordinary combustibles like wood and paper",
+                "text": "Class A \u2014 designed for ordinary combustibles like wood and paper",
                 "isCorrect": false
             },
             {
-                "text": "Class B — designed for flammable liquids like fuel and oil",
+                "text": "Class B \u2014 designed for flammable liquids like fuel and oil",
                 "isCorrect": false
             },
             {
-                "text": "Class D — designed for combustible metals like magnesium",
+                "text": "Class D \u2014 designed for combustible metals like magnesium",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 268
     },
     {
         "subject": "II. General Safety Practices",
@@ -5310,7 +5531,7 @@ const allQuestionsRaw = [
         "text": "When working on aircraft electrical systems, what is the minimum PPE (Personal Protective Equipment) typically required?",
         "options": [
             {
-                "text": "Safety glasses, insulated tools, and appropriate gloves — additional PPE may be required based on the specific hazard",
+                "text": "Safety glasses, insulated tools, and appropriate gloves \u2014 additional PPE may be required based on the specific hazard",
                 "isCorrect": true
             },
             {
@@ -5325,7 +5546,8 @@ const allQuestionsRaw = [
                 "text": "A full face shield is the only requirement for low-voltage work",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 268
     },
     {
         "subject": "II. General Safety Practices",
@@ -5349,7 +5571,8 @@ const allQuestionsRaw = [
                 "text": "Grounding prevents the equipment from powering on accidentally",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 269
     },
     {
         "subject": "II. General Safety Practices",
@@ -5373,7 +5596,8 @@ const allQuestionsRaw = [
                 "text": "Confined space entry requires no special procedures if the tank has been drained",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "II. General Safety Practices",
@@ -5390,14 +5614,15 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Do not use water — apply a neutralizing solution to the eyes first",
+                "text": "Do not use water \u2014 apply a neutralizing solution to the eyes first",
                 "isCorrect": false
             },
             {
                 "text": "Flushing is only needed if the chemical causes immediate pain",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 276
     },
     {
         "subject": "II. General Safety Practices",
@@ -5406,22 +5631,23 @@ const allQuestionsRaw = [
         "text": "At what noise level (in decibels) is hearing protection required in an aircraft maintenance environment?",
         "options": [
             {
-                "text": "85 dB or above — prolonged exposure at this level causes permanent hearing damage",
+                "text": "85 dB or above \u2014 prolonged exposure at this level causes permanent hearing damage",
                 "isCorrect": true
             },
             {
-                "text": "120 dB — hearing protection is only needed near jet engine run-ups",
+                "text": "120 dB \u2014 hearing protection is only needed near jet engine run-ups",
                 "isCorrect": false
             },
             {
-                "text": "60 dB — equivalent to normal conversation",
+                "text": "60 dB \u2014 equivalent to normal conversation",
                 "isCorrect": false
             },
             {
                 "text": "Hearing protection is recommended but never mandatory in aviation maintenance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "II. General Safety Practices",
@@ -5445,7 +5671,8 @@ const allQuestionsRaw = [
                 "text": "The employee training schedule for handling the material",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 275
     },
     {
         "subject": "II. General Safety Practices",
@@ -5469,7 +5696,8 @@ const allQuestionsRaw = [
                 "text": "Solvents should be heated before use to improve their cleaning effectiveness",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "II. General Safety Practices",
@@ -5482,7 +5710,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Wash it down the drain with water — hydraulic fluid is non-toxic",
+                "text": "Wash it down the drain with water \u2014 hydraulic fluid is non-toxic",
                 "isCorrect": false
             },
             {
@@ -5493,7 +5721,8 @@ const allQuestionsRaw = [
                 "text": "Sweep it outside the hangar and let it soak into the ground",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 277
     },
     {
         "subject": "II. General Safety Practices",
@@ -5517,7 +5746,8 @@ const allQuestionsRaw = [
                 "text": "Bonding is only required when fueling in wet weather conditions",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "II. General Safety Practices",
@@ -5541,7 +5771,8 @@ const allQuestionsRaw = [
                 "text": "Store flammable chemicals next to the eye wash station for quick access in emergencies",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 181
     },
     {
         "subject": "II. General Safety Practices",
@@ -5554,7 +5785,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Wipe it off with a dry cloth — sulfuric acid is only harmful if swallowed",
+                "text": "Wipe it off with a dry cloth \u2014 sulfuric acid is only harmful if swallowed",
                 "isCorrect": false
             },
             {
@@ -5562,10 +5793,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "No action is needed — dilute battery acid is harmless to skin",
+                "text": "No action is needed \u2014 dilute battery acid is harmless to skin",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 188
     },
     {
         "subject": "II. General Safety Practices",
@@ -5574,7 +5806,7 @@ const allQuestionsRaw = [
         "text": "What hazard is associated with sanding or grinding composite materials (carbon fiber, fiberglass) on aircraft?",
         "options": [
             {
-                "text": "The dust particles are hazardous — they can cause respiratory irritation and skin itching; a respirator, gloves, and eye protection are required",
+                "text": "The dust particles are hazardous \u2014 they can cause respiratory irritation and skin itching; a respirator, gloves, and eye protection are required",
                 "isCorrect": true
             },
             {
@@ -5586,10 +5818,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Composite materials cannot be sanded — they must always be chemically stripped",
+                "text": "Composite materials cannot be sanded \u2014 they must always be chemically stripped",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "II. General Safety Practices",
@@ -5598,22 +5831,23 @@ const allQuestionsRaw = [
         "text": "What does FOD stand for in aviation maintenance, and why is it critical?",
         "options": [
             {
-                "text": "Foreign Object Debris (or Damage) — loose items like tools, hardware, or debris can be ingested by engines or damage flight control surfaces",
+                "text": "Foreign Object Debris (or Damage) \u2014 loose items like tools, hardware, or debris can be ingested by engines or damage flight control surfaces",
                 "isCorrect": true
             },
             {
-                "text": "Flight Operations Directive — a mandatory safety instruction from the FAA",
+                "text": "Flight Operations Directive \u2014 a mandatory safety instruction from the FAA",
                 "isCorrect": false
             },
             {
-                "text": "Fuel Over-Delivery — exceeding the maximum fuel capacity of an aircraft",
+                "text": "Fuel Over-Delivery \u2014 exceeding the maximum fuel capacity of an aircraft",
                 "isCorrect": false
             },
             {
-                "text": "Forced Operational Downtime — when an aircraft is grounded for maintenance",
+                "text": "Forced Operational Downtime \u2014 when an aircraft is grounded for maintenance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 375
     },
     {
         "subject": "II. General Safety Practices",
@@ -5622,7 +5856,7 @@ const allQuestionsRaw = [
         "text": "Why must all tools be accounted for before and after performing maintenance on an aircraft?",
         "options": [
             {
-                "text": "A lost tool left inside the aircraft can cause FOD damage — it could jam controls, short wiring, or be ingested by an engine",
+                "text": "A lost tool left inside the aircraft can cause FOD damage \u2014 it could jam controls, short wiring, or be ingested by an engine",
                 "isCorrect": true
             },
             {
@@ -5637,7 +5871,8 @@ const allQuestionsRaw = [
                 "text": "Tool accountability is recommended but not required by any regulation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "II. General Safety Practices",
@@ -5661,7 +5896,8 @@ const allQuestionsRaw = [
                 "text": "An inspection of the tool crib to verify all tools are properly stored",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 325
     },
     {
         "subject": "II. General Safety Practices",
@@ -5670,7 +5906,7 @@ const allQuestionsRaw = [
         "text": "When removing screws, nuts, and bolts during maintenance, what is the best practice for FOD prevention?",
         "options": [
             {
-                "text": "Place all removed hardware in a clearly labeled container immediately — never set loose hardware on aircraft surfaces or the floor",
+                "text": "Place all removed hardware in a clearly labeled container immediately \u2014 never set loose hardware on aircraft surfaces or the floor",
                 "isCorrect": true
             },
             {
@@ -5685,7 +5921,8 @@ const allQuestionsRaw = [
                 "text": "Hardware control is only necessary when working near engine intakes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 371
     },
     {
         "subject": "II. General Safety Practices",
@@ -5694,7 +5931,7 @@ const allQuestionsRaw = [
         "text": "Which personal items are a common source of FOD and should be secured or removed before working on aircraft?",
         "options": [
             {
-                "text": "Pens, badges, loose jewelry, hats, and personal phones — anything that could fall into an aircraft opening or engine intake",
+                "text": "Pens, badges, loose jewelry, hats, and personal phones \u2014 anything that could fall into an aircraft opening or engine intake",
                 "isCorrect": true
             },
             {
@@ -5709,7 +5946,8 @@ const allQuestionsRaw = [
                 "text": "Safety glasses are the most common FOD item and should not be worn near aircraft",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 268
     },
     {
         "subject": "II. General Safety Practices",
@@ -5733,7 +5971,8 @@ const allQuestionsRaw = [
                 "text": "Safety wire is decorative and serves no functional purpose on modern aircraft",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 371
     },
     {
         "subject": "II. General Safety Practices",
@@ -5742,7 +5981,7 @@ const allQuestionsRaw = [
         "text": "When installing safety wire, in which direction should the wire pull to prevent the fastener from loosening?",
         "options": [
             {
-                "text": "The wire must be installed so that it pulls in the tightening direction — if the fastener tries to loosen, the wire resists it",
+                "text": "The wire must be installed so that it pulls in the tightening direction \u2014 if the fastener tries to loosen, the wire resists it",
                 "isCorrect": true
             },
             {
@@ -5757,7 +5996,8 @@ const allQuestionsRaw = [
                 "text": "The wire must always pull downward due to gravity effects during flight",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 372
     },
     {
         "subject": "II. General Safety Practices",
@@ -5766,7 +6006,7 @@ const allQuestionsRaw = [
         "text": "When is a cotter pin used instead of safety wire on aircraft?",
         "options": [
             {
-                "text": "Cotter pins are used with castellated nuts on bolts — the pin passes through the bolt shank hole and the nut slots to prevent rotation",
+                "text": "Cotter pins are used with castellated nuts on bolts \u2014 the pin passes through the bolt shank hole and the nut slots to prevent rotation",
                 "isCorrect": true
             },
             {
@@ -5781,7 +6021,8 @@ const allQuestionsRaw = [
                 "text": "Cotter pins are obsolete and no longer approved for use on aircraft",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 443
     },
     {
         "subject": "II. General Safety Practices",
@@ -5790,7 +6031,7 @@ const allQuestionsRaw = [
         "text": "What does a circuit breaker collar (or pin) indicate when installed on an aircraft circuit breaker?",
         "options": [
             {
-                "text": "The circuit breaker has been intentionally disabled (pulled) and collared for maintenance — it must not be reset until maintenance is complete",
+                "text": "The circuit breaker has been intentionally disabled (pulled) and collared for maintenance \u2014 it must not be reset until maintenance is complete",
                 "isCorrect": true
             },
             {
@@ -5805,7 +6046,8 @@ const allQuestionsRaw = [
                 "text": "The collar is an anti-theft device to prevent unauthorized removal of the breaker",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 189
     },
     {
         "subject": "II. General Safety Practices",
@@ -5814,7 +6056,7 @@ const allQuestionsRaw = [
         "text": "When must wheel chocks be placed on an aircraft?",
         "options": [
             {
-                "text": "Whenever the aircraft is parked and the parking brake alone cannot be relied upon — chocks prevent unintended aircraft movement",
+                "text": "Whenever the aircraft is parked and the parking brake alone cannot be relied upon \u2014 chocks prevent unintended aircraft movement",
                 "isCorrect": true
             },
             {
@@ -5829,7 +6071,8 @@ const allQuestionsRaw = [
                 "text": "Wheel chocks are optional if the parking brake is set",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 28
     },
     {
         "subject": "II. General Safety Practices",
@@ -5853,7 +6096,8 @@ const allQuestionsRaw = [
                 "text": "Both arms held straight down at the sides with palms facing rearward",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 82
     },
     {
         "subject": "II. General Safety Practices",
@@ -5877,7 +6121,8 @@ const allQuestionsRaw = [
                 "text": "Wing walkers are only required when towing at night",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 434
     },
     {
         "subject": "II. General Safety Practices",
@@ -5901,7 +6146,8 @@ const allQuestionsRaw = [
                 "text": "Jet engines are safe to approach from any direction when at idle power",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 259
     },
     {
         "subject": "II. General Safety Practices",
@@ -5925,7 +6171,8 @@ const allQuestionsRaw = [
                 "text": "No checks are needed if the aircraft has been jacked before at the same location",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 11
     },
     {
         "subject": "II. General Safety Practices",
@@ -5934,7 +6181,7 @@ const allQuestionsRaw = [
         "text": "Why should a propeller always be treated as if the engine could start at any time?",
         "options": [
             {
-                "text": "A magneto-equipped engine can fire if the propeller is moved and the magneto switch is hot or malfunctioning — always treat the prop as 'live'",
+                "text": "A magneto-equipped engine can fire if the propeller is moved and the magneto switch is hot or malfunctioning \u2014 always treat the prop as 'live'",
                 "isCorrect": true
             },
             {
@@ -5949,7 +6196,8 @@ const allQuestionsRaw = [
                 "text": "Propellers can only cause injury if the engine is running above 1,000 RPM",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "II. General Safety Practices",
@@ -5958,11 +6206,11 @@ const allQuestionsRaw = [
         "text": "What type of fuel must NEVER be used in a turbine (jet) engine aircraft that requires Jet-A?",
         "options": [
             {
-                "text": "AVGAS (100LL) — aviation gasoline contains tetraethyl lead which damages turbine engine hot-section components and can cause engine failure",
+                "text": "AVGAS (100LL) \u2014 aviation gasoline contains tetraethyl lead which damages turbine engine hot-section components and can cause engine failure",
                 "isCorrect": true
             },
             {
-                "text": "Jet-A1 — it has a different flash point than Jet-A and is incompatible",
+                "text": "Jet-A1 \u2014 it has a different flash point than Jet-A and is incompatible",
                 "isCorrect": false
             },
             {
@@ -5970,10 +6218,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Diesel fuel — although chemically similar to Jet-A, it is strictly prohibited",
+                "text": "Diesel fuel \u2014 although chemically similar to Jet-A, it is strictly prohibited",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 286
     },
     {
         "subject": "II. General Safety Practices",
@@ -5982,7 +6231,7 @@ const allQuestionsRaw = [
         "text": "Why is it dangerous to stand directly in front of or behind an aircraft tire during inflation?",
         "options": [
             {
-                "text": "If the tire or wheel assembly fails during inflation, it can explode with lethal force — always inflate from the side using a remote gauge and cage if available",
+                "text": "If the tire or wheel assembly fails during inflation, it can explode with lethal force \u2014 always inflate from the side using a remote gauge and cage if available",
                 "isCorrect": true
             },
             {
@@ -5994,10 +6243,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "There is no safety concern — aircraft tires are designed to never fail during inflation",
+                "text": "There is no safety concern \u2014 aircraft tires are designed to never fail during inflation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 359
     },
     {
         "subject": "II. General Safety Practices",
@@ -6021,7 +6271,8 @@ const allQuestionsRaw = [
                 "text": "Mooring is optional for aircraft weighing more than 10,000 pounds",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 432
     },
     {
         "subject": "II. General Safety Practices",
@@ -6030,7 +6281,7 @@ const allQuestionsRaw = [
         "text": "Before connecting a ground power unit (GPU) to an aircraft, what must be verified?",
         "options": [
             {
-                "text": "The GPU voltage, frequency, and polarity must match the aircraft requirements — incorrect power can damage electrical systems and avionics",
+                "text": "The GPU voltage, frequency, and polarity must match the aircraft requirements \u2014 incorrect power can damage electrical systems and avionics",
                 "isCorrect": true
             },
             {
@@ -6045,7 +6296,8 @@ const allQuestionsRaw = [
                 "text": "Only the GPU fuel level needs to be checked before connecting",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 438
     },
     {
         "subject": "II. General Safety Practices",
@@ -6069,7 +6321,8 @@ const allQuestionsRaw = [
                 "text": "Covers are used to indicate the aircraft is unserviceable and should not be flown",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 261
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6093,7 +6346,8 @@ const allQuestionsRaw = [
                 "text": "Torque wrenches are only required for engine components, not airframe fasteners",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6117,7 +6371,8 @@ const allQuestionsRaw = [
                 "text": "The wrong size stripper will remove too much insulation but won't damage the conductor",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6138,10 +6393,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "The crimping tool is only needed for appearance — solder provides the actual electrical connection",
+                "text": "The crimping tool is only needed for appearance \u2014 solder provides the actual electrical connection",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 361
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6150,7 +6406,7 @@ const allQuestionsRaw = [
         "text": "When soldering a connection on an aircraft electronic component, what type of solder should be used?",
         "options": [
             {
-                "text": "Rosin-core solder — acid-core solder must never be used in electronics because acid flux causes corrosion that leads to connection failure",
+                "text": "Rosin-core solder \u2014 acid-core solder must never be used in electronics because acid flux causes corrosion that leads to connection failure",
                 "isCorrect": true
             },
             {
@@ -6165,7 +6421,8 @@ const allQuestionsRaw = [
                 "text": "Lead-free solder is prohibited in all aircraft applications",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 358
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6189,7 +6446,8 @@ const allQuestionsRaw = [
                 "text": "High speed is always preferred to minimize the time the drill is in contact with the material",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6198,7 +6456,7 @@ const allQuestionsRaw = [
         "text": "Before using any hand tool on an aircraft, what should a technician check?",
         "options": [
             {
-                "text": "Verify the tool is in good condition — no cracks, mushroomed heads, worn jaws, or loose handles — and that it is the correct tool for the job",
+                "text": "Verify the tool is in good condition \u2014 no cracks, mushroomed heads, worn jaws, or loose handles \u2014 and that it is the correct tool for the job",
                 "isCorrect": true
             },
             {
@@ -6213,7 +6471,8 @@ const allQuestionsRaw = [
                 "text": "New tools never need inspection and can be used directly from the package",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6234,10 +6493,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Regular pliers work identically — safety wire pliers are just a convenience",
+                "text": "Regular pliers work identically \u2014 safety wire pliers are just a convenience",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 357
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6261,7 +6521,8 @@ const allQuestionsRaw = [
                 "text": "Fiber optic cables transmit data using magnetic fields through a metallic core",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6282,10 +6543,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Copper wire is actually superior in every way — fiber optics are used only for cost savings",
+                "text": "Copper wire is actually superior in every way \u2014 fiber optics are used only for cost savings",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 70
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6294,7 +6556,7 @@ const allQuestionsRaw = [
         "text": "What principle allows light to travel through a curved fiber optic cable without escaping?",
         "options": [
             {
-                "text": "Total internal reflection — light bounces off the boundary between the core and cladding, staying confined within the core",
+                "text": "Total internal reflection \u2014 light bounces off the boundary between the core and cladding, staying confined within the core",
                 "isCorrect": true
             },
             {
@@ -6309,7 +6571,8 @@ const allQuestionsRaw = [
                 "text": "The cable is filled with a special gas that guides the light around curves",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 26
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6322,7 +6585,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Conductor, insulation, and shielding — the same as copper cables",
+                "text": "Conductor, insulation, and shielding \u2014 the same as copper cables",
                 "isCorrect": false
             },
             {
@@ -6333,7 +6596,8 @@ const allQuestionsRaw = [
                 "text": "Glass rod, air gap, and rubber coating",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6357,7 +6621,8 @@ const allQuestionsRaw = [
                 "text": "Fiber optic cables are actually more durable than copper and need no special handling",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6366,7 +6631,7 @@ const allQuestionsRaw = [
         "text": "What is the most common cause of signal loss in fiber optic connections?",
         "options": [
             {
-                "text": "Dirt, dust, oil, or contamination on the fiber end-face at connectors — even microscopic particles can block or scatter the light signal",
+                "text": "Dirt, dust, oil, or contamination on the fiber end-face at connectors \u2014 even microscopic particles can block or scatter the light signal",
                 "isCorrect": true
             },
             {
@@ -6381,7 +6646,8 @@ const allQuestionsRaw = [
                 "text": "Temperature changes that melt the fiber core",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 26
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6402,10 +6668,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "There is no practical difference — the terms are used interchangeably",
+                "text": "There is no practical difference \u2014 the terms are used interchangeably",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 26
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6414,7 +6681,7 @@ const allQuestionsRaw = [
         "text": "What instrument is used to test a fiber optic cable for signal loss and locate faults?",
         "options": [
             {
-                "text": "An Optical Time Domain Reflectometer (OTDR) — it sends light pulses into the fiber and analyzes reflections to find breaks, bends, and splices",
+                "text": "An Optical Time Domain Reflectometer (OTDR) \u2014 it sends light pulses into the fiber and analyzes reflections to find breaks, bends, and splices",
                 "isCorrect": true
             },
             {
@@ -6429,7 +6696,8 @@ const allQuestionsRaw = [
                 "text": "A megohmmeter (megger) to check insulation resistance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 64
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6453,7 +6721,8 @@ const allQuestionsRaw = [
                 "text": "It stores radio signals in a buffer until the receiver is ready to process them",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 242
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6466,7 +6735,7 @@ const allQuestionsRaw = [
                 "isCorrect": true
             },
             {
-                "text": "Antenna length has no relationship to frequency — any length works for any frequency",
+                "text": "Antenna length has no relationship to frequency \u2014 any length works for any frequency",
                 "isCorrect": false
             },
             {
@@ -6477,7 +6746,8 @@ const allQuestionsRaw = [
                 "text": "The antenna must be exactly the same length as the full wavelength to function",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 82
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6486,7 +6756,7 @@ const allQuestionsRaw = [
         "text": "What is the purpose of coaxial cable (transmission line) between an aircraft radio and its antenna?",
         "options": [
             {
-                "text": "It carries the RF signal with minimal loss and shielding prevents interference — the cable's impedance must match the antenna and radio for maximum power transfer",
+                "text": "It carries the RF signal with minimal loss and shielding prevents interference \u2014 the cable's impedance must match the antenna and radio for maximum power transfer",
                 "isCorrect": true
             },
             {
@@ -6501,7 +6771,8 @@ const allQuestionsRaw = [
                 "text": "The coaxial cable amplifies the signal as it travels from the radio to the antenna",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 232
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6522,10 +6793,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "VHF and HF have identical range capabilities — the choice is based on audio quality only",
+                "text": "VHF and HF have identical range capabilities \u2014 the choice is based on audio quality only",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 181
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6534,7 +6806,7 @@ const allQuestionsRaw = [
         "text": "What does a high Standing Wave Ratio (SWR) indicate in an aircraft antenna system?",
         "options": [
             {
-                "text": "An impedance mismatch between the transmitter, transmission line, and antenna — RF energy is being reflected back instead of radiated, which can damage the transmitter",
+                "text": "An impedance mismatch between the transmitter, transmission line, and antenna \u2014 RF energy is being reflected back instead of radiated, which can damage the transmitter",
                 "isCorrect": true
             },
             {
@@ -6549,7 +6821,8 @@ const allQuestionsRaw = [
                 "text": "High SWR is desirable and indicates optimal antenna performance",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 166
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6573,7 +6846,8 @@ const allQuestionsRaw = [
                 "text": "Bridge rectifiers work only with three-phase AC, while half-wave works with single-phase",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6597,7 +6871,8 @@ const allQuestionsRaw = [
                 "text": "A Zener diode converts AC to DC more efficiently than standard diodes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 117
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6606,7 +6881,7 @@ const allQuestionsRaw = [
         "text": "What is 'ripple' in the output of a rectifier circuit, and why is it undesirable?",
         "options": [
             {
-                "text": "Ripple is the residual AC component in the DC output — it causes noise, overheating, and malfunctions in sensitive electronic circuits that require pure DC",
+                "text": "Ripple is the residual AC component in the DC output \u2014 it causes noise, overheating, and malfunctions in sensitive electronic circuits that require pure DC",
                 "isCorrect": true
             },
             {
@@ -6621,7 +6896,8 @@ const allQuestionsRaw = [
                 "text": "Ripple is the physical vibration of the transformer core during operation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 112
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6645,7 +6921,8 @@ const allQuestionsRaw = [
                 "text": "The capacitor increases the output voltage to compensate for ripple losses",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 115
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6669,31 +6946,33 @@ const allQuestionsRaw = [
                 "text": "Inductors are only used in AC circuits and have no effect in DC power supplies",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 114
     },
     {
         "subject": "I. Introductory and General Requirements",
         "category": "Inductors",
         "topic": "RL Time Constant",
-        "text": "In an RL circuit, the time constant (τ) determines how quickly current rises to its maximum value. How is it calculated?",
+        "text": "In an RL circuit, the time constant (\u03c4) determines how quickly current rises to its maximum value. How is it calculated?",
         "options": [
             {
-                "text": "τ = L/R (inductance in henries divided by resistance in ohms), measured in seconds",
+                "text": "\u03c4 = L/R (inductance in henries divided by resistance in ohms), measured in seconds",
                 "isCorrect": true
             },
             {
-                "text": "τ = R × L (resistance times inductance)",
+                "text": "\u03c4 = R \u00d7 L (resistance times inductance)",
                 "isCorrect": false
             },
             {
-                "text": "τ = R/L (resistance divided by inductance)",
+                "text": "\u03c4 = R/L (resistance divided by inductance)",
                 "isCorrect": false
             },
             {
-                "text": "τ = 2π × L × R (the same as inductive reactance)",
+                "text": "\u03c4 = 2\u03c0 \u00d7 L \u00d7 R (the same as inductive reactance)",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 145
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6702,7 +6981,7 @@ const allQuestionsRaw = [
         "text": "What is back-EMF (counter-electromotive force) in an inductor, and why is it important?",
         "options": [
             {
-                "text": "It is a voltage generated by the inductor that opposes any change in current — it can produce dangerously high voltage spikes when a circuit is suddenly opened",
+                "text": "It is a voltage generated by the inductor that opposes any change in current \u2014 it can produce dangerously high voltage spikes when a circuit is suddenly opened",
                 "isCorrect": true
             },
             {
@@ -6717,7 +6996,8 @@ const allQuestionsRaw = [
                 "text": "Back-EMF only occurs in transformers, not in single inductors",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 34
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6726,7 +7006,7 @@ const allQuestionsRaw = [
         "text": "What are the two main types of losses in a real (non-ideal) transformer?",
         "options": [
             {
-                "text": "Copper losses (I²R heating in the windings) and core losses (hysteresis and eddy currents in the iron core)",
+                "text": "Copper losses (I\u00b2R heating in the windings) and core losses (hysteresis and eddy currents in the iron core)",
                 "isCorrect": true
             },
             {
@@ -6738,10 +7018,11 @@ const allQuestionsRaw = [
                 "isCorrect": false
             },
             {
-                "text": "Real transformers have no losses — they are 100% efficient by design",
+                "text": "Real transformers have no losses \u2014 they are 100% efficient by design",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 104
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6750,7 +7031,7 @@ const allQuestionsRaw = [
         "text": "How does an autotransformer differ from a standard two-winding transformer?",
         "options": [
             {
-                "text": "An autotransformer uses a single winding with a tap, sharing part of the winding between primary and secondary — it is smaller and lighter but provides no electrical isolation",
+                "text": "An autotransformer uses a single winding with a tap, sharing part of the winding between primary and secondary \u2014 it is smaller and lighter but provides no electrical isolation",
                 "isCorrect": true
             },
             {
@@ -6765,7 +7046,8 @@ const allQuestionsRaw = [
                 "text": "An autotransformer has three separate windings for three-phase operation",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 84
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6774,7 +7056,7 @@ const allQuestionsRaw = [
         "text": "When using a megohmmeter (megger) to test a transformer, what are you checking?",
         "options": [
             {
-                "text": "Insulation resistance between windings and between windings and the core — low readings indicate insulation breakdown that could lead to shorts",
+                "text": "Insulation resistance between windings and between windings and the core \u2014 low readings indicate insulation breakdown that could lead to shorts",
                 "isCorrect": true
             },
             {
@@ -6789,7 +7071,8 @@ const allQuestionsRaw = [
                 "text": "The frequency response of the transformer at various input frequencies",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 353
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6813,7 +7096,8 @@ const allQuestionsRaw = [
                 "text": "Smaller wire actually handles more current because it has less material to heat up",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 262
     },
     {
         "subject": "III. Fundamentals of On Equipment Maintenance",
@@ -6822,7 +7106,7 @@ const allQuestionsRaw = [
         "text": "What can an oscilloscope show that a standard multimeter cannot?",
         "options": [
             {
-                "text": "The shape (waveform) of a signal over time — including frequency, amplitude, distortion, noise, and timing relationships",
+                "text": "The shape (waveform) of a signal over time \u2014 including frequency, amplitude, distortion, noise, and timing relationships",
                 "isCorrect": true
             },
             {
@@ -6837,7 +7121,8 @@ const allQuestionsRaw = [
                 "text": "Oscilloscopes measure resistance more accurately than a multimeter",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 345
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6861,7 +7146,8 @@ const allQuestionsRaw = [
                 "text": "Crystals are used only for audio frequency generation, not radio frequencies",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 168
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6885,7 +7171,8 @@ const allQuestionsRaw = [
                 "text": "It only works when the technician is standing on a metal floor",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 33
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6894,7 +7181,7 @@ const allQuestionsRaw = [
         "text": "Why does galvanic corrosion occur when two dissimilar metals are in contact on an aircraft?",
         "options": [
             {
-                "text": "In the presence of an electrolyte (moisture), the two metals form a galvanic cell — the more active (anodic) metal corrodes sacrificially while protecting the less active (cathodic) metal",
+                "text": "In the presence of an electrolyte (moisture), the two metals form a galvanic cell \u2014 the more active (anodic) metal corrodes sacrificially while protecting the less active (cathodic) metal",
                 "isCorrect": true
             },
             {
@@ -6909,7 +7196,8 @@ const allQuestionsRaw = [
                 "text": "All metals corrode at the same rate regardless of what they are in contact with",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6933,7 +7221,8 @@ const allQuestionsRaw = [
                 "text": "Apply maximum voltage to the circuit to force the fault to appear",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 117
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6942,7 +7231,7 @@ const allQuestionsRaw = [
         "text": "When troubleshooting a circuit with zero output voltage, what is a logical first measurement to take?",
         "options": [
             {
-                "text": "Check the input voltage with a voltmeter — if input voltage is present but output is zero, the fault is within the circuit between input and output",
+                "text": "Check the input voltage with a voltmeter \u2014 if input voltage is present but output is zero, the fault is within the circuit between input and output",
                 "isCorrect": true
             },
             {
@@ -6957,7 +7246,8 @@ const allQuestionsRaw = [
                 "text": "Check the circuit breaker last, after testing all individual components",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -6966,7 +7256,7 @@ const allQuestionsRaw = [
         "text": "In a series circuit, a technician measures full source voltage across one resistor and zero volts across all others. What does this indicate?",
         "options": [
             {
-                "text": "The resistor showing full voltage is open — in a series circuit, all source voltage appears across the open component because no current flows",
+                "text": "The resistor showing full voltage is open \u2014 in a series circuit, all source voltage appears across the open component because no current flows",
                 "isCorrect": true
             },
             {
@@ -6981,7 +7271,8 @@ const allQuestionsRaw = [
                 "text": "All other resistors have failed simultaneously",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 342
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -7005,7 +7296,8 @@ const allQuestionsRaw = [
                 "text": "The battery voltage is too low to keep the breaker engaged",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 266
     },
     {
         "subject": "I. Introductory and General Requirements",
@@ -7014,7 +7306,7 @@ const allQuestionsRaw = [
         "text": "Why must circuit power be removed before using an ohmmeter to troubleshoot?",
         "options": [
             {
-                "text": "An ohmmeter supplies its own internal voltage to measure resistance — applying external circuit power can give false readings and damage the meter",
+                "text": "An ohmmeter supplies its own internal voltage to measure resistance \u2014 applying external circuit power can give false readings and damage the meter",
                 "isCorrect": true
             },
             {
@@ -7029,7 +7321,8 @@ const allQuestionsRaw = [
                 "text": "There is no safety reason; it is simply a matter of convenience",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 199
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -7053,7 +7346,8 @@ const allQuestionsRaw = [
                 "text": "To display the aircraft's weight and balance data for flight planning",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 242
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -7077,7 +7371,8 @@ const allQuestionsRaw = [
                 "text": "Service bulletins are mandatory, and Airworthiness Directives are optional guidelines",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 336
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -7086,7 +7381,7 @@ const allQuestionsRaw = [
         "text": "How does a block diagram differ from a schematic diagram?",
         "options": [
             {
-                "text": "A block diagram shows functional units as blocks with arrows indicating signal flow direction — it is a high-level overview, while a schematic shows individual component-level detail for troubleshooting",
+                "text": "A block diagram shows functional units as blocks with arrows indicating signal flow direction \u2014 it is a high-level overview, while a schematic shows individual component-level detail for troubleshooting",
                 "isCorrect": true
             },
             {
@@ -7101,7 +7396,8 @@ const allQuestionsRaw = [
                 "text": "Block diagrams are only used for hydraulic systems, not electrical systems",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 425
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -7110,7 +7406,7 @@ const allQuestionsRaw = [
         "text": "What information does an aircraft wiring diagram provide to a technician?",
         "options": [
             {
-                "text": "It shows how components are connected together electrically — including wiring routes, connectors, terminal boards, and wire identification — used for troubleshooting and repair",
+                "text": "It shows how components are connected together electrically \u2014 including wiring routes, connectors, terminal boards, and wire identification \u2014 used for troubleshooting and repair",
                 "isCorrect": true
             },
             {
@@ -7125,7 +7421,8 @@ const allQuestionsRaw = [
                 "text": "They display only the wire colors and have no connection information",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 425
     },
     {
         "subject": "II. Common Maintenance Practices",
@@ -7149,7 +7446,8 @@ const allQuestionsRaw = [
                 "text": "A checklist used by the pilot before every takeoff that cannot be modified",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 20
     },
     {
         "subject": "IV. Aircraft Fundamentals",
@@ -7158,7 +7456,7 @@ const allQuestionsRaw = [
         "text": "What are the four forces acting on an aircraft in flight?",
         "options": [
             {
-                "text": "Lift (upward), Weight (downward), Thrust (forward), and Drag (backward) — lift must equal weight and thrust must equal drag for steady, level flight",
+                "text": "Lift (upward), Weight (downward), Thrust (forward), and Drag (backward) \u2014 lift must equal weight and thrust must equal drag for steady, level flight",
                 "isCorrect": true
             },
             {
@@ -7173,7 +7471,8 @@ const allQuestionsRaw = [
                 "text": "Thrust, drag, tension, and pressure",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 286
     },
     {
         "subject": "IV. Aircraft Fundamentals",
@@ -7182,22 +7481,23 @@ const allQuestionsRaw = [
         "text": "An aircraft rolls to the left. Which axis of flight is involved, and what control surface causes this motion?",
         "options": [
             {
-                "text": "The longitudinal axis (nose to tail) — ailerons on the trailing edges of the wings control roll",
+                "text": "The longitudinal axis (nose to tail) \u2014 ailerons on the trailing edges of the wings control roll",
                 "isCorrect": true
             },
             {
-                "text": "The lateral axis (wing tip to wing tip) — the elevator controls roll",
+                "text": "The lateral axis (wing tip to wing tip) \u2014 the elevator controls roll",
                 "isCorrect": false
             },
             {
-                "text": "The vertical axis (top to bottom) — the rudder controls roll",
+                "text": "The vertical axis (top to bottom) \u2014 the rudder controls roll",
                 "isCorrect": false
             },
             {
-                "text": "The horizontal axis — flaps control roll movement",
+                "text": "The horizontal axis \u2014 flaps control roll movement",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 433
     },
     {
         "subject": "IV. Aircraft Fundamentals",
@@ -7206,7 +7506,7 @@ const allQuestionsRaw = [
         "text": "What is the most common type of fuselage construction used in modern aircraft?",
         "options": [
             {
-                "text": "Semimonocoque — it derives its strength from internal structural members (bulkheads, longerons, stringers) combined with the stressed outer skin",
+                "text": "Semimonocoque \u2014 it derives its strength from internal structural members (bulkheads, longerons, stringers) combined with the stressed outer skin",
                 "isCorrect": true
             },
             {
@@ -7221,7 +7521,8 @@ const allQuestionsRaw = [
                 "text": "Geodesic construction using interwoven basket-weave frames",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 316
     },
     {
         "subject": "IV. Aircraft Fundamentals",
@@ -7230,7 +7531,7 @@ const allQuestionsRaw = [
         "text": "What components make up the empennage of an aircraft?",
         "options": [
             {
-                "text": "The tail section — including the vertical fin (stabilizer) with the rudder attached, and the horizontal stabilizer with the elevator attached",
+                "text": "The tail section \u2014 including the vertical fin (stabilizer) with the rudder attached, and the horizontal stabilizer with the elevator attached",
                 "isCorrect": true
             },
             {
@@ -7245,7 +7546,8 @@ const allQuestionsRaw = [
                 "text": "The cockpit instrument panel and avionics bay",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 290
     },
     {
         "subject": "IV. Aircraft Fundamentals",
@@ -7254,7 +7556,7 @@ const allQuestionsRaw = [
         "text": "Why is the center of gravity (CG) critical to safe aircraft operation?",
         "options": [
             {
-                "text": "The CG is the point where all weight is concentrated — if it falls outside the allowable range, the aircraft becomes uncontrollable because the tail surfaces cannot maintain proper pitch balance",
+                "text": "The CG is the point where all weight is concentrated \u2014 if it falls outside the allowable range, the aircraft becomes uncontrollable because the tail surfaces cannot maintain proper pitch balance",
                 "isCorrect": true
             },
             {
@@ -7269,6 +7571,7 @@ const allQuestionsRaw = [
                 "text": "The CG is only relevant for cargo aircraft, not passenger planes",
                 "isCorrect": false
             }
-        ]
+        ],
+        "studyGuidePage": 434
     }
 ];

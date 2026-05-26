@@ -852,10 +852,20 @@ const Comp = {
 };
 
 function formatComplex(c) {
-  if (Math.abs(c.i) < 0.1) return `${c.r.toFixed(1)}`;
-  if (Math.abs(c.r) < 0.1) return `${c.i.toFixed(1)}j`;
+  const getPrecision = (val) => {
+    if (val === 0 || Math.abs(val) >= 0.1) return 1;
+    const orderOfMagnitude = Math.floor(Math.log10(Math.abs(val)));
+    return Math.max(1, Math.min(5, -orderOfMagnitude + 1));
+  };
+
+  const pR = getPrecision(c.r);
+  const pI = getPrecision(c.i);
+  const maxP = Math.max(pR, pI);
+
+  if (Math.abs(c.i) < 1e-9) return `${c.r.toFixed(maxP)}`;
+  if (Math.abs(c.r) < 1e-9) return `${c.i.toFixed(maxP)}j`;
   const sign = c.i >= 0 ? '+' : '-';
-  return `(${c.r.toFixed(1)} ${sign} ${Math.abs(c.i).toFixed(1)}j)`;
+  return `(${c.r.toFixed(maxP)} ${sign} ${Math.abs(c.i).toFixed(maxP)}j)`;
 }
 
 const topologiesByDifficulty = {
@@ -1366,6 +1376,21 @@ function solveRLCNetwork(topology, components, freq, Vs) {
   };
 }
 
+/**
+ * Formats LaTeX-like subscripts (e.g. R_{EQ}, I_T) into HTML subscript tags (e.g. R<sub>EQ</sub>, I<sub>T</sub>)
+ * and strips any LaTeX math wrappers ($).
+ */
+function formatMathNotation(str) {
+  if (!str) return '';
+  return str
+    // Remove LaTeX dollar sign math wrappers ($)
+    .replace(/\$(.*?)\$/g, '$1')
+    // Format subscripts with curly braces: R_{EQ} -> R<sub>EQ</sub>
+    .replace(/([a-zA-Z0-9]+)_{([a-zA-Z0-9,\s\-+&;]+)}/g, '$1<sub>$2</sub>')
+    // Format simple subscripts: I_T -> I<sub>T</sub>, V_s -> V<sub>s</sub>
+    .replace(/\b([RLCXZVIPTYf])_([a-zA-Z0-9]+)\b/g, '$1<sub>$2</sub>');
+}
+
 function generateRandomCalculationQuestion(difficulty = 'medium', type = 'all') {
   let category = type;
   if (type === 'all') {
@@ -1708,7 +1733,7 @@ function generateRandomCalculationQuestion(difficulty = 'medium', type = 'all') 
 
   return {
     topic: getTopicName(category),
-    text: questionText,
+    text: formatMathNotation(questionText),
     options: makeOptions(correctVal, unit, v => v.toFixed(1)),
     circuitData: {
       topology: topology,
@@ -1721,7 +1746,7 @@ function generateRandomCalculationQuestion(difficulty = 'medium', type = 'all') 
       compType: category === 'resistors' ? 'R' : (category === 'inductors' ? 'L' : 'C'),
       unit: category === 'resistors' ? 'Ω' : (category === 'inductors' ? 'mH' : 'µF')
     },
-    walkthrough: walkthrough,
+    walkthrough: formatMathNotation(walkthrough),
     isCalculation: true,
     subject: 'V. Calculation Practice',
     category: 'Circuit Calculations'
