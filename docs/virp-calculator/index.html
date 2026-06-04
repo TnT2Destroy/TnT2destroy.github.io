@@ -423,6 +423,7 @@
     function addBranch(pathStr) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
+        if (!component) return;
         component.branches.push([]);
         renderControls();
         drawAndCalculate();
@@ -431,6 +432,7 @@
     function removeBranch(pathStr, branchIndex) {
         const path = JSON.parse(pathStr);
         const component = getComponentByPath(path);
+        if (!component) return;
         if (component.branches.length > 1) {
             component.branches.splice(branchIndex, 1);
             renderControls();
@@ -544,13 +546,18 @@
                         branchR += subComp.Req;
                     });
                     return branchR;
-                }).filter(r => r > 0);
+                });
 
-                if (branchResistances.length === 0) {
+                if (branchResistances.some(r => r === 0)) {
                     component.Req = 0;
                 } else {
-                    const inverseSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
-                    component.Req = 1 / inverseSum;
+                    const validBranches = branchResistances.filter(r => r > 0);
+                    if (validBranches.length === 0) {
+                        component.Req = 0;
+                    } else {
+                        const inverseSum = validBranches.reduce((sum, r) => sum + (1 / r), 0);
+                        component.Req = 1 / inverseSum;
+                    }
                 }
             }
         }
@@ -1008,6 +1015,7 @@
                 
                 ctx.beginPath();
                 setDrawStyle(branchIsActive, branchPath);
+                ctx.moveTo(branchCurrentX, branchY);
                 ctx.lineTo(pEndX - pGapX, branchY);
                 ctx.moveTo(pEndX, branchY);
                 ctx.stroke();
@@ -1066,8 +1074,10 @@
     // --- CANVAS INTERACTIVITY ---
     function handleCanvasClick(e) {
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
 
         for (let i = drawableComponents.length - 1; i >= 0; i--) {
             const comp = drawableComponents[i];
@@ -1089,8 +1099,10 @@
 
     function handleCanvasMouseMove(e) {
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
         let newHoveredPath = null;
         let onComponent = false;
 

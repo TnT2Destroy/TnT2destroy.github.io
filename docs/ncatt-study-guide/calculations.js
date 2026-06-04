@@ -412,44 +412,45 @@ function drawCircuit(canvas, data) {
     if (numComps >= 6) drawJunction(ctx, x3, bottomY);
     
     // Branch 1: component 1 (vertical)
+    const lp = data.compType;
     ctx.beginPath();
     ctx.moveTo(60, topY);
     ctx.lineTo(x1, topY);
     ctx.stroke();
-    drawComponent(ctx, x1, topY, bottomY - topY, true, data.compType, 'L1', data.vals[0] + ' ' + data.unit);
+    drawComponent(ctx, x1, topY, bottomY - topY, true, data.compType, lp+'1', data.vals[0] + ' ' + data.unit);
     drawJunction(ctx, x1, topY);
-    
+
     if (numComps >= 2) {
       // component 2 (horizontal)
-      drawComponent(ctx, x1, topY, x2 - x1, false, data.compType, 'L2', data.vals[1] + ' ' + data.unit);
+      drawComponent(ctx, x1, topY, x2 - x1, false, data.compType, lp+'2', data.vals[1] + ' ' + data.unit);
     }
-    
+
     if (numComps >= 3) {
       // Branch 2: component 3 (vertical)
       drawJunction(ctx, x2, topY);
-      drawComponent(ctx, x2, topY, bottomY - topY, true, data.compType, 'L3', data.vals[2] + ' ' + data.unit);
+      drawComponent(ctx, x2, topY, bottomY - topY, true, data.compType, lp+'3', data.vals[2] + ' ' + data.unit);
     }
-    
+
     if (numComps >= 4) {
       // component 4 (horizontal)
-      drawComponent(ctx, x2, topY, x3 - x2, false, data.compType, 'L4', data.vals[3] + ' ' + data.unit);
+      drawComponent(ctx, x2, topY, x3 - x2, false, data.compType, lp+'4', data.vals[3] + ' ' + data.unit);
     }
-    
+
     if (numComps >= 5) {
       // Branch 3: component 5 (vertical)
       drawJunction(ctx, x3, topY);
-      drawComponent(ctx, x3, topY, bottomY - topY, true, data.compType, 'L5', data.vals[4] + ' ' + data.unit);
+      drawComponent(ctx, x3, topY, bottomY - topY, true, data.compType, lp+'5', data.vals[4] + ' ' + data.unit);
     }
-    
+
     if (numComps >= 6) {
       // component 6 (horizontal)
-      drawComponent(ctx, x3, topY, x4 - x3, false, data.compType, 'L6', data.vals[5] + ' ' + data.unit);
+      drawComponent(ctx, x3, topY, x4 - x3, false, data.compType, lp+'6', data.vals[5] + ' ' + data.unit);
     }
-    
+
     if (numComps >= 7) {
       // Branch 4: component 7 (vertical)
       drawJunction(ctx, x4, topY);
-      drawComponent(ctx, x4, topY, bottomY - topY, true, data.compType, 'L7', data.vals[6] + ' ' + data.unit);
+      drawComponent(ctx, x4, topY, bottomY - topY, true, data.compType, lp+'7', data.vals[6] + ' ' + data.unit);
     }
     
   } else if (data.topology === 'series') {
@@ -665,26 +666,25 @@ function drawCircuit(canvas, data) {
     drawJunction(ctx, p2, bottomY);
     drawComponent(ctx, p2, topY, bottomY - topY, true, data.types[1], data.labels[1], data.valStrs[1]);
     
-    // Connection between groups
+    // Connection between groups (top rail from p2 through p3, p4 to end)
     ctx.beginPath();
     ctx.moveTo(p2, topY);
-    ctx.lineTo(p3, topY);
+    ctx.lineTo(endX, topY);
     ctx.stroke();
-    
+
     // Group 2 Branch 1
     drawJunction(ctx, p3, topY);
     drawJunction(ctx, p3, bottomY);
     drawComponent(ctx, p3, topY, bottomY - topY, true, data.types[2], data.labels[2], data.valStrs[2]);
-    
+
     // Group 2 Branch 2
     drawJunction(ctx, p4, topY);
     drawJunction(ctx, p4, bottomY);
     drawComponent(ctx, p4, topY, bottomY - topY, true, data.types[3], data.labels[3], data.valStrs[3]);
-    
-    // Connect to end
+
+    // Connect end to bottom rail
     ctx.beginPath();
-    ctx.moveTo(p4, topY);
-    ctx.lineTo(endX, topY);
+    ctx.moveTo(endX, topY);
     ctx.lineTo(endX, bottomY);
     ctx.stroke();
  
@@ -906,17 +906,23 @@ function getTopicName(category) {
 function makeOptions(correctVal, unit, formatFn = (v) => v.toFixed(1)) {
   const correctText = `${formatFn(correctVal)} ${unit}`;
   const optsSet = new Set([correctText]);
-  
-  const multipliers = [0.5, 2.0, 10.0, 0.1, 1.5, 0.75, 1.25];
-  while (optsSet.size < 4) {
+
+  const multipliers = [0.5, 2.0, 10.0, 0.1, 1.5, 0.75, 1.25, 3.0, 0.33, 5.0];
+  let attempts = 0;
+  while (optsSet.size < 4 && attempts < 50) {
+    attempts++;
     const mult = multipliers[Math.floor(Math.random() * multipliers.length)];
     let raw = correctVal * mult;
     if (Math.random() > 0.5) raw += (Math.random() - 0.5) * (correctVal * 0.15);
-    if (raw < 0.01) raw = 0.01;
+    if (raw < 0.01) raw = correctVal * (2 + attempts);
     const distText = `${formatFn(raw)} ${unit}`;
     optsSet.add(distText);
   }
-  
+  while (optsSet.size < 4) {
+    const fallback = correctVal * (optsSet.size + 1) * 1.7;
+    optsSet.add(`${formatFn(fallback)} ${unit}`);
+  }
+
   return Array.from(optsSet).map(txt => ({
     text: txt,
     isCorrect: txt === correctText
@@ -975,17 +981,17 @@ function solveRL_EQ(topology, vals, unitChar = 'R', unit = 'Ω') {
     if (vals.length === 3) {
       const s = vals[1] + vals[2];
       eq = (vals[0] * s) / (vals[0] + s);
-      steps.push(`1. Calculate series branch (L2 + L3): ${unitChar}_{23} = ${vals[1]} + ${vals[2]} = <strong>${s.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`2. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{23}) / (L1 + ${unitChar}_{23}) = (${vals[0]} &times; ${s.toFixed(1)}) / (${vals[0]} + ${s.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`1. Calculate series branch (${unitChar}2 + ${unitChar}3): ${unitChar}_{23} = ${vals[1]} + ${vals[2]} = <strong>${s.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical ${unitChar}1: ${unitChar}_{EQ} = (${unitChar}1 &times; ${unitChar}_{23}) / (${unitChar}1 + ${unitChar}_{23}) = (${vals[0]} &times; ${s.toFixed(1)}) / (${vals[0]} + ${s.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
     } else if (vals.length === 5) {
       const s1 = vals[3] + vals[4];
       const p1 = (vals[2] * s1) / (vals[2] + s1);
       const s2 = vals[1] + p1;
       eq = (vals[0] * s2) / (vals[0] + s2);
-      steps.push(`1. Start from far right branch (L4 + L5): ${unitChar}_{45} = ${vals[3]} + ${vals[4]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`2. Combine in parallel with vertical L3: ${unitChar}_{345} = (L3 &times; ${unitChar}_{45}) / (L3 + ${unitChar}_{45}) = (${vals[2]} &times; ${s1.toFixed(1)}) / (${vals[2]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`3. Add series portion L2: ${unitChar}_{2345} = L2 + ${unitChar}_{345} = ${vals[1]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`4. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{2345}) / (L1 + ${unitChar}_{2345}) = (${vals[0]} &times; ${s2.toFixed(1)}) / (${vals[0]} + ${s2.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`1. Start from far right branch (${unitChar}4 + ${unitChar}5): ${unitChar}_{45} = ${vals[3]} + ${vals[4]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical ${unitChar}3: ${unitChar}_{345} = (${unitChar}3 &times; ${unitChar}_{45}) / (${unitChar}3 + ${unitChar}_{45}) = (${vals[2]} &times; ${s1.toFixed(1)}) / (${vals[2]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`3. Add series portion ${unitChar}2: ${unitChar}_{2345} = ${unitChar}2 + ${unitChar}_{345} = ${vals[1]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`4. Combine in parallel with vertical ${unitChar}1: ${unitChar}_{EQ} = (${unitChar}1 &times; ${unitChar}_{2345}) / (${unitChar}1 + ${unitChar}_{2345}) = (${vals[0]} &times; ${s2.toFixed(1)}) / (${vals[0]} + ${s2.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
     } else {
       const s1 = vals[5] + vals[6];
       const p1 = (vals[4] * s1) / (vals[4] + s1);
@@ -993,12 +999,12 @@ function solveRL_EQ(topology, vals, unitChar = 'R', unit = 'Ω') {
       const p2 = (vals[2] * s2) / (vals[2] + s2);
       const s3 = vals[1] + p2;
       eq = (vals[0] * s3) / (vals[0] + s3);
-      steps.push(`1. Start from far right branch (L6 + L7): ${unitChar}_{67} = ${vals[5]} + ${vals[6]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`2. Combine in parallel with vertical L5: ${unitChar}_{567} = (L5 &times; ${unitChar}_{67}) / (L5 + ${unitChar}_{67}) = (${vals[4]} &times; ${s1.toFixed(1)}) / (${vals[4]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`3. Add series branch L4: ${unitChar}_{4567} = L4 + ${unitChar}_{567} = ${vals[3]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`4. Combine in parallel with vertical L3: ${unitChar}_{34567} = (L3 &times; ${unitChar}_{4567}) / (L3 + ${unitChar}_{4567}) = (${vals[2]} &times; ${s2.toFixed(1)}) / (${vals[2]} + ${s2.toFixed(1)}) &approx; <strong>${p2.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`5. Add series branch L2: ${unitChar}_{234567} = L2 + ${unitChar}_{34567} = ${vals[1]} + ${p2.toFixed(1)} = <strong>${s3.toFixed(1)} ${unit}</strong>.`);
-      steps.push(`6. Combine in parallel with vertical L1: ${unitChar}_{EQ} = (L1 &times; ${unitChar}_{234567}) / (L1 + ${unitChar}_{234567}) = (${vals[0]} &times; ${s3.toFixed(1)}) / (${vals[0]} + ${s3.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`1. Start from far right branch (${unitChar}6 + ${unitChar}7): ${unitChar}_{67} = ${vals[5]} + ${vals[6]} = <strong>${s1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`2. Combine in parallel with vertical ${unitChar}5: ${unitChar}_{567} = (${unitChar}5 &times; ${unitChar}_{67}) / (${unitChar}5 + ${unitChar}_{67}) = (${vals[4]} &times; ${s1.toFixed(1)}) / (${vals[4]} + ${s1.toFixed(1)}) &approx; <strong>${p1.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`3. Add series branch ${unitChar}4: ${unitChar}_{4567} = ${unitChar}4 + ${unitChar}_{567} = ${vals[3]} + ${p1.toFixed(1)} = <strong>${s2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`4. Combine in parallel with vertical ${unitChar}3: ${unitChar}_{34567} = (${unitChar}3 &times; ${unitChar}_{4567}) / (${unitChar}3 + ${unitChar}_{4567}) = (${vals[2]} &times; ${s2.toFixed(1)}) / (${vals[2]} + ${s2.toFixed(1)}) &approx; <strong>${p2.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`5. Add series branch ${unitChar}2: ${unitChar}_{234567} = ${unitChar}2 + ${unitChar}_{34567} = ${vals[1]} + ${p2.toFixed(1)} = <strong>${s3.toFixed(1)} ${unit}</strong>.`);
+      steps.push(`6. Combine in parallel with vertical ${unitChar}1: ${unitChar}_{EQ} = (${unitChar}1 &times; ${unitChar}_{234567}) / (${unitChar}1 + ${unitChar}_{234567}) = (${vals[0]} &times; ${s3.toFixed(1)}) / (${vals[0]} + ${s3.toFixed(1)}) &approx; <strong>${eq.toFixed(1)} ${unit}</strong>.`);
     }
   }
   return { eq, steps };
@@ -1055,17 +1061,17 @@ function solveC_EQ(topology, vals) {
     if (vals.length === 3) {
       const s = (vals[1] * vals[2]) / (vals[1] + vals[2]);
       eq = vals[0] + s;
-      steps.push(`1. Calculate series branch (L2 + L3): C_{23} = (L2 &times; L3) / (L2 + L3) = (${vals[1]} &times; ${vals[2]}) / (${vals[1]} + ${vals[2]}) &approx; <strong>${s.toFixed(1)} µF</strong>.`);
-      steps.push(`2. Combine in parallel with vertical L1: C_{EQ} = L1 + C_{23} = ${vals[0]} + ${s.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+      steps.push(`1. Calculate series branch (C2 + C3): C_{23} = (C2 &times; C3) / (C2 + C3) = (${vals[1]} &times; ${vals[2]}) / (${vals[1]} + ${vals[2]}) &approx; <strong>${s.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical C1: C_{EQ} = C1 + C_{23} = ${vals[0]} + ${s.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
     } else if (vals.length === 5) {
       const s1 = (vals[3] * vals[4]) / (vals[3] + vals[4]);
       const p1 = vals[2] + s1;
       const s2 = (vals[1] * p1) / (vals[1] + p1);
       eq = vals[0] + s2;
-      steps.push(`1. Start from far right series branch (L4 + L5): C_{45} = (L4 &times; L5) / (L4 + L5) = (${vals[3]} &times; ${vals[4]}) / (${vals[3]} + ${vals[4]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
-      steps.push(`2. Combine in parallel with vertical branch L3: C_{345} = L3 + C_{45} = ${vals[2]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
-      steps.push(`3. Combine in series with L2: C_{2345} = (L2 &times; C_{345}) / (L2 + C_{345}) = (${vals[1]} &times; ${p1.toFixed(1)}) / (${vals[1]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
-      steps.push(`4. Combine in parallel with vertical branch L1: C_{EQ} = L1 + C_{2345} = ${vals[0]} + ${s2.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+      steps.push(`1. Start from far right series branch (C4 + C5): C_{45} = (C4 &times; C5) / (C4 + C5) = (${vals[3]} &times; ${vals[4]}) / (${vals[3]} + ${vals[4]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical branch C3: C_{345} = C3 + C_{45} = ${vals[2]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
+      steps.push(`3. Combine in series with C2: C_{2345} = (C2 &times; C_{345}) / (C2 + C_{345}) = (${vals[1]} &times; ${p1.toFixed(1)}) / (${vals[1]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
+      steps.push(`4. Combine in parallel with vertical branch C1: C_{EQ} = C1 + C_{2345} = ${vals[0]} + ${s2.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
     } else {
       const s1 = (vals[5] * vals[6]) / (vals[5] + vals[6]);
       const p1 = vals[4] + s1;
@@ -1073,12 +1079,12 @@ function solveC_EQ(topology, vals) {
       const p2 = vals[2] + s2;
       const s3 = (vals[1] * p2) / (vals[1] + p2);
       eq = vals[0] + s3;
-      steps.push(`1. Start from far right series branch (L6 + L7): C_{67} = (L6 &times; L7) / (L6 + L7) = (${vals[5]} &times; ${vals[6]}) / (${vals[5]} + ${vals[6]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
-      steps.push(`2. Combine in parallel with vertical branch L5: C_{567} = L5 + C_{67} = ${vals[4]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
-      steps.push(`3. Combine in series with L4: C_{4567} = (L4 &times; C_{567}) / (L4 + C_{567}) = (${vals[3]} &times; ${p1.toFixed(1)}) / (${vals[3]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
-      steps.push(`4. Combine in parallel with vertical branch L3: C_{34567} = L3 + C_{4567} = ${vals[2]} + ${s2.toFixed(1)} = <strong>${p2.toFixed(1)} µF</strong>.`);
-      steps.push(`5. Combine in series with L2: C_{234567} = (L2 &times; C_{34567}) / (L2 + C_{34567}) = (${vals[1]} &times; ${p2.toFixed(1)}) / (${vals[1]} + ${p2.toFixed(1)}) &approx; <strong>${s3.toFixed(1)} µF</strong>.`);
-      steps.push(`6. Combine in parallel with vertical branch L1: C_{EQ} = L1 + C_{234567} = ${vals[0]} + ${s3.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
+      steps.push(`1. Start from far right series branch (C6 + C7): C_{67} = (C6 &times; C7) / (C6 + C7) = (${vals[5]} &times; ${vals[6]}) / (${vals[5]} + ${vals[6]}) &approx; <strong>${s1.toFixed(1)} µF</strong>.`);
+      steps.push(`2. Combine in parallel with vertical branch C5: C_{567} = C5 + C_{67} = ${vals[4]} + ${s1.toFixed(1)} = <strong>${p1.toFixed(1)} µF</strong>.`);
+      steps.push(`3. Combine in series with C4: C_{4567} = (C4 &times; C_{567}) / (C4 + C_{567}) = (${vals[3]} &times; ${p1.toFixed(1)}) / (${vals[3]} + ${p1.toFixed(1)}) &approx; <strong>${s2.toFixed(1)} µF</strong>.`);
+      steps.push(`4. Combine in parallel with vertical branch C3: C_{34567} = C3 + C_{4567} = ${vals[2]} + ${s2.toFixed(1)} = <strong>${p2.toFixed(1)} µF</strong>.`);
+      steps.push(`5. Combine in series with C2: C_{234567} = (C2 &times; C_{34567}) / (C2 + C_{34567}) = (${vals[1]} &times; ${p2.toFixed(1)}) / (${vals[1]} + ${p2.toFixed(1)}) &approx; <strong>${s3.toFixed(1)} µF</strong>.`);
+      steps.push(`6. Combine in parallel with vertical branch C1: C_{EQ} = C1 + C_{234567} = ${vals[0]} + ${s3.toFixed(1)} = <strong>${eq.toFixed(1)} µF</strong>.`);
     }
   }
   return { eq, steps };

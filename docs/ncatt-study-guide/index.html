@@ -1834,6 +1834,8 @@
       wrongs.sort(() => Math.random()-0.5);
       wrongs[0].style.opacity = "0.25";
       wrongs[0].style.pointerEvents = "none";
+      wrongs[1].style.opacity = "0.25";
+      wrongs[1].style.pointerEvents = "none";
     }
 
     function showEndScreen() {
@@ -1870,13 +1872,13 @@
 
     // ======== BOOKMARK, FLAG & NOTES ========
     function toggleBookmark() {
-      const q = quizQueue[queueIdx];
+      const q = quizQueue[queueIdx]; if (!q) return;
       if (bookmarks.has(q.globalId)) { bookmarks.delete(q.globalId); } else { bookmarks.add(q.globalId); }
       SS('bookmarks', [...bookmarks]);
       document.getElementById('bookmarkBtn').innerHTML = bookmarks.has(q.globalId) ? '[★]' : '[☆]';
     }
     function toggleFlag() {
-      const q = quizQueue[queueIdx];
+      const q = quizQueue[queueIdx]; if (!q) return;
       if (flaggedQuestions.has(q.globalId)) { flaggedQuestions.delete(q.globalId); } else { flaggedQuestions.add(q.globalId); }
       SS('flagged', [...flaggedQuestions]);
       document.getElementById('flagBtn').innerHTML = flaggedQuestions.has(q.globalId) ? '[⚑]' : '[🏳]';
@@ -2028,7 +2030,8 @@
     function examNext() { examIdx++; renderExamQuestion(); }
     function finishExam() {
       clearInterval(examTimerInterval); examActive = false;
-      const pct = Math.round((examCorrect/50)*100);
+      const total = examQueue.length || 50;
+      const pct = Math.round((examCorrect/total)*100);
       const pass = pct >= 70;
       document.getElementById('examContent').style.display = 'none';
       document.getElementById('examResult').style.display = 'block';
@@ -2036,7 +2039,7 @@
       document.getElementById('examScore').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
       document.getElementById('examVerdict').innerHTML = pass ? '✓ EXAM PASSED' : '✗ EXAM FAILED';
       document.getElementById('examVerdict').style.color = pass ? 'var(--correct)' : 'var(--incorrect)';
-      document.getElementById('examDetail').textContent = examCorrect+'/50 correct answers — '+(pass?'Congratulations! You have passed the simulated exam.':'You need at least 70% correct to pass the exam. Keep studying!');
+      document.getElementById('examDetail').textContent = examCorrect+'/'+total+' correct answers — '+(pass?'Congratulations! You have passed the simulated exam.':'You need at least 70% correct to pass the exam. Keep studying!');
       if (pass) fireConfetti();
       todayCount += examAnswered; todayCorrect += examCorrect;
       SS('todayCount_'+today(), todayCount); SS('todayCorrect_'+today(), todayCorrect);
@@ -2318,7 +2321,7 @@
       if (!confirm('Reset all your study progress? This cannot be undone.')) return;
       masteryData={}; bookmarks=new Set(); userNotes={}; streakData={count:0,lastDate:null}; sessionHistory=[]; missedRecent=[]; achievements=new Set(); firstAttempts={}; consecutiveCorrect=0; todayCount=0; todayCorrect=0; flaggedQuestions=new Set(); timeStats={}; missCount={};
       ['mastery','bookmarks','flagged','notes','streak','sessions','missed','achievements','firstAttempts','consecutive','timeStats','missCount'].forEach(k=>{
-        const arr = ['bookmarks','achievements','flagged'].includes(k);
+        const arr = ['bookmarks','achievements','flagged','sessions','missed'].includes(k);
         const obj = ['mastery','notes','firstAttempts','timeStats','missCount'].includes(k);
         SS(k, arr?[] : obj?{} : k==='streak'?{count:0,lastDate:null}:0);
       });
